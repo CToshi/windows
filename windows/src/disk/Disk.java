@@ -35,8 +35,9 @@ public class Disk {
 		DiskBlock d;
 		for (int i = 0; i < MAX_SPACE_OF_DISK; i++) {
 			d = new DiskBlock(i);
+			disks.add(d);
 		}
-		// 这里会将FAT存进磁盘块号0，1，2，3的
+		// *****这里会将FAT存进磁盘块号0，1，2，3的
 	}
 
 }

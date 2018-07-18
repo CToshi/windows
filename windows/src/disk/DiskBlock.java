@@ -20,17 +20,17 @@ public class DiskBlock {
 		FileInit();
 	}
 
-	//这里对文件(磁盘块)初始化
+	//*****这里对文件(磁盘块)初始化
 	private void FileInit() {
 		
 	}
 	
-	//读取磁盘块内容
+	//*****读取磁盘块内容
 	public void readFronFile() {
 		
 	}
 	
-	//写磁盘块内容
+	//*****写磁盘块内容
 	public void writeIntoFile() {
 		
 	}
