@@ -1,11 +1,13 @@
 package disk;
 
 import java.io.File;
-
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class DiskBlock {
 	// 磁盘块块号
-	private int number;
+	private Integer number;
 
 	// 磁盘块状态
 	private int statusOfUsed;
@@ -20,22 +22,38 @@ public class DiskBlock {
 		FileInit();
 	}
 
-	//*****这里对文件(磁盘块)初始化
+	// 这里对文件(磁盘块)初始化
 	private void FileInit() {
-		
+		content = new File("disk/" + number.toString() + ".txt");
 	}
-	
-	//*****读取磁盘块内容
-	public void readFronFile() {
-		
+
+	// 读取磁盘块内容
+	public String readFronFile() throws FileNotFoundException {
+
+		String contentOfDiskBlock = "";
+		try (Scanner diskblock = new Scanner(content)) {
+			while (diskblock.hasNext()) {
+				contentOfDiskBlock = contentOfDiskBlock + diskblock.nextLine();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw new FileNotFoundException("文件不存在");
+		}
+		return contentOfDiskBlock;
+
 	}
-	
-	//*****写磁盘块内容
-	public void writeIntoFile() {
-		
+
+	// 写磁盘块内容
+	public void writeIntoFile(String contentOfFile) throws FileNotFoundException {
+		try (PrintWriter diskblock = new PrintWriter(content)) {
+			diskblock.print(contentOfFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw new FileNotFoundException("文件创建失败");
+		}
+
 	}
-	
-	
+
 	public int getStatusOfUsed() {
 		return statusOfUsed;
 	}
