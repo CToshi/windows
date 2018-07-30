@@ -34,6 +34,7 @@ public class CPU {
 		if(instructions == null || instructions.length == 0){
 			return false;
 		}
+
 		return true;
 	}
 
