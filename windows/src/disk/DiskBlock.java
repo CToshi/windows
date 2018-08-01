@@ -6,30 +6,42 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class DiskBlock {
-	// 磁盘块块号
+	/**
+	 *  磁盘块块号
+	 */
 	private Integer number;
 
-	// 磁盘块状态
+	/**
+	 *  磁盘块状态
+	 */
 	private int statusOfUsed;
 
-	// 每个磁盘块其实是一个文件
+	/**
+	 *  每个磁盘块其实是一个文件
+	 */
 	private File content;
 
 	public DiskBlock(int number) {
 		super();
 		this.number = number;
 		statusOfUsed = 0;
-		FileInit();
+		fileInit();
 	}
 
-	// 这里对文件(磁盘块)初始化
-	private void FileInit() {
+	/**
+	 *  这里对文件(磁盘块)初始化
+	 */
+	private void fileInit() {
 		content = new File("disk/" + number.toString() + ".txt");
 	}
 
-	// 读取磁盘块内容
+	/**
+	 *  读取磁盘块内容
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public String readFronFile() throws FileNotFoundException {
-
+		
 		String contentOfDiskBlock = "";
 		try (Scanner diskblock = new Scanner(content)) {
 			while (diskblock.hasNext()) {
@@ -43,7 +55,11 @@ public class DiskBlock {
 
 	}
 
-	// 写磁盘块内容
+	/**
+	 *  写磁盘块内容
+	 * @param contentOfFile
+	 * @throws FileNotFoundException
+	 */
 	public void writeIntoFile(String contentOfFile) throws FileNotFoundException {
 		try (PrintWriter diskblock = new PrintWriter(content)) {
 			diskblock.print(contentOfFile);
