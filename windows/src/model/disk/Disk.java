@@ -1,4 +1,4 @@
-package disk;
+package model.disk;
 
 import java.util.ArrayList;
 

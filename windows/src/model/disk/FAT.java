@@ -1,4 +1,4 @@
-package disk;
+package model.disk;
 
 public class FAT {
 	// 管理Fat数组
