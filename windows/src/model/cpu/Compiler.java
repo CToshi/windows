@@ -9,7 +9,7 @@ public class Compiler {
 		LinkedList<Integer> list = new LinkedList<>();
 		boolean compileError = false;
 		for (String ins : inss) {
-			if (ins.length() > 0 && !ins.equals("end")) {
+			if (ins.length() > 0) {
 				int res = encode(ins);
 				if (res == 255) {
 					compileError = true;
@@ -27,11 +27,12 @@ public class Compiler {
 
 	/**
 	 * 编码规则：
-	 * x=? --> ?
-	 * x++ --> 100
-	 * x-- --> 101
-	 * !?? --> x属于[111, 139]且x%10 != 0, 其中十位表示设备，个位表示时间
-	 * 编码失败 --> 255
+	 * x=? --> ?,
+	 * x++ --> 100,
+	 * x-- --> 101,
+	 * !?? --> x属于[111, 139]且x%10 != 0, 其中十位表示设备，个位表示时间,
+	 * end --> 200,
+	 * 编码失败 --> 255,
 	 *
 	 * @param code
 	 * @return
@@ -54,6 +55,8 @@ public class Compiler {
 				} catch (NumberFormatException e) {
 				}
 			}
+		} else if (code.equals("end")){
+			result = 200;
 		}
 		return result;
 	}
