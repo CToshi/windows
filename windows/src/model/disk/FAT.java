@@ -1,5 +1,7 @@
 package model.disk;
 
+import java.util.Arrays;
+
 public class FAT {
 	/**
 	 * 管理Fat数组
@@ -89,4 +91,12 @@ public class FAT {
 		num =fat[number];
 		return num;
 	}
+
+	@Override
+	public String toString() {
+		return  Arrays.toString(fat) ;
+	}
+	
+
+	
 }

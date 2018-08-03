@@ -3,16 +3,15 @@ package model.disk;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-
 /**
  * @author BFELFISH
  */
 
 public class Disk {
 	/**
-	 *  磁盘最大容量
+	 * 磁盘最大容量
 	 */
-	
+
 	final static int MAX_SPACE_OF_DISK = 256;
 	/**
 	 * 磁盘大小
@@ -20,9 +19,9 @@ public class Disk {
 	final static int CAPACITY_OF_DISK_BLOCKS = 64;
 
 	/**
-	 *  磁盘管理磁盘块数组
+	 * 磁盘管理磁盘块数组
 	 */
-	
+
 	ArrayList<DiskBlock> disks;
 
 	public Disk() {
@@ -40,15 +39,15 @@ public class Disk {
 		}
 
 		/**
-		 *  *****这里会将FAT存进磁盘块号0，1，2，3的
+		 * *****这里会将FAT存进磁盘块号0，1，2，3的
 		 */
-
+		writeToDisk(FAT.getInstance().toString());
 	}
 
 	/**
 	 * 这个方法是读磁盘，返回一个字符串，参数是FAT第一项。 通过查文件目录项得到文件的起始块号。
 	 */
-	
+
 	public String readFromDisk(int number) {
 		String content = new String("");
 		DiskBlock d;
@@ -66,8 +65,8 @@ public class Disk {
 
 	public void writeToDisk(String content) {
 		DiskBlock d;
-		
-		int capacity = 0;
+
+		int capacity = content.getBytes().length;
 
 		int number = FAT.getInstance().changeFAT(capacity);
 		int indexOfStart = 0;
@@ -81,8 +80,13 @@ public class Disk {
 			} catch (FileNotFoundException e) {
 				System.out.println("写入磁盘时出错");
 			}
+			
 			number = FAT.getInstance().next(number);
-
+			indexOfStart = indexOfEnd;
+			indexOfEnd += CAPACITY_OF_DISK_BLOCKS;
+			if (indexOfEnd > content.length()) {
+				indexOfEnd = content.length();
+			}
 		}
 
 	}
@@ -94,4 +98,5 @@ public class Disk {
 	public void deleteFile(int startNum) {
 		FAT.getInstance().recovery(startNum);
 	}
+	
 }
