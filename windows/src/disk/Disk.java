@@ -66,9 +66,7 @@ public class Disk {
 
 	public void writeToDisk(String content) {
 		DiskBlock d;
-		/**
-		 *  这里计算文件大小
-		 */
+		
 		int capacity = 0;
 
 		int number = FAT.getInstance().changeFAT(capacity);
