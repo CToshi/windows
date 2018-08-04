@@ -7,19 +7,20 @@ public class PCB {
 	private int id;
 	private STATE state;
 	private MemoryBlock memoryBlock;
+	private CPURegisters registers;
+	private ProcessCode code;
 
 	public enum STATE {
 		RUNNING, READY, BLOCKED,
 	};
 
-	public PCB(int id, CPURegisters registers, MemoryBlock memoryBlock) {
+	public PCB(int id, MemoryBlock memoryBlock, ProcessCode code) {
 		this.id = id;
 		this.state = STATE.READY;
-		this.registers = registers;
+		this.registers = new CPURegisters();
 		this.memoryBlock = memoryBlock;
+		this.code = code;
 	}
-
-	private CPURegisters registers;
 
 	public int getID() {
 		return id;
@@ -35,5 +36,9 @@ public class PCB {
 
 	public MemoryBlock getMemoryBlock() {
 		return memoryBlock;
+	}
+
+	public ProcessCode getCode() {
+		return code;
 	}
 }

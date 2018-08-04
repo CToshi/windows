@@ -3,8 +3,12 @@ package model.cpu;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import model.cpu.process.ProcessCode;
+
 public class Compiler {
-	public static int[] compile(String instructions) {
+	private static int END_CODE = 200;
+
+	public static ProcessCode compile(String instructions) {
 		String[] inss = instructions.split("[\\s]");
 		LinkedList<Integer> list = new LinkedList<>();
 		boolean compileError = false;
@@ -18,11 +22,11 @@ public class Compiler {
 				list.add(res);
 			}
 		}
-		int[] results = null;
+		ProcessCode code = null;
 		if (!compileError) {
-			results = Arrays.stream(list.toArray(new Integer[0])).mapToInt(Integer::valueOf).toArray();
+			code = new ProcessCode(Arrays.stream(list.toArray(new Integer[0])).mapToInt(Integer::valueOf).toArray());
 		}
-		return results;
+		return code;
 	}
 
 	/**
@@ -31,7 +35,7 @@ public class Compiler {
 	 * x++ --> 100,
 	 * x-- --> 101,
 	 * !?? --> x属于[111, 139]且x%10 != 0, 其中十位表示设备，个位表示时间,
-	 * end --> 200,
+	 * end --> END_CODE,
 	 * 编码失败 --> 255,
 	 *
 	 * @param code
@@ -55,9 +59,13 @@ public class Compiler {
 				} catch (NumberFormatException e) {
 				}
 			}
-		} else if (code.equals("end")){
-			result = 200;
+		} else if (code.equals("end")) {
+			result = END_CODE;
 		}
 		return result;
+	}
+
+	public static int getEndCode() {
+		return END_CODE;
 	}
 }
