@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
-
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
@@ -14,7 +13,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root,400,400);
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

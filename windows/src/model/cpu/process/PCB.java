@@ -12,9 +12,9 @@ public class PCB {
 		RUNNING, READY, BLOCKED,
 	};
 
-	public PCB(int id, STATE state, CPURegisters registers, MemoryBlock memoryBlock) {
+	public PCB(int id, CPURegisters registers, MemoryBlock memoryBlock) {
 		this.id = id;
-		this.state = state;
+		this.state = STATE.READY;
 		this.registers = registers;
 		this.memoryBlock = memoryBlock;
 	}
