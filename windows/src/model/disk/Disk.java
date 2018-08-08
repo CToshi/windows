@@ -46,6 +46,7 @@ public class Disk {
 
 	/**
 	 * 这个方法是读磁盘，返回一个字符串，参数是FAT第一项。 通过查文件目录项得到文件的起始块号。
+	 * @return content     返回文件读取内容
 	 */
 
 	public String readFromDisk(int number) {
@@ -67,7 +68,7 @@ public class Disk {
 		DiskBlock d;
 
 		int capacity = content.getBytes().length;
-
+		//先利用FAT分配磁盘
 		int number = FAT.getInstance().changeFAT(capacity);
 		int indexOfStart = 0;
 		int indexOfEnd = CAPACITY_OF_DISK_BLOCKS;

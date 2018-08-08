@@ -37,7 +37,7 @@ public class DiskBlock {
 
 	/**
 	 *  ¶ÁÈ¡´ÅÅÌ¿éÄÚÈİ
-	 * @return
+	 * @return contentOfDiskBlock
 	 * @throws FileNotFoundException
 	 */
 	public String readFronFile() throws FileNotFoundException {
