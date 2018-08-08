@@ -27,7 +27,15 @@ public class DiskBlock {
 		content = new File("disk/" + number.toString() + ".txt");
 	}
 
+<<<<<<< HEAD
 	// ¶ÁÈ¡´ÅÅÌ¿éÄÚÈÝ
+=======
+	/**
+	 *  ¶ÁÈ¡´ÅÅÌ¿éÄÚÈÝ
+	 * @return contentOfDiskBlock
+	 * @throws FileNotFoundException
+	 */
+>>>>>>> master
 	public String readFronFile() throws FileNotFoundException {
 
 		String contentOfDiskBlock = "";
