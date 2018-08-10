@@ -64,6 +64,7 @@ public class DeviceManager {
 	public void release(Device device) {
 		map_of_freeDeviceQueue.get(device.getDevice_ID()).offer(device);
 		device.setFree(true);
+		device.setRemainTime(0);
 	}
 
 	public static DeviceManager getInstance() {
