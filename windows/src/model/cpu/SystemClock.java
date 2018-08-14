@@ -9,7 +9,7 @@ public class SystemClock {
 		initTime = System.currentTimeMillis();
 	}
 
-	public SystemClock getInstance() {
+	public static SystemClock getInstance() {
 		return clock;
 	}
 
@@ -17,7 +17,10 @@ public class SystemClock {
 		return (int) ((System.currentTimeMillis() - initTime) / unit);
 	}
 
-//	public void setTimeUnit(int unit) {
-//		this.unit = unit;
-//	}
+	public int getTimeUnit() {
+		return unit;
+	}
+	// public void setTimeUnit(int unit) {
+	// this.unit = unit;
+	// }
 }

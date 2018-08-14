@@ -2,6 +2,7 @@ package model.cpu;
 
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
@@ -11,7 +12,7 @@ import model.memory.MemoryBlock;
 public class CPU {
 	private static CPU cpu = new CPU();
 	private static int MAX_NUMBE_OF_PROCESS = 11;
-	private CPURegisters registers;
+	// private CPURegisters registers;
 	private ArrayList<LinkedBlockingQueue<PCB>> processQueues;
 	private LinkedBlockingQueue<ProcessCode> waitingQueue;
 	/**
@@ -27,29 +28,33 @@ public class CPU {
 	/**
 	 * 轮转时间片，单位：条（指令）
 	 */
-	private static int TIME_UNIT = 3;
+	private static int TIMESLICE = 3;
 	/**
 	 * 每条指令执行时间，单位：个（时钟周期）（SystemClock)
 	 */
 	private static int INS_UNIT = 5;
+
 	/**
 	 * 运行中的进程的剩余时间片
 	 */
-	private int leftTime;
-
-	private enum QUEUE_TYPE {
+	private enum Queue_Type {
 		BLANK, READY, BLOCKED
 	}
 
+	private InsExecutor insExecutor;
+	private SystemClock systemClock;
+
 	private CPU() {
-		processQueues = new ArrayList<>(QUEUE_TYPE.values().length);
-		for (int i = 0; i < QUEUE_TYPE.values().length; i++) {
+		processQueues = new ArrayList<>(Queue_Type.values().length);
+		for (int i = 0; i < Queue_Type.values().length; i++) {
 			processQueues.add(new LinkedBlockingQueue<>(MAX_NUMBE_OF_PROCESS));
 		}
 		memory = Memory.getInstance();
+		systemClock = SystemClock.getInstance();
 		pcbManager = new PCBManager();
 		runningProcess = strollingProcess = pcbManager.allocatePCB(new MemoryBlock(0, 0, "闲逛进程"),
 				new ProcessCode(new int[0]));
+		insExecutor = new InsExecutor();
 	}
 
 	public static CPU getInstance() {
@@ -74,6 +79,34 @@ public class CPU {
 	}
 
 	/**
+	 * 撤销当前进程
+	 * 回收PCB
+	 */
+	private void destroy() {
+		pcbManager.recoverPCB(runningProcess);
+	}
+
+	/**
+	 * 阻塞当前进程
+	 */
+	private void block() {
+
+	}
+
+	/**
+	 * 唤醒线程
+	 *
+	 * @param pcb
+	 */
+	public void awake(PCB pcb) {
+		try {
+			getQueue(Queue_Type.READY).put(pcb);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 当Memory有空间且pcbManager可申请PCB时，申请PCB并将其放到就绪队列
 	 * 申请失败时code进入等待队列
 	 *
@@ -89,28 +122,49 @@ public class CPU {
 			}
 			return;
 		}
-		getQueue(QUEUE_TYPE.READY).add(pcbManager.allocatePCB(block, code));
+		getQueue(Queue_Type.READY).add(pcbManager.allocatePCB(block, code));
 	}
 
-	private void deal() {
-		if (runningProcess.getCode().getNext() == Compiler.getEndCode()) {
-
+	public void handle() {
+		if (runningProcess != strollingProcess) {
+			insExecutor.execute();
+			runningProcess.setRegisters(insExecutor.getRegisters());
+			switch (insExecutor.getRegisters().getPSW()) {
+			case TIME_OUT:
+				takeTurn();
+				break;
+			case IO_INTERRUPT:
+				block();
+				break;
+			case END:
+				destroy();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
+	/**
+	 * 轮转，将当前进程置于就绪队列，使就绪队列头的进程运行
+	 */
 	private void takeTurn() {
-		if (getQueue(QUEUE_TYPE.READY).isEmpty()) {
+		// try {
+		// runningProcess =
+		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
+		// TimeUnit.MILLISECONDS);
+		runningProcess = getQueue(Queue_Type.READY).poll();
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		if (runningProcess == null) {
 			runningProcess = strollingProcess;
-			return;
-		}
-		try {
-			runningProcess = getQueue(QUEUE_TYPE.READY).take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} else {
+			insExecutor.init(runningProcess.getCode(), runningProcess.getRegisters(), TIMESLICE);
 		}
 	}
 
-	private LinkedBlockingQueue<PCB> getQueue(QUEUE_TYPE type) {
+	private LinkedBlockingQueue<PCB> getQueue(Queue_Type type) {
 		return processQueues.get(type.ordinal());
 	}
 
