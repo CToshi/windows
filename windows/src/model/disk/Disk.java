@@ -61,7 +61,7 @@ public class Disk {
 		int capacity = content.getBytes().length;
 		if (capacity <= FAT.getInstance().capacityOfDisk() * CAPACITY_OF_DISK_BLOCKS) {
 			int startNum = FAT.getInstance().changeFAT(capacity);
-			Files f = new Files(startNum, capacity, content, fileName);
+			Files f = new Files(fileName,capacity,startNum,0,content);
 			disks.add(f);
 			IsSucceed = true;
 		}

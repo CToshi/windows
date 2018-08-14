@@ -30,49 +30,44 @@ public class FAT {
 		}
 	}
 
-
 	/**
-	 *  修改FAT，capacity为该文件的大小，同时分配了磁盘块
+	 * 修改FAT，capacity为该文件的大小，同时分配了磁盘块
 	 */
 	public int changeFAT(int capacity) {
-	
+
 		int number = 0;
 		int last = 0;
-		int startNum=-1;
-		
+		int startNum = -1;
 
 		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS;
 		if (capacity % Disk.CAPACITY_OF_DISK_BLOCKS != 0) {
 			numberOfDiskBlocks++;
 		}
-		
-		
+
 		/**
-		 * i从Disk.MAX_SPACE_OF_DISK / Disk.CAPACITY_OF_DISK_BLOCKS开始，最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
+		 * i从Disk.MAX_SPACE_OF_DISK /
+		 * Disk.CAPACITY_OF_DISK_BLOCKS开始，最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
 		 */
-		for (int i = 0, j = 0; i < Disk.MAX_SPACE_OF_DISK
-				&& j < numberOfDiskBlocks; i++, j++) {
+		for (int i = 0, j = 0; i < Disk.MAX_SPACE_OF_DISK && j < numberOfDiskBlocks; i++, j++) {
 			if (fat[i] != 0) {
 				continue;
 			} else {
 				last = number;
 				number = i;
 				if (number == 0) {
-					// *****number为起始磁盘块号，记录在文件目录项中，以方便后面以这个为起点将文件写到磁盘块中
-
+					startNum = number;
 				} else {
 					fat[last] = number;
 				}
 			}
-			
+
 		}
 
-		
 		/**
 		 * 最后一项内容为-1。
 		 */
 		fat[number] = -1;
-		
+
 		return startNum;
 
 	}
@@ -92,35 +87,35 @@ public class FAT {
 
 	/**
 	 * 该方法返回空闲磁盘块
-	 * @return capacity    空闲的磁盘块数
+	 * 
+	 * @return capacity 空闲的磁盘块数
 	 */
 	public int capacityOfDisk() {
-		int capacity =0;
-		for(int i = Disk.MAX_SPACE_OF_DISK/Disk.CAPACITY_OF_DISK_BLOCKS;i<Disk.MAX_SPACE_OF_DISK;i++) {
-			if(fat[i]==0) {
+		int capacity = 0;
+		for (int i = Disk.MAX_SPACE_OF_DISK / Disk.CAPACITY_OF_DISK_BLOCKS; i < Disk.MAX_SPACE_OF_DISK; i++) {
+			if (fat[i] == 0) {
 				capacity++;
 			}
 		}
 		return capacity;
 	}
-	
+
 	/**
 	 * 返回fat第number项的内容
+	 * 
 	 * @param number
 	 * @return fat[number]
 	 */
 	public int getNext(int number) {
 		return fat[number];
 	}
+
 	/**
 	 * 重写toString方法，方便存进磁盘。
 	 */
 	@Override
 	public String toString() {
-		return  Arrays.toString(fat) ;
+		return Arrays.toString(fat);
 	}
-	
 
-	
-	
 }
