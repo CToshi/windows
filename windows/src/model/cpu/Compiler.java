@@ -31,7 +31,7 @@ public class Compiler {
 
 	/**
 	 * 编码规则：
-	 * x=? --> ?,
+	 * x=? --> ?, 且?属于[0,99]
 	 * x++ --> 100,
 	 * x-- --> 101,
 	 * !?? --> x属于[111, 139]且x%10 != 0, 其中十位表示设备，个位表示时间,
@@ -46,6 +46,9 @@ public class Compiler {
 		if (code.startsWith("x=")) {
 			try {
 				result = Integer.valueOf(code.substring(2));
+				if(result >= 100){
+					result = 255;
+				}
 			} catch (NumberFormatException e) {
 			}
 		} else if (code.equals("x++")) {
