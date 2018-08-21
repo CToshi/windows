@@ -14,57 +14,67 @@ public class DeviceManager {
 	private static int MAX_NUMBER_OF_C_DEVICE = 3;
 	private HashMap<Character, ArrayList<Device>> map_of_device;
 	private HashMap<Character, Queue<PCB>> map_of_pcbQueue;
+	private HashMap<PCB, Integer> map_of_time;
 	private HashMap<Character, Queue<Device>> map_of_freeDeviceQueue;
 
 	private DeviceManager() {
 		map_of_device = new HashMap<>();
 		map_of_pcbQueue = new HashMap<>();
-
-		map_of_device.put('A', new ArrayList<>(MAX_NUMBER_OF_A_DEVICE));
-		map_of_device.put('B', new ArrayList<>(MAX_NUMBER_OF_B_DEVICE));
-		map_of_device.put('C', new ArrayList<>(MAX_NUMBER_OF_C_DEVICE));
-
-		map_of_pcbQueue.put('A', new LinkedList<>());
-		map_of_pcbQueue.put('B', new LinkedList<>());
-		map_of_pcbQueue.put('C', new LinkedList<>());
-
-		map_of_freeDeviceQueue.put('A', new LinkedList<>());
-		map_of_freeDeviceQueue.put('B', new LinkedList<>());
-		map_of_freeDeviceQueue.put('C', new LinkedList<>());
-
-		for (int i = 0; i < MAX_NUMBER_OF_A_DEVICE; i++) {
-			Device device = new Device('A');
-			map_of_device.get('A').add(device);
-			map_of_freeDeviceQueue.get('A').offer(device);
-		}
-		for (int i = 0; i < MAX_NUMBER_OF_B_DEVICE; i++) {
-			Device device = new Device('B');
-			map_of_device.get('B').add(device);
-			map_of_freeDeviceQueue.get('B').offer(device);
-		}
-		for (int i = 0; i < MAX_NUMBER_OF_C_DEVICE; i++) {
-			Device device = new Device('C');
-			map_of_device.get('C').add(device);
-			map_of_freeDeviceQueue.get('C').offer(device);
+		map_of_time = new HashMap<>();
+		
+		for (char i = 'a'; i <= 'c'; i++) {
+			int iniSize;
+			if (i == 'a') {
+				iniSize=MAX_NUMBER_OF_A_DEVICE;
+			} else if (i == 'b') {
+				iniSize=MAX_NUMBER_OF_B_DEVICE;
+			} else {
+				iniSize=MAX_NUMBER_OF_C_DEVICE;
+			}
+			
+			map_of_device.put(i,new ArrayList<>(iniSize));
+			map_of_pcbQueue.put(i, new LinkedList<>());
+			map_of_freeDeviceQueue.put(i, new LinkedList<>());
+			
+			for (int j = 0; j < iniSize; j++) {
+				Device device = new Device(i);
+				map_of_device.get(i).add(device);
+				map_of_freeDeviceQueue.get(i).offer(device);
+			}
 		}
 	}
 
-	public Device request(PCB pcb, char device_ID, int time) {
-		if(map_of_freeDeviceQueue.get(device_ID).isEmpty()) {
+	public void request(PCB pcb, char device_ID, int time) {
+		if (map_of_freeDeviceQueue.get(device_ID).isEmpty()) {
 			map_of_pcbQueue.get(device_ID).offer(pcb);
-			return null;
-		}else {
+			map_of_time.put(pcb, time);
+		} else {
 			Device device = map_of_freeDeviceQueue.get(device_ID).poll();
 			device.setRemainTime(time);
 			device.setFree(false);
-			return device;
 		}
 	}
-	
+
 	public void release(Device device) {
+		CPU.getInstance().awake(device.getPcb());
 		map_of_freeDeviceQueue.get(device.getDevice_ID()).offer(device);
 		device.setFree(true);
-		device.setRemainTime(0);
+		device.setPcb(null);
+	}
+	
+	public void occupy(char device_ID) {
+		if(!map_of_pcbQueue.get(device_ID).isEmpty()) {
+			PCB pcb = map_of_pcbQueue.get(device_ID).poll();
+			request(pcb, device_ID, map_of_time.get(pcb));
+		}
+	}
+
+	public void work() {
+		for (char i = 'a'; i <= 'c'; i++) {
+			for (Device device : map_of_device.get(i)) {
+				device.run();
+			}
+		}
 	}
 
 	public static DeviceManager getInstance() {
