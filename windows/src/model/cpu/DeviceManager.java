@@ -22,11 +22,11 @@ public class DeviceManager {
 		map_of_pcbQueue = new HashMap<>();
 		map_of_time = new HashMap<>();
 		
-		for (char i = 'a'; i <= 'c'; i++) {
+		for (char i = 'A'; i <= 'C'; i++) {
 			int iniSize;
-			if (i == 'a') {
+			if (i == 'A') {
 				iniSize=MAX_NUMBER_OF_A_DEVICE;
-			} else if (i == 'b') {
+			} else if (i == 'B') {
 				iniSize=MAX_NUMBER_OF_B_DEVICE;
 			} else {
 				iniSize=MAX_NUMBER_OF_C_DEVICE;
@@ -51,6 +51,7 @@ public class DeviceManager {
 		} else {
 			Device device = map_of_freeDeviceQueue.get(device_ID).poll();
 			device.setRemainTime(time);
+			device.setPcb(pcb);
 			device.setFree(false);
 		}
 	}
@@ -70,7 +71,7 @@ public class DeviceManager {
 	}
 
 	public void work() {
-		for (char i = 'a'; i <= 'c'; i++) {
+		for (char i = 'A'; i <= 'C'; i++) {
 			for (Device device : map_of_device.get(i)) {
 				device.run();
 			}
