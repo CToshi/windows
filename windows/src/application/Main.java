@@ -1,6 +1,8 @@
 package application;
 
 import javafx.application.Application;
+import javafx.stage.Stage;
+import model.disk.FAT;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -11,7 +13,9 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+
 		Main.primaryStage = primaryStage;
+		FAT.getInstance().toString();
 		try {
 			primaryStage.initStyle(StageStyle.UNDECORATED);
 			primaryStage.setMaximized(true);
