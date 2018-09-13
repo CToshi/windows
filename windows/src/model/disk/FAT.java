@@ -19,7 +19,10 @@ public class FAT {
 	// FAT初始化
 	private void init() {
 		fat = new int[Disk.MAX_SPACE_OF_DISK];
-		for (int i = 0; i < Disk.MAX_SPACE_OF_DISK; i++) {
+		for(int i=0;i<3;i++) {
+			fat[i]=-1;
+		}
+		for (int i = 3; i < Disk.MAX_SPACE_OF_DISK; i++) {
 			if (i < Disk.MAX_SPACE_OF_DISK / Disk.CAPACITY_OF_DISK_BLOCKS) {
 
 				fat[i] = 0;
@@ -32,6 +35,7 @@ public class FAT {
 
 	/**
 	 * 修改FAT，capacity为该文件的大小，同时分配了磁盘块
+	 * @return int:返回起始块号
 	 */
 	public int changeFAT(int capacity) {
 
@@ -39,7 +43,7 @@ public class FAT {
 		int last = 0;
 		int startNum = -1;
 
-		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS;
+		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS+1;
 		if (capacity % Disk.CAPACITY_OF_DISK_BLOCKS != 0) {
 			numberOfDiskBlocks++;
 		}
@@ -72,7 +76,10 @@ public class FAT {
 
 	}
 
-	// 回收
+	/**
+	 * 该方法用于回收磁盘块
+	 * @param startNumber
+	 */
 	public void recovery(int startNumber) {
 		int number = startNumber;
 
@@ -88,7 +95,7 @@ public class FAT {
 	/**
 	 * 该方法返回空闲磁盘块
 	 * 
-	 * @return capacity 空闲的磁盘块数
+	 * @return int: 空闲的磁盘块数
 	 */
 	public int capacityOfDisk() {
 		int capacity = 0;
@@ -104,18 +111,18 @@ public class FAT {
 	 * 返回fat第number项的内容
 	 * 
 	 * @param number
-	 * @return fat[number]
+	 * @return int:fat[number]
 	 */
 	public int getNext(int number) {
 		return fat[number];
 	}
 
-	/**
-	 * 重写toString方法，方便存进磁盘。
-	 */
-	@Override
-	public String toString() {
-		return Arrays.toString(fat);
-	}
+//	/**
+//	 * 重写toString方法，方便存进磁盘。
+//	 */
+//	@Override
+//	public String toString() {
+//		return Arrays.toString(fat);
+//	}
 
 }

@@ -1,34 +1,15 @@
 package model.disk;
-
-public class Files {
-	/**
-	 * @author BFELFISH
-	 * 该类为文件类，包括了文件目录项和文件内容，是磁盘管理的主要元素
-	 */
-	
-	private FileItem fileItem;
+/**
+ * @author BFELFISH
+ * 该类为文件类，包括了文件内容
+ */
+public class Files extends FileItem {
+	//文件内容
 	private String content;
 	
-	public Files() {
-		
-	}
-	
-	public Files(int startNum) {
-		fileItem=new FileItem("新建文件", 0, startNum, 0);
-		content="";
-	}
-
-	public Files(String fileName, int capacity, int startNum,int attributes,String content) {
-		this.fileItem=new FileItem(fileName, capacity, startNum, attributes);
+	public Files(Directory father,String fileName,String fileExtentionName, int capacity, int startNum, int attributes,String content) {
+		super(father,fileName, fileExtentionName,capacity, startNum, attributes);
 		this.content=content;
-	}
-
-	public FileItem getFileItem() {
-		return fileItem;
-	}
-
-	public void setFileItem(FileItem fileItem) {
-		this.fileItem = fileItem;
 	}
 
 	public String getContent() {
@@ -39,10 +20,47 @@ public class Files {
 		this.content = content;
 	}
 	
+	/**
+	 * 该方法是修改该内容
+	 * @param 传入修改后的内容
+	 * @return int:返回一个数字，0：修改成功，1：只读属性文件不可修改，2：磁盘空间不足
+	 */
+	public int  changeFilesContent(String content) {
+		int errorCode=0;
+		while(true) {
+			if(this.attributes==0) {
+			errorCode=1;
+			break;
+			}
+			int numberOfBlocks=content.getBytes().length/Disk.CAPACITY_OF_DISK_BLOCKS+1;
+			if(numberOfBlocks>FAT.getInstance().capacityOfDisk()) {
+				errorCode=2;
+				break;
+			}
+			this.content=content;
+			break;
+		}
+		return errorCode;
+	}
+
 	
-	
-	
-	
+	@Override
+	/**
+	 * 删除文件
+	 */
+	public boolean deleteFiles() {
+		boolean succeed=true;
+		if(this.canBeDeleted) {
+			fatherFile.removeFiles(this);
+			FAT.getInstance().recovery(this.startNum);
+
+		}else {
+			succeed=false;
+		}
+		
+		return succeed;
+	}
 	
 	
 }
+
