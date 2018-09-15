@@ -33,44 +33,41 @@ public class Directory extends FileItem {
 	/**
 	 * 该方法为在该目录下创建文件
 	 * 
-	 * @return boolean:返回创建是否成功
+	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
-	public boolean creatFile() {
-		boolean succeed = true;
+	public Files createFile() {
+		Files f=null;
+		
 		// 检查文件夹下文件数目是否已超过最大值
 		if (!isFull()) {
 			// 检查磁盘是否已满
-			if (FAT.getInstance().capacityOfDisk() <= 0) {
-				succeed = false;
-			} else {
+			if (FAT.getInstance().capacityOfDisk()> 0) {
 				int startNum = FAT.getInstance().changeFAT(8);
 				// 默认生成可写且空白的文件
-				Files f = new Files(this, ("新建文件" + files.size()), "e", 8, startNum, 1, "");
+				f = new Files(this, ("新" + files.size()), "e", 8, startNum, 1, "");
 				this.files.add(f);
-			}
+			} 
 		}
-		return succeed;
+		return f;
 	}
 
 	/**
 	 * 该方法为在该目录下创建文件夹
 	 * 
-	 * @return boolean:返回创建是否成功
+	 * @return Directory:返回文件夹，如果为null则创建失败
 	 */
-	public boolean creatDirectory() {
-		boolean succeed = true;
+	public Directory createDirectory() {
+		Directory f=null;
 		if (!isFull()) {
 			// 检查磁盘是否已满
-			if (FAT.getInstance().capacityOfDisk() <= 0) {
-				succeed = false;
-			} else {
+			if (FAT.getInstance().capacityOfDisk()>0) {
 				int startNum = FAT.getInstance().changeFAT(8);
 				// 默认生成可写且空白的文件
-				Directory f = new Directory(this, ("新建文件夹" + files.size()), 8, startNum, 1);
+				 f = new Directory(this, ("新" + files.size()), 8, startNum, 1);
 				this.files.add(f);
-			}
+			} 
 		}
-		return succeed;
+		return f;
 	}
 
 	
