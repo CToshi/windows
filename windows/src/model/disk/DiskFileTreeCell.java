@@ -2,19 +2,19 @@ package model.disk;
 
 import javafx.scene.control.TreeCell;
 
-public class DiskFileTreeCell extends TreeCell<DiskFile> {
+public class DiskFileTreeCell extends TreeCell<FileItem> {
 
 	public DiskFileTreeCell() {
 		
 	}
 
 	@Override
-	public void updateItem(DiskFile diskFile, boolean empty) {
-		super.updateItem(diskFile, empty);
+	public void updateItem(FileItem fileItem, boolean empty) {
+		super.updateItem(fileItem, empty);
 		if (empty) {
 			setText(null);
 		} else {
-			setText(diskFile.toString());
+			setText(fileItem.getFileName());
 		}
 	}
 
