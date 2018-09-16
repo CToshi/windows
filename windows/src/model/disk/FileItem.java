@@ -41,7 +41,7 @@ public abstract class FileItem {
 	/**
 	 * 该方法为修改文件的文件名
 	 * @param原文件名与修改后的文件名
-	 * @return int:0:修改成功，1:文件名字数超出限制,2：文件名已存在
+	 * @return int:0:修改成功，1:文件名字数超出限制,2：文件名已存在,3:文件名含非法字符
 	 */
 	public int changeFilesName(String fileName,String newFileName) {
 		int errorCode=0;
@@ -50,6 +50,9 @@ public abstract class FileItem {
 		}
 		if(	fatherFile.isExistedName(newFileName)) {
 			return 2;
+		}
+		if(newFileName.contains("$")||newFileName.contains(".")||newFileName.contains("/")) {
+			return 3;
 		}
 		this.fileName=newFileName;
 		return errorCode;
