@@ -113,7 +113,7 @@ public class Directory extends FileItem {
 			}
 			files.clear();
 			fatherFile.removeFiles(this);
-			FAT.getInstance().changeFAT(this.startNum);
+			FAT.getInstance().recovery(this.startNum);
 		}else {
 			succeed=false;
 		}
