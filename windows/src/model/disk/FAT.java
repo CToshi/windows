@@ -1,7 +1,5 @@
 package model.disk;
 
-import java.util.Arrays;
-
 public class FAT {
 	// 管理Fat数组
 	private int[] fat;
@@ -48,7 +46,7 @@ public class FAT {
 		int startNum = -1;
 
 		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS;
-		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
+//		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
 		if (capacity % Disk.CAPACITY_OF_DISK_BLOCKS != 0) {
 			numberOfDiskBlocks++;
 		}

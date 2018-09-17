@@ -1,23 +1,22 @@
 package model.disk;
 
-import java.util.ArrayList;
-
-import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class DiskFileTreeItem extends TreeItem<FileItem>{
-	private boolean isInit = false;
+	private final Node directoryIcon = new ImageView(
+			new Image(getClass().getResourceAsStream("../../images/directory.png")));
+	private final Node filesIcon = new ImageView(new Image(getClass().getResourceAsStream("../../images/files.png")));
 	
 	public DiskFileTreeItem(FileItem fileItem) {
 		super(fileItem);
-	}
-	
-	@Override
-	public ObservableList<TreeItem<FileItem>> getChildren() {
-		if(!isInit) {
-			isInit = true;
+		if (fileItem instanceof Directory) {
+			setGraphic(directoryIcon);
+		} else {
+			setGraphic(filesIcon);
 		}
-		return super.getChildren();
 	}
 
 }
