@@ -1,5 +1,6 @@
 package model.disk;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.input.KeyCode;
@@ -12,7 +13,7 @@ public class DiskFileTreeCell extends TreeCell<FileItem> {
 	public DiskFileTreeCell() {
 
 	}
-	
+
 	/**
 	 * 设置TreeItem的样式
 	 */
@@ -59,10 +60,28 @@ public class DiskFileTreeCell extends TreeCell<FileItem> {
 		textField = new TextField(getItem().getFileName());
 		textField.setOnKeyReleased((KeyEvent t) -> {
 			if (t.getCode() == KeyCode.ENTER) {
-				if (!textField.getText().equals("") && getItem().changeFilesName(getItem().getFileName(), textField.getText()) == 0) {
-					commitEdit(getItem());
-				} else {
+				int errorCode = getItem().changeFilesName(getItem().getFileName(), textField.getText());
+				if (errorCode != 0) {
+					Alert alert = null;
+					switch (errorCode) {
+					case 1:
+						alert = new Alert(Alert.AlertType.ERROR, "文件名字数超出限制");
+						break;
+					case 2:
+						alert = new Alert(Alert.AlertType.ERROR, "文件名已存在");
+						break;
+					case 3:
+						alert = new Alert(Alert.AlertType.ERROR, "文件名含非法字符");
+						break;
+					case 4:
+						alert = new Alert(Alert.AlertType.ERROR, "文件名不得为空");
+						break;
+					}
+					alert.setHeaderText(null);
+					alert.show();
 					cancelEdit();
+				} else {
+					commitEdit(getItem());
 				}
 			} else if (t.getCode() == KeyCode.ESCAPE) {
 				cancelEdit();
