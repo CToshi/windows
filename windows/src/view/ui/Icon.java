@@ -13,22 +13,22 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import view.ui.Window.Type;
+import view.ui.IconManager.Type;
 
 public class Icon extends Label {
 
 	private Image image;
 	private ImageView imageView;
 	private Border stroke;
-	private Stage window;
+	private Window window;
+	private String fileName;
 	private Type type;
-	private static final Color ON = new Color(1, 1, 1, 0.2);
+	private static final Color ON_COLOR = new Color(1, 1, 1, 0.2);
 	private static final Color CLICK = new Color(0.4, 0.8, 1, 0.2);
-	private static final Color UNSELECTED = new Color(0.4, 0.8, 1, 0);
 	private boolean isClick = false;
 
-	public Icon(Image image, double width, double height, double x, double y, Type type) {
+	public Icon(Image image, double width, double height, double x, double y, Type type,String fileName) {
+		this.fileName = fileName;
 		this.type = type;
 		this.image = image;
 		imageView = new ImageView(image);
@@ -44,7 +44,9 @@ public class Icon extends Label {
 		BorderStroke borderStroke = new BorderStroke(Color.WHITE, BorderStrokeStyle.DASHED, new CornerRadii(0),
 				new BorderWidths(1));
 		stroke = new Border(borderStroke);
-		window = new Window(Main.getPrimaryStage(), this.image, type);
+		if(type == Type.HELP){
+			window = IconManager.getHelp();
+		}
 		this.setOnMouseClicked(e -> {
 			if(!isClick){
 				IconManager.canselSelected();
@@ -54,12 +56,20 @@ public class Icon extends Label {
 				isClick = true;
 				IconManager.setBeClick(true);
 			}else {
-				this.setBackground(new Background(new BackgroundFill(ON, null, null)));
+				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 				isClick = false;
 				IconManager.setBeClick(false);
 			}
-			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2){
-				window.show();
+			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount()%2 == 0){
+				if(type != Type.HELP){
+					window = new Window(Main.getPrimaryStage(), this.image, type,fileName);
+					window.show();
+				}else{
+					if(window.isShowing())
+						window.toFront();
+					else
+						window.show();
+				}
 				isClick = false;
 				canselBorder();
 				canselSelected();
@@ -68,7 +78,7 @@ public class Icon extends Label {
 		});
 		this.setOnMouseEntered(e -> {
 			if(!isClick)
-				this.setBackground(new Background(new BackgroundFill(ON, null, null)));
+				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 			else
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 		});
@@ -76,7 +86,7 @@ public class Icon extends Label {
 			if (!isClick)
 				this.setBackground(null);
 			else
-				this.setBackground(new Background(new BackgroundFill(ON, null, null)));
+				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 			IconManager.setBeClick(false);
 		});
 	}
@@ -90,4 +100,11 @@ public class Icon extends Label {
 		this.setBorder(null);
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 }

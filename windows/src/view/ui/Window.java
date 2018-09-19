@@ -4,49 +4,37 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import view.ui.IconManager.Type;
 
 public class Window extends Stage {
 
-	private Image image;
 	private Label label;
 	private Pane root;
 	private Scene scene;
 	private Type type;
 	private Rectangle2D primaryScreenBounds;
+	private String fileName;
 
-	public static enum Type {
-		FOLDER, HELP, TXT
-	}
-
-	public Window(Stage stage, Image image,Type type) {
+	public Window(Stage stage, Image image,Type type,String fileName) {
 		this.root = new Pane();
 		this.scene = new Scene(root);
 		this.setScene(scene);
 		this.initOwner(stage);
-		this.image = image;
-		this.label = new Label();
 		this.type = type;
+		this.fileName = fileName;
 		init(type);
 	}
 
 	public void init(Type type) {
-		ImageView imageView = new ImageView(image);
-		imageView.setFitWidth(TaskBar.getHboxMaxSize());
-		imageView.setFitHeight(TaskBar.getHboxMaxSize());
-		label.setGraphic(imageView);
-		label.setOnMouseClicked(e -> {
-			this.toFront();
-		});
 		this.setOnShowing(e -> {
-			TaskBar.addWindow(label, this);
+			TaskBar.addWindow(fileName, this);
 		});
 		this.setOnCloseRequest(e -> {
-			TaskBar.removeWindow(label, this);
+			TaskBar.removeWindow(fileName, this);
 		});
 		this.setEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			TaskBar.Selected();
@@ -66,27 +54,41 @@ public class Window extends Stage {
 		case TXT:
 			createTxtWindow();
 			break;
+		case CMD:
+			createCMDWindow();
+			break;
+		default:
+			System.out.println("Window的switch 出问题了！！！");
+			break;
 		}
+	}
+
+	private void createCMDWindow(){
+		
+	}
+
+	private void createTxtWindow() {
+		this.setTitle(fileName +"Txt");
+	}
+
+	private void createFolderWindow() {
+		this.setTitle(fileName + "Folder");
+	}
+
+	private void createHelpWindow() {
+		this.setTitle(fileName + "Help");
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public Label getLabel() {
 		return label;
 	}
 
-	private void createTxtWindow() {
-		this.setTitle("Txt");
-	}
-
-	private void createFolderWindow() {
-		this.setTitle("Folder");
-	}
-
-	private void createHelpWindow() {
-		this.setTitle("Help");
-	}
-
-	public Type getType() {
-		return type;
+	public void setLabel(Label label) {
+		this.label = label;
 	}
 
 }

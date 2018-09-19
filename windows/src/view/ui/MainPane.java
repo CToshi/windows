@@ -7,7 +7,6 @@ import java.util.TimerTask;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
@@ -40,8 +39,8 @@ public class MainPane extends Pane {
 			this.getChildren().add(icons[i]);
 		}
 		this.setOnMouseClicked(e -> {
-			TaskBar.Selected();
 			TaskBar.canselMenu();
+			TaskBar.Selected();
 			SecondaryMenu.disappear();
 			if (!IconManager.isBeClick())
 				IconManager.canselSelected();
@@ -88,9 +87,17 @@ public class MainPane extends Pane {
 		}
 	}
 
+	public static void display(Node node){
+		MainPane.getInstance().getChildren().add(node);
+	}
+
 	public static void disappear(Node[] nodes) {
 		for (Node node : nodes) {
 			MainPane.getInstance().getChildren().remove(node);
 		}
+	}
+
+	public static void disappear(Node node){
+		MainPane.getInstance().getChildren().remove(node);
 	}
 }
