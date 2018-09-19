@@ -32,6 +32,7 @@ public class Files extends FileItem {
 			errorCode=1;
 			break;
 			}
+			//计算这个文件占用多少个磁盘块
 			int numberOfBlocks=content.getBytes().length/Disk.CAPACITY_OF_DISK_BLOCKS+1;
 			if(numberOfBlocks>FAT.getInstance().capacityOfDisk()) {
 				errorCode=2;
@@ -53,7 +54,6 @@ public class Files extends FileItem {
 		if(this.canBeDeleted) {
 			fatherFile.removeFiles(this);
 			FAT.getInstance().recovery(this.startNum);
-
 		}else {
 			succeed=false;
 		}

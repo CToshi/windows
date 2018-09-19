@@ -1,7 +1,5 @@
 package model.disk;
 
-import java.util.Arrays;
-
 public class FAT {
 	// 管理Fat数组
 	private int[] fat;
@@ -16,8 +14,11 @@ public class FAT {
 		init();
 	}
 
-	// FAT初始化
-	private void init() {
+	/**
+	 * FAT初始化
+	 * @return 初始化是否成功
+	 */
+	private boolean init() {
 		fat = new int[Disk.MAX_SPACE_OF_DISK];
 		for(int i=0;i<3;i++) {
 			fat[i]=-1;
@@ -31,6 +32,7 @@ public class FAT {
 				fat[i] = 0;
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -43,7 +45,8 @@ public class FAT {
 		int last = 0;
 		int startNum = -1;
 
-		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS+1;
+		int numberOfDiskBlocks = capacity / Disk.CAPACITY_OF_DISK_BLOCKS;
+//		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
 		if (capacity % Disk.CAPACITY_OF_DISK_BLOCKS != 0) {
 			numberOfDiskBlocks++;
 		}
@@ -52,17 +55,18 @@ public class FAT {
 		 * i从Disk.MAX_SPACE_OF_DISK /
 		 * Disk.CAPACITY_OF_DISK_BLOCKS开始，最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
 		 */
-		for (int i = 0, j = 0; i < Disk.MAX_SPACE_OF_DISK && j < numberOfDiskBlocks; i++, j++) {
+		for (int i = 0, j = 0; i < Disk.MAX_SPACE_OF_DISK && j < numberOfDiskBlocks; i++) {
 			if (fat[i] != 0) {
 				continue;
 			} else {
 				last = number;
 				number = i;
-				if (number == 0) {
+				if (last == 0) {
 					startNum = number;
 				} else {
 					fat[last] = number;
 				}
+				j++;
 			}
 
 		}
@@ -71,7 +75,6 @@ public class FAT {
 		 * 最后一项内容为-1。
 		 */
 		fat[number] = -1;
-
 		return startNum;
 
 	}
@@ -79,17 +82,23 @@ public class FAT {
 	/**
 	 * 该方法用于回收磁盘块
 	 * @param startNumber
+	 * @return boolean:返回false则说明起始块号错误，越界
 	 */
-	public void recovery(int startNumber) {
-		int number = startNumber;
+	public boolean recovery(int startNumber) {
+		boolean succeed=true;
+		if(startNumber>Disk.MAX_SPACE_OF_DISK) {
+			succeed=false;
+		}else {
+			int number = startNumber;
+			while (fat[number] != -1) {
+				int temp = number;
+				number = fat[number];
+				fat[temp] = 0;
+			}
 
-		while (fat[number] != -1) {
-			int temp = number;
-			number = fat[number];
-			fat[temp] = 0;
+			fat[number] = 0;
 		}
-
-		fat[number] = 0;
+		return succeed;
 	}
 
 	/**
