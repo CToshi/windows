@@ -19,8 +19,7 @@ public class DeviceManager {
 	private HashMap<Character, Queue<Device>> map_of_freeDeviceQueue;
 
 	private DeviceManager() {
-		usingProcess = new ArrayList<>(
-				MAX_NUMBER_OF_A_DEVICE + MAX_NUMBER_OF_B_DEVICE + MAX_NUMBER_OF_C_DEVICE);
+		usingProcess = new ArrayList<>(MAX_NUMBER_OF_A_DEVICE + MAX_NUMBER_OF_B_DEVICE + MAX_NUMBER_OF_C_DEVICE);
 		map_of_device = new HashMap<>();
 		map_of_pcbQueue = new HashMap<>();
 		map_of_time = new HashMap<>();
@@ -29,7 +28,7 @@ public class DeviceManager {
 			usingProcess.add(0);
 		}
 
-
+		int index = 0;
 		for (char i = 'A'; i <= 'C'; i++) {
 			int iniSize;
 			if (i == 'A') {
@@ -40,13 +39,12 @@ public class DeviceManager {
 				iniSize = MAX_NUMBER_OF_C_DEVICE;
 			}
 
-
 			map_of_device.put(i, new ArrayList<>(iniSize));
 			map_of_pcbQueue.put(i, new LinkedList<>());
 			map_of_freeDeviceQueue.put(i, new LinkedList<>());
 
 			for (int j = 0; j < iniSize; j++) {
-				Device device = new Device(i);
+				Device device = new Device(i, index++);
 				map_of_device.get(i).add(device);
 				map_of_freeDeviceQueue.get(i).offer(device);
 			}
@@ -62,7 +60,7 @@ public class DeviceManager {
 			device.setRemainTime(time);
 			device.setPcb(pcb);
 			device.setFree(false);
-			updateUsingProcess();
+			usingProcess.set(device.getIndex_of_usingProcess(), pcb.getID());
 		}
 	}
 
@@ -71,7 +69,7 @@ public class DeviceManager {
 		map_of_freeDeviceQueue.get(device.getDevice_ID()).offer(device);
 		device.setFree(true);
 		device.setPcb(null);
-		updateUsingProcess();
+		usingProcess.set(device.getIndex_of_usingProcess(), 0);
 	}
 
 	public void occupy(char device_ID) {
@@ -88,24 +86,11 @@ public class DeviceManager {
 			}
 		}
 	}
-	
-	public void updateUsingProcess() {
-		int pos = 0;
-		for (char i = 'A'; i <= 'C'; i++) {
-			for (Device device : map_of_device.get(i)) {
-				if(device.isFree()) {
-					usingProcess.set(pos++, 0);
-				} else {
-					usingProcess.set(pos++, device.getPcb().getID());
-				}
-			}
-		}
-	}
-	
+
 	public ArrayList<Integer> getUsingProcess() {
 		return usingProcess;
 	}
-	
+
 	public HashMap<Character, Queue<Device>> getMap_of_freeDeviceQueue() {
 		return map_of_freeDeviceQueue;
 	}

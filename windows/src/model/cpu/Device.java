@@ -6,11 +6,13 @@ public class Device {
 	private char device_ID;
 	private int remainTime;
 	private boolean free;
+	private int index_of_usingProcess;
 	private PCB pcb;
 
-	public Device(char device_ID) {
+	public Device(char device_ID,int index) {
 		this.device_ID = device_ID;
 		this.free = true;
+		this.index_of_usingProcess = index;
 		remainTime = 0;
 	}
 
@@ -24,6 +26,10 @@ public class Device {
 		}
 	}
 	
+	public int getIndex_of_usingProcess() {
+		return index_of_usingProcess;
+	}
+
 	public PCB getPcb() {
 		return pcb;
 	}
