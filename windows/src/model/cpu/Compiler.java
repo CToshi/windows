@@ -71,4 +71,20 @@ public class Compiler {
 	public static int getEndCode() {
 		return END_CODE;
 	}
+
+	public static String decode(int code){
+		if(0<=code && code <= 99){
+			return "x="+String.valueOf(code);
+		}else if (code == 100){
+			return "x++";
+		}else if (code== 101){
+			return "x--";
+		}else if (111<= code && code <= 139){
+			code -= 100;
+			return (char)('A' + code/10) + String.valueOf(code%10);
+		}else if (code == END_CODE){
+			return "end";
+		}
+		return "";
+	}
 }

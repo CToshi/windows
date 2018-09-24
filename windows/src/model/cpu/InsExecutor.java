@@ -12,7 +12,7 @@ import model.cpu.process.ProcessCode;
 public class InsExecutor {
 	private ProcessCode code;
 	private CPURegisters registers;
-	private int leftTimes;
+	private int timeLeft;
 
 	public InsExecutor() {
 		code = new ProcessCode();
@@ -22,7 +22,7 @@ public class InsExecutor {
 	public void init(ProcessCode code, CPURegisters registers, int times) {
 		this.code = code;
 		this.registers = registers;
-		leftTimes = times;
+		timeLeft = times;
 	}
 
 	public int getIns() {
@@ -35,9 +35,9 @@ public class InsExecutor {
 
 	public void execute() {
 		registers = registers.setPSW(PSW_Type.NOTHING);
-		leftTimes--;
+		timeLeft = Math.max(0, timeLeft - 1);
 		int ins = code.getIns();
-		if (leftTimes <= 0) {
+		if (timeLeft <= 0) {
 			registers = registers.setPSW(PSW_Type.TIME_OUT);
 		} else {
 			code.toNext();
@@ -53,5 +53,9 @@ public class InsExecutor {
 				registers = registers.setPSW(PSW_Type.END);
 			}
 		}
+	}
+
+	public int getTimeLeft() {
+		return timeLeft;
 	}
 }

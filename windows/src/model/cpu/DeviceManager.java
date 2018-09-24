@@ -21,7 +21,8 @@ public class DeviceManager {
 		map_of_device = new HashMap<>();
 		map_of_pcbQueue = new HashMap<>();
 		map_of_time = new HashMap<>();
-		
+		map_of_freeDeviceQueue = new HashMap<>();
+
 		for (char i = 'A'; i <= 'C'; i++) {
 			int iniSize;
 			if (i == 'A') {
@@ -31,11 +32,11 @@ public class DeviceManager {
 			} else {
 				iniSize=MAX_NUMBER_OF_C_DEVICE;
 			}
-			
+
 			map_of_device.put(i,new ArrayList<>(iniSize));
 			map_of_pcbQueue.put(i, new LinkedList<>());
 			map_of_freeDeviceQueue.put(i, new LinkedList<>());
-			
+
 			for (int j = 0; j < iniSize; j++) {
 				Device device = new Device(i);
 				map_of_device.get(i).add(device);
@@ -62,7 +63,7 @@ public class DeviceManager {
 		device.setFree(true);
 		device.setPcb(null);
 	}
-	
+
 	public void occupy(char device_ID) {
 		if(!map_of_pcbQueue.get(device_ID).isEmpty()) {
 			PCB pcb = map_of_pcbQueue.get(device_ID).poll();
