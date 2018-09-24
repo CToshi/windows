@@ -1,7 +1,9 @@
 package model.cpu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 import application.Main;
 import model.cpu.process.PCB;
@@ -32,7 +34,7 @@ public class CPU {
 	/**
 	 * 每条指令执行时间，单位：个（时钟周期）（SystemClock)
 	 */
-	private static int INS_UNIT = 5;
+	private static int INS_UNIT = 3;
 
 	/**
 	 * 运行中的进程的剩余时间片
@@ -136,13 +138,13 @@ public class CPU {
 	}
 
 	public void handle() {
-		Main.test("handle");
+		Main.test("handle", getCurrentInstruction());
 		insExecutor.execute();
 		// runningProcess.setRegisters(insExecutor.getRegisters());
 		switch (insExecutor.getRegisters().getPSW()) {
 		case TIME_OUT:
 			Main.test("taketune");
-			takeTurn();
+			takeTurn(false);
 			break;
 		case IO_INTERRUPT:
 			Main.test("block");
@@ -151,7 +153,7 @@ public class CPU {
 		case END:
 			Main.test("destroy");
 			destroy();
-			takeTurn();
+			takeTurn(true);
 			break;
 		default:
 			Main.test("nothing");
@@ -159,14 +161,24 @@ public class CPU {
 		}
 	}
 
+
 	/**
-	 * 轮转，将当前进程置于就绪队列，使就绪队列头的进程运行
+	 * 轮转，使就绪队列头的进程运行
+	 * @param isEnd 为false时, 将当前进程置于就绪队列
 	 */
-	private void takeTurn() {
+	private void takeTurn(boolean isEnd) {
 		// try {
 		// runningProcess =
 		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
 		// TimeUnit.MILLISECONDS);
+		if(!isEnd){
+			runningProcess.setRegisters(insExecutor.getRegisters());
+			try {
+				getQueue(Queue_Type.READY).put(runningProcess);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		runningProcess = getQueue(Queue_Type.READY).poll();
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
@@ -204,5 +216,8 @@ public class CPU {
 
 	public int getRunningPid() {
 		return runningProcess.getID();
+	}
+	public Collection<Integer> getReadyQueue(){
+		return getQueue(Queue_Type.READY).stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
 	}
 }

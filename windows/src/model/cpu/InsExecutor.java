@@ -36,22 +36,23 @@ public class InsExecutor {
 	public void execute() {
 		registers = registers.setPSW(PSW_Type.NOTHING);
 		timeLeft = Math.max(0, timeLeft - 1);
+		// timeLeft--;
 		int ins = code.getIns();
+
+		code.toNext();
+		if (ins < 100) {
+			registers = registers.setAX(ins);
+		} else if (ins == 100) {
+			registers = registers.increase();
+		} else if (ins == 101) {
+			registers = registers.decreace();
+		} else if (111 <= ins && ins <= 139) {
+			registers = registers.setPSW(PSW_Type.IO_INTERRUPT);
+		} else {
+			registers = registers.setPSW(PSW_Type.END);
+		}
 		if (timeLeft <= 0) {
 			registers = registers.setPSW(PSW_Type.TIME_OUT);
-		} else {
-			code.toNext();
-			if (ins < 100) {
-				registers = registers.setAX(ins);
-			} else if (ins == 100) {
-				registers = registers.increase();
-			} else if (ins == 101) {
-				registers = registers.decreace();
-			} else if (111 <= ins && ins <= 139) {
-				registers = registers.setPSW(PSW_Type.IO_INTERRUPT);
-			} else {
-				registers = registers.setPSW(PSW_Type.END);
-			}
 		}
 	}
 

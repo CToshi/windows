@@ -31,6 +31,7 @@ public class ProcessPane extends StackPane{
 			int index = indices[i];
 			try {
 				COLORS[i] = (Paint) fields[index].get(null);
+				COLORS[i] = Color.WHITESMOKE;
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
@@ -43,9 +44,10 @@ public class ProcessPane extends StackPane{
 //		Test.setBackground(this, Color.RED);
 //		Circle circle = new Circle();
 		ellipse = new Ellipse();
+		ellipse.setStroke(Color.BLACK);
 		ellipse.setFill(COLORS[pid]);
-		ellipse.radiusXProperty().bind(this.widthProperty().multiply(0.5));
-		ellipse.radiusYProperty().bind(this.widthProperty().multiply(0.5));
+		ellipse.radiusXProperty().bind(this.widthProperty().multiply(0.45));
+		ellipse.radiusYProperty().bind(this.widthProperty().multiply(0.45));
 //		ellipse.radiusYProperty().bind(this.heightProperty().multiply(0.5));
 
 		BorderPane circlePane = new BorderPane(ellipse);

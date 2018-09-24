@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
@@ -33,6 +34,7 @@ public class Test extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		URL location = getClass().getResource("/view/cpu/FXML_CPUWindow.fxml");
+//		URL location = getClass().getResource("/view/cpu/FXML_CPU.fxml");
 		FXMLLoader loader = new FXMLLoader(location);
 		Pane root = loader.load();
 		CPUWindowController controller = loader.getController();
@@ -42,9 +44,11 @@ public class Test extends Application {
 			});
 		});
 		runlater(()->{
-			CPU.getInstance().create("x++ x--");
-			CPU.getInstance().create("x++ x--");
-			
+			for(int i = 0;i<2;i++){
+				CPU.getInstance().create("x++ x-- x=99 x++");
+			}
+//			CPU.getInstance().create("x++ x--");
+
 		});
 		Scene scene = new Scene(root, 1280, 720);
 		scene.setOnMouseClicked(e -> {
@@ -56,6 +60,7 @@ public class Test extends Application {
 			SystemClock.getInstance().stop();
 			timer.cancel();
 		});
+
 	}
 
 	public static void setBackground(Region pane, Paint color) {
