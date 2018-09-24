@@ -34,6 +34,17 @@ public class Disk {
 		return root;
 	}
 
+	/**
+	 * 磁盘格式化
+	 * @return boolean:返回删除是否成功
+	 */
+	public boolean format() {
+		boolean succeed=true;
+		root.setCanBeDeleted(true);
+		root.deleteFiles();
+		init();
+		return succeed;
+	}
 	
 }
 

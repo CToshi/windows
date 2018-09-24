@@ -121,4 +121,17 @@ public class Directory extends FileItem {
 		return succeed;
 	}
 
+	@Override
+	public boolean changeAttributes(int attributes) {
+		boolean succeed =true;
+		for(FileItem f:files) {
+			if(!FileItem.isDirectory(f)) {
+				Files f2 = (Files)f;
+				f2.changeAttributes(attributes);
+			}
+		}
+		return succeed;
+	}
+	
+	
 }

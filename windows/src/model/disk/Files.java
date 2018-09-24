@@ -60,6 +60,14 @@ public class Files extends FileItem {
 		
 		return succeed;
 	}
+
+	@Override
+	public boolean changeAttributes(int attributes) {
+		boolean succeed =true;
+		this.attributes=attributes;
+		return succeed;
+		
+	}
 	
 	
 }

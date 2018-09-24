@@ -111,5 +111,12 @@ public abstract class FileItem {
 	public Directory getFatherFile() {
 		return fatherFile;
 	}
+	
+	/**
+	 * 该方法用于修改文件属性
+	 * @param int:attributes
+	 * @return boolean:修改是否成功
+	 */
+	public abstract boolean changeAttributes(int attributes) ;
 
 }
