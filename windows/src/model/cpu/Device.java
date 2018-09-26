@@ -1,5 +1,8 @@
 package model.cpu;
 
+import java.util.ArrayList;
+
+import javafx.util.Pair;
 import model.cpu.process.PCB;
 
 public class Device {
@@ -9,23 +12,23 @@ public class Device {
 	private int index_of_usingProcess;
 	private PCB pcb;
 
-	public Device(char device_ID,int index) {
+	public Device(char device_ID, int index) {
 		this.device_ID = device_ID;
 		this.free = true;
 		this.index_of_usingProcess = index;
 		remainTime = 0;
 	}
 
-	public void run() {
+	public void run(ArrayList<Pair<Integer, Integer>> usingProcess) {
 		if (!isFree()) {
-			remainTime--;
+			usingProcess.set(index_of_usingProcess, new Pair<Integer, Integer>(pcb.getID(), remainTime--));
 			if (remainTime == 0) {
 				DeviceManager.getInstance().release(this);
 				DeviceManager.getInstance().occupy(device_ID);
 			}
 		}
 	}
-	
+
 	public int getIndex_of_usingProcess() {
 		return index_of_usingProcess;
 	}
