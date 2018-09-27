@@ -1,5 +1,7 @@
 package model.disk;
 
+import javafx.util.Pair;
+
 public abstract class FileItem implements Cloneable {
 	/**
 	 * @author BFELFISH 该类为目录项，包括了文件名，文件扩展名，文件大小，文件起始块号，文件属性（只读0，可写1，可执行2）
@@ -12,6 +14,7 @@ public abstract class FileItem implements Cloneable {
 	protected int startNum;
 	protected int attributes;
 	protected boolean canBeDeleted = true;
+	private DiskFileTreeItem myItem;
 
 	public FileItem(Directory father, String fileName, String fileExtentionName, int capacity, int startNum,
 			int attributes) {
@@ -113,6 +116,14 @@ public abstract class FileItem implements Cloneable {
 
 	public Directory getFatherFile() {
 		return fatherFile;
+	}
+
+	public DiskFileTreeItem getMyItem() {
+		return myItem;
+	}
+
+	public void setMyItem(DiskFileTreeItem myItem) {
+		this.myItem = myItem;
 	}
 
 	/**
