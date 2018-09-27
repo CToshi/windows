@@ -6,17 +6,19 @@ import javafx.scene.image.Image;
 public class IconManager {
 
 	public static enum Type {
-		FOLDER, HELP, TXT , START , CMD
+		FOLDER, HELP, TXT, START, CMD
 	}
 
 	private static Icon[] icons;
-	private final String[] ROUTES = { "images/help.png", "images/folder.png", "images/txt.png" };
+	private final String[] ROUTES = { "images/help.png", "images/computer.png", "images/txt.png" };
 	private final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT };
-	private static final double ICON_WIDTH = 50;
-	private static final double ICON_HEIGHT = 50;
+	private static final double ICON_WIDTH = 85;
+	private static final double ICON_HEIGHT = 85;
 	private static boolean isBeClick = false;
-	private static final String[] FILENAMES = { "233", "244", "255" };
+	private static final String[] FILENAMES = { "帮助", "此电脑", "233" };
 	private static Window help;
+	private static Window folder;
+	private static Window cmd;
 	private static IconManager iconManager = new IconManager();
 
 	public static IconManager getInstance() {
@@ -27,16 +29,17 @@ public class IconManager {
 		double x = 0;
 		double y = 0;
 		for (int i = 0; i < ROUTES.length; i++) {
-			Image image = new Image(ROUTES[i]);
-			Icon icon = new Icon(image, ICON_WIDTH, ICON_HEIGHT, x, y, TYPES[i],FILENAMES[i]);
+			Icon icon = new Icon(ROUTES[i], ICON_WIDTH, ICON_HEIGHT, x, y, TYPES[i], FILENAMES[i]);
 			icons[i] = icon;
-			y = y + ICON_HEIGHT * 2;
+			y = y + ICON_HEIGHT + 30;
 		}
 	}
 
 	private IconManager() {
 		icons = new Icon[ROUTES.length];
-		help = new Window(Main.getPrimaryStage(), new Image(ROUTES[0]), Type.HELP, "help");
+		help = new Window(Main.getPrimaryStage(), Type.HELP, "帮助");
+		folder = new Window(Main.getPrimaryStage(), Type.FOLDER, "此电脑");
+		cmd = new Window(Main.getPrimaryStage(), Type.CMD, "CMD");
 		initIcon();
 	}
 
@@ -70,6 +73,14 @@ public class IconManager {
 
 	public static Window getHelp() {
 		return help;
+	}
+
+	public static Window getFolder() {
+		return folder;
+	}
+
+	public static Window getCmd() {
+		return cmd;
 	}
 
 }

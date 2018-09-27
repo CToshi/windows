@@ -30,12 +30,12 @@ import view.ui.IconManager.Type;
 
 public class WindowMenu{
 
-	private final String[] TIPS = { "文件夹", "帮助", "关机" };
-	private final String[] ROUTES = { "images/folder.png", "images/help.png", "images/close.png" };
+	private final String[] TIPS = { "此电脑", "帮助", "关机" };
+	private final String[] ROUTES = { "images/computer.png", "images/help.png", "images/close.png" };
 	private final Color BACKGROUND_COLOR = new Color(0, 0, 0, 0.7);
 	private final Color ON_COLOR = new Color(0, 0, 0, 0.5);
 	private final double LABEL_WIDTH = 140;
-	private final double LABEL_HEIGHT = 70;
+	private final double LABEL_HEIGHT = 50;
 	private final double IMAGE_SIZE = 50;
 
 	private Type type;
@@ -59,7 +59,7 @@ public class WindowMenu{
 	}
 
 	public void addLabel(String text, Window window) {
-		if(this.type == type.HELP && getAmount() >= 1)
+		if(this.type == Type.HELP && getAmount() >= 1)
 			return;
 		Label label = new Label(text);
 		label.setAlignment(Pos.CENTER);
@@ -67,8 +67,8 @@ public class WindowMenu{
 		rectangle.setArcHeight(15);
 		rectangle.setArcWidth(15);
 		label.setShape(rectangle);
-		label.setTextFill(Color.WHEAT);
-		label.setFont(Font.font("Microsoft Himalaya",FontWeight.LIGHT,30));
+		label.setTextFill(Color.WHITE);
+		label.setFont(Font.font("",FontWeight.LIGHT,20));
 		label.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
 		BorderStroke borderStroke = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0),
 				new BorderWidths(1));
@@ -130,8 +130,11 @@ public class WindowMenu{
 		EventHandler<MouseEvent> folderHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				Window window = new Window(Main.getPrimaryStage(), new Image(ROUTES[0]), Type.FOLDER, FILENAMES[0]);
-				window.show();
+				if(!IconManager.getFolder().isShowing()){
+					IconManager.getFolder().show();
+				}else {
+					IconManager.getFolder().toFront();
+				}
 			}
 		};
 

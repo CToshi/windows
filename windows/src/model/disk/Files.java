@@ -6,7 +6,7 @@ package model.disk;
 public class Files extends FileItem {
 	//文件内容
 	private String content;
-	
+
 	public Files(Directory father,String fileName,String fileExtentionName, int capacity, int startNum, int attributes,String content) {
 		super(father,fileName, fileExtentionName,capacity, startNum, attributes);
 		this.content=content;
@@ -19,7 +19,7 @@ public class Files extends FileItem {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	/**
 	 * 该方法是修改该内容
 	 * @param 传入修改后的内容
@@ -44,7 +44,7 @@ public class Files extends FileItem {
 		return errorCode;
 	}
 
-	
+
 	@Override
 	/**
 	 * 删除文件
@@ -57,10 +57,9 @@ public class Files extends FileItem {
 		}else {
 			succeed=false;
 		}
-		
 		return succeed;
 	}
-	
-	
+
+
 }
 

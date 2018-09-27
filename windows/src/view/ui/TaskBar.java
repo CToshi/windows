@@ -30,8 +30,8 @@ public class TaskBar extends HBox {
 	 * ROUTES和TYPES数组要一一对应
 	 */
 	private static final String[] ROUTES = { "images/help.png", "images/folder.png", "images/txt.png",
-			"images/begin.png" };
-	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START };
+			"images/begin.png", "images/cmd.png"};
+	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START ,Type.CMD};
 
 	private static ArrayList<Window> windows;
 	private static ArrayList<WindowMenu> menus;

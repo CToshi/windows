@@ -45,27 +45,16 @@ public class MainPane extends Pane {
 			if (!IconManager.isBeClick())
 				IconManager.canselSelected();
 			if (e.getButton() == MouseButton.SECONDARY) {
-				SecondaryMenu.display(e.getX(), e.getY());
+				SecondaryMenu.display(e.getX(), e.getY(), SecondaryMenu.getPriority());
 			}
 		});
 	}
 
 	public void reStart() {
-
 		Platform.runLater(() -> {
 			disappear(IconManager.getIcons());
 			IconManager.getInstance().initIcon();
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
 		});
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -74,7 +63,6 @@ public class MainPane extends Pane {
 				});
 			}
 		}, 100);
-		// this.requestLayout();
 	}
 
 	public void addIcon(Icon icon) {
@@ -87,7 +75,7 @@ public class MainPane extends Pane {
 		}
 	}
 
-	public static void display(Node node){
+	public static void display(Node node) {
 		MainPane.getInstance().getChildren().add(node);
 	}
 
@@ -97,7 +85,7 @@ public class MainPane extends Pane {
 		}
 	}
 
-	public static void disappear(Node node){
+	public static void disappear(Node node) {
 		MainPane.getInstance().getChildren().remove(node);
 	}
 }

@@ -1,6 +1,7 @@
 package view.ui;
 
 import application.Main;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,6 +14,9 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import view.ui.IconManager.Type;
 
 public class Icon extends Label {
@@ -21,51 +25,60 @@ public class Icon extends Label {
 	private ImageView imageView;
 	private Border stroke;
 	private Window window;
-	private String fileName;
+	// private String fileName;
 	private Type type;
 	private static final Color ON_COLOR = new Color(1, 1, 1, 0.2);
 	private static final Color CLICK = new Color(0.4, 0.8, 1, 0.2);
 	private boolean isClick = false;
 
-	public Icon(Image image, double width, double height, double x, double y, Type type,String fileName) {
-		this.fileName = fileName;
+	public Icon(String url, double width, double height, double x, double y, Type type, String fileName) {
 		this.type = type;
-		this.image = image;
+		this.image = new Image(url);
 		imageView = new ImageView(image);
+		imageView.setFitHeight(height);
+		imageView.setFitWidth(width);
 		this.setGraphic(imageView);
-		this.setWidth(width);
-		this.setHeight(height);
+		// this.setWidth(width);
+		// this.setHeight(height);
 		this.setLayoutX(x);
 		this.setLayoutY(y);
+		this.setText(fileName);
+		this.setFont(Font.font("", FontWeight.BOLD, FontPosture.REGULAR, 15));
+		this.setTextFill(Color.WHITE);
+		this.setContentDisplay(ContentDisplay.TOP);
 		init();
 	}
 
-	private void init(){
+	private void init() {
 		BorderStroke borderStroke = new BorderStroke(Color.WHITE, BorderStrokeStyle.DASHED, new CornerRadii(0),
 				new BorderWidths(1));
 		stroke = new Border(borderStroke);
-		if(type == Type.HELP){
+		if (type == Type.HELP) {
 			window = IconManager.getHelp();
+		} else if (type == Type.FOLDER) {
+			window = IconManager.getFolder();
+		} else if (type == Type.CMD) {
+			window = IconManager.getCmd();
 		}
 		this.setOnMouseClicked(e -> {
-			if(!isClick){
+			if (!isClick) {
 				IconManager.canselSelected();
 				IconManager.canselBorder();
 				this.setBorder(stroke);
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 				isClick = true;
 				IconManager.setBeClick(true);
-			}else {
+			} else {
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 				isClick = false;
 				IconManager.setBeClick(false);
 			}
-			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount()%2 == 0){
-				if(type != Type.HELP){
-					window = new Window(Main.getPrimaryStage(), this.image, type,fileName);
+			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() % 2 == 0) {
+				if (type == Type.TXT) {
+					window = new Window(Main.getPrimaryStage(),  type, this.getText());
 					window.show();
-				}else{
-					if(window.isShowing())
+				} else {
+					if (window.isShowing())
 						window.toFront();
 					else
 						window.show();
@@ -77,12 +90,14 @@ public class Icon extends Label {
 			}
 		});
 		this.setOnMouseEntered(e -> {
-			if(!isClick)
+			SecondaryMenu.setPriority(SecondaryMenu.ICON);
+			if (!isClick)
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 			else
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 		});
 		this.setOnMouseExited(e -> {
+			SecondaryMenu.setPriority(SecondaryMenu.BACKGROUND);
 			if (!isClick)
 				this.setBackground(null);
 			else
@@ -96,15 +111,15 @@ public class Icon extends Label {
 		this.isClick = false;
 	}
 
-	public void canselBorder(){
+	public void canselBorder() {
 		this.setBorder(null);
 	}
 
 	public String getFileName() {
-		return fileName;
+		return this.getText();
 	}
 
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		this.setText(fileName);
 	}
 }
