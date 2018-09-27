@@ -32,8 +32,15 @@ public class Files extends FileItem {
 			errorCode=1;
 			break;
 			}
-			//计算这个文件占用多少个磁盘块
-			int numberOfBlocks=content.getBytes().length/Disk.CAPACITY_OF_DISK_BLOCKS+1;
+			int numberOfBlocks;
+			//计算这个文件占用多少个磁盘块,如果是可执行文件，一行一字节
+			if(this.fileExtentionName.equals(".txt")) {
+				numberOfBlocks=content.getBytes().length/Disk.CAPACITY_OF_DISK_BLOCKS+1;
+			}else {
+				String[] contents=content.split("\n");
+				 numberOfBlocks=contents.length;
+				 numberOfBlocks=numberOfBlocks%Disk.CAPACITY_OF_DISK_BLOCKS+1;
+			}
 			if(numberOfBlocks>FAT.getInstance().capacityOfDisk()) {
 				errorCode=2;
 				break;

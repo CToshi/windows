@@ -148,11 +148,7 @@ public class FAT {
 	 */
 	public int[] getFAT() {
 		int[] returnFat=new int[fat.length];
-		int j=0;
-		for(int i:fat) {
-			returnFat[j]=i;
-			j++;
-		}
+		returnFat=fat.clone();
 		return returnFat;
 	}
 //	/**

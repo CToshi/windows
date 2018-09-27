@@ -1,6 +1,6 @@
 package model.disk;
 
-public abstract class FileItem {
+public abstract class FileItem  implements Cloneable{
 	/**
 	 * @author BFELFISH 该类为目录项，包括了文件名，文件扩展名，文件大小，文件起始块号，文件属性（只读0，可写1，可执行2）
 	 */
@@ -118,5 +118,7 @@ public abstract class FileItem {
 	 * @return boolean:修改是否成功
 	 */
 	public abstract boolean changeAttributes(int attributes) ;
+	
+	
 
 }

@@ -7,7 +7,7 @@ package model.disk;
 
 import java.util.ArrayList;
 
-public class Directory extends FileItem {
+public class Directory extends FileItem implements Cloneable{
 
 	private final int MAX_NUM_OF_FILES = 8;
 	private ArrayList<FileItem> files;
@@ -31,26 +31,36 @@ public class Directory extends FileItem {
 	}
 
 	/**
-	 * 该方法为在该目录下创建文件
+	 * 该方法为在该目录下创建txt文件
 	 * 
 	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
-	public Files createFile() {
-		Files f=null;
-		
+	public Files createTxtFile() {
+		return createFile(".txt");
+	}
+
+	/**
+	 * 该方法为在该目录下创建exe文件
+	 * @return Files:返回一个文件，如果文件为null则表明创建失败
+	 */
+	public Files createExeFile() {
+		return createFile(".e");
+	}
+	
+	private Files createFile(String fileExtentionName ) {
+			Files f=null;
 		// 检查文件夹下文件数目是否已超过最大值
 		if (!isFull()) {
 			// 检查磁盘是否已满
 			if (FAT.getInstance().capacityOfDisk()> 0) {
 				int startNum = FAT.getInstance().changeFAT(8);
 				// 默认生成可写且空白的文件
-				f = new Files(this, ("新" + files.size()), "e", 8, startNum, 1, "");
+				f = new Files(this, ("新" + files.size()),fileExtentionName, 8, startNum, 1, "");
 				this.files.add(f);
 			} 
 		}
 		return f;
 	}
-
 	/**
 	 * 该方法为在该目录下创建文件夹
 	 * 
