@@ -1,5 +1,7 @@
 package model.disk;
 
+import java.util.ArrayList;
+
 public class FAT {
 	// 管理Fat数组
 	private int[] fat;
@@ -126,6 +128,29 @@ public class FAT {
 		return fat[number];
 	}
 
+	/**
+	 * 返回一个数组，数组里存放的是空闲磁盘块的编号,用于显示磁盘块占用情况
+	 * @return  ArrayList<Integer>:磁盘块占用情况,该数组中的编号为被占用的磁盘块的编号
+	 */
+	public ArrayList<Integer> getFreeBlocks() {
+		ArrayList<Integer> freeBlocks= new ArrayList<>();
+		for(int i =0;i<fat.length;i++) {
+			if(fat[i]!=0) {
+				freeBlocks.add(i);
+			}
+		}
+		return freeBlocks;
+	}
+	
+	/**
+	 * 返回FAT的使用情况
+	 * @return int[]:值与FAT相同的
+	 */
+	public int[] getFAT() {
+		int[] returnFat=new int[fat.length];
+		returnFat=fat.clone();
+		return returnFat;
+	}
 //	/**
 //	 * 重写toString方法，方便存进磁盘。
 //	 */

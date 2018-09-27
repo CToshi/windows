@@ -48,15 +48,11 @@ public class CPURegisters implements Cloneable {
 	}
 
 	public CPURegisters increase() {
-		CPURegisters registers = clone();
-		registers.setAX(AX + 1);
-		return registers;
+		return this.setAX(AX + 1);
 	}
 
 	public CPURegisters decreace() {
-		CPURegisters registers = clone();
-		registers.setAX(AX - 1);
-		return registers;
+		return this.setAX(AX - 1);
 	}
 
 	public CPURegisters setPSW(PSW_Type PSW) {

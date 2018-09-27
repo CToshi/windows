@@ -1,16 +1,18 @@
 package model.cpu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import application.Main;
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
 import model.memory.Memory;
 import model.memory.MemoryBlock;
 
 public class CPU {
-	private static CPU cpu = new CPU();
+	private static CPU cpu;
 	private static int MAX_NUMBE_OF_PROCESS = 11;
 	// private CPURegisters registers;
 	private ArrayList<LinkedBlockingQueue<PCB>> processQueues;
@@ -28,11 +30,11 @@ public class CPU {
 	/**
 	 * 轮转时间片，单位：条（指令）
 	 */
-	private static int TIMESLICE = 3;
+	private static int TIME_SLICE = 3;
 	/**
 	 * 每条指令执行时间，单位：个（时钟周期）（SystemClock)
 	 */
-	private static int INS_UNIT = 5;
+	private static int INS_UNIT = 3;
 
 	/**
 	 * 运行中的进程的剩余时间片
@@ -42,7 +44,10 @@ public class CPU {
 	}
 
 	private InsExecutor insExecutor;
-	private SystemClock systemClock;
+	private int currentTime;
+	static {
+		cpu = new CPU();
+	}
 
 	private CPU() {
 		processQueues = new ArrayList<>(Queue_Type.values().length);
@@ -50,10 +55,9 @@ public class CPU {
 			processQueues.add(new LinkedBlockingQueue<>(MAX_NUMBE_OF_PROCESS));
 		}
 		memory = Memory.getInstance();
-		systemClock = SystemClock.getInstance();
 		pcbManager = new PCBManager();
-		runningProcess = strollingProcess = pcbManager.allocatePCB(new MemoryBlock(0, 0, "闲逛进程"),
-				new ProcessCode(new int[0]));
+		runningProcess = strollingProcess = pcbManager.allocatePCB(new MemoryBlock(0, 0), new ProcessCode(new int[0]));
+		waitingQueue = new LinkedBlockingQueue<>();
 		insExecutor = new InsExecutor();
 	}
 
@@ -114,6 +118,7 @@ public class CPU {
 	 */
 	private void allocatePCB(ProcessCode code) {
 		MemoryBlock block = memory.allocate(code);
+		Main.test(block, !pcbManager.available());
 		if (block == null || !pcbManager.available()) {
 			try {
 				waitingQueue.put(code);
@@ -125,34 +130,55 @@ public class CPU {
 		getQueue(Queue_Type.READY).add(pcbManager.allocatePCB(block, code));
 	}
 
-	public void handle() {
-		if (runningProcess != strollingProcess) {
-			insExecutor.execute();
-			runningProcess.setRegisters(insExecutor.getRegisters());
-			switch (insExecutor.getRegisters().getPSW()) {
-			case TIME_OUT:
-				takeTurn();
-				break;
-			case IO_INTERRUPT:
-				block();
-				break;
-			case END:
-				destroy();
-				break;
-			default:
-				break;
-			}
+	public void work() {
+		currentTime++;
+		if (currentTime % INS_UNIT == 0) {
+			handle();
 		}
 	}
 
+	public void handle() {
+		Main.test("handle", getCurrentInstruction());
+		insExecutor.execute();
+		// runningProcess.setRegisters(insExecutor.getRegisters());
+		switch (insExecutor.getRegisters().getPSW()) {
+		case TIME_OUT:
+			Main.test("taketune");
+			takeTurn(false);
+			break;
+		case IO_INTERRUPT:
+			Main.test("block");
+			block();
+			break;
+		case END:
+			Main.test("destroy");
+			destroy();
+			takeTurn(true);
+			break;
+		default:
+			Main.test("nothing");
+			break;
+		}
+	}
+
+
 	/**
-	 * 轮转，将当前进程置于就绪队列，使就绪队列头的进程运行
+	 * 轮转，使就绪队列头的进程运行
+	 * @param isEnd 为false时, 将当前进程置于就绪队列
 	 */
-	private void takeTurn() {
+	private void takeTurn(boolean isEnd) {
 		// try {
 		// runningProcess =
 		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
 		// TimeUnit.MILLISECONDS);
+		if(!isEnd){
+			runningProcess.setRegisters(insExecutor.getRegisters());
+			try {
+				getQueue(Queue_Type.READY).put(runningProcess);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		runningProcess = getQueue(Queue_Type.READY).poll();
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
@@ -160,7 +186,7 @@ public class CPU {
 		if (runningProcess == null) {
 			runningProcess = strollingProcess;
 		} else {
-			insExecutor.init(runningProcess.getCode(), runningProcess.getRegisters(), TIMESLICE);
+			insExecutor.init(runningProcess.getCode(), runningProcess.getRegisters(), TIME_SLICE);
 		}
 	}
 
@@ -170,5 +196,28 @@ public class CPU {
 
 	public static int getMAX_NUMBE_OF_PROCESS() {
 		return MAX_NUMBE_OF_PROCESS;
+	}
+
+	public int getTimeSlice() {
+		return TIME_SLICE;
+	}
+
+	public String getCurrentInstruction() {
+		return Compiler.decode(insExecutor.getIns());
+	}
+
+	public int getValueOfX() {
+		return insExecutor.getRegisters().getAX();
+	}
+
+	public int getTimeLeft() {
+		return insExecutor.getTimeLeft();
+	}
+
+	public int getRunningPid() {
+		return runningProcess.getID();
+	}
+	public Collection<Integer> getReadyQueue(){
+		return getQueue(Queue_Type.READY).stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
 	}
 }

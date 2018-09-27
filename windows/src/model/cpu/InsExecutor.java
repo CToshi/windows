@@ -12,7 +12,7 @@ import model.cpu.process.ProcessCode;
 public class InsExecutor {
 	private ProcessCode code;
 	private CPURegisters registers;
-	private int leftTimes;
+	private int timeLeft;
 
 	public InsExecutor() {
 		code = new ProcessCode();
@@ -22,7 +22,7 @@ public class InsExecutor {
 	public void init(ProcessCode code, CPURegisters registers, int times) {
 		this.code = code;
 		this.registers = registers;
-		leftTimes = times;
+		timeLeft = times;
 	}
 
 	public int getIns() {
@@ -35,23 +35,28 @@ public class InsExecutor {
 
 	public void execute() {
 		registers = registers.setPSW(PSW_Type.NOTHING);
-		leftTimes--;
+		timeLeft = Math.max(0, timeLeft - 1);
+		// timeLeft--;
 		int ins = code.getIns();
-		if (leftTimes <= 0) {
-			registers = registers.setPSW(PSW_Type.TIME_OUT);
+
+		code.toNext();
+		if (ins < 100) {
+			registers = registers.setAX(ins);
+		} else if (ins == 100) {
+			registers = registers.increase();
+		} else if (ins == 101) {
+			registers = registers.decreace();
+		} else if (111 <= ins && ins <= 139) {
+			registers = registers.setPSW(PSW_Type.IO_INTERRUPT);
 		} else {
-			code.toNext();
-			if (ins < 100) {
-				registers = registers.setAX(ins);
-			} else if (ins == 100) {
-				registers = registers.increase();
-			} else if (ins == 101) {
-				registers = registers.decreace();
-			} else if (111 <= ins && ins <= 139) {
-				registers = registers.setPSW(PSW_Type.IO_INTERRUPT);
-			} else {
-				registers = registers.setPSW(PSW_Type.END);
-			}
+			registers = registers.setPSW(PSW_Type.END);
 		}
+		if (timeLeft <= 0) {
+			registers = registers.setPSW(PSW_Type.TIME_OUT);
+		}
+	}
+
+	public int getTimeLeft() {
+		return timeLeft;
 	}
 }

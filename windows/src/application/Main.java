@@ -8,6 +8,13 @@ import model.disk.FAT;
 import view.ui.RootPane;
 
 public class Main extends Application {
+	public static void test(Object... ts) {
+		for (Object t : ts) {
+			System.out.print(t + " ");
+		}
+		System.out.println();
+	}
+
 	private static Stage primaryStage;
 
 	@Override

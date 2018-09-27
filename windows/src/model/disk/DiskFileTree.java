@@ -16,6 +16,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 
 	/**
 	 * 设置内容可修改且与TreeCell关联
+	 * 
 	 * @param root: 根节点
 	 */
 	private DiskFileTree(DiskFileTreeItem root) {
@@ -42,7 +43,6 @@ public class DiskFileTree extends TreeView<FileItem> {
 			} else {
 				if (e.getButton() == MouseButton.SECONDARY) {
 					contextMenu.hide();
-					getSelectionModel().getSelectedItem().getValue();
 					if (getSelectionModel().getSelectedItem().getValue() instanceof Files) {
 						((Menu) contextMenu.getItems().get(0)).setVisible(false);
 					} else {
@@ -69,7 +69,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private Menu addMenu() {
 		Menu addMenu = new Menu("新建");
-		addMenu.getItems().addAll(addTxtMenuItem(), addDirMenuItem());
+		addMenu.getItems().addAll(addTxtMenuItem(), addExeMenuItem(), addDirMenuItem());
 		return addMenu;
 	}
 
@@ -81,12 +81,24 @@ public class DiskFileTree extends TreeView<FileItem> {
 		MenuItem addTxt = new MenuItem("TXT文件");
 		addTxt.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
-			if (fatherItem.getValue() instanceof Directory) {
-				Files files = ((Directory) fatherItem.getValue()).createFile();
-				fatherItem.getChildren().add(new DiskFileTreeItem(files));
-			}
+			Files files = ((Directory) fatherItem.getValue()).createTxtFile();
+			fatherItem.getChildren().add(new DiskFileTreeItem(files));
 		});
 		return addTxt;
+	}
+
+	/**
+	 * 
+	 * @return 新建EXE文件选项
+	 */
+	private MenuItem addExeMenuItem() {
+		MenuItem addExe = new MenuItem("EXE文件");
+		addExe.setOnAction(e -> {
+			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			Files files = ((Directory) fatherItem.getValue()).createExeFile();
+			fatherItem.getChildren().add(new DiskFileTreeItem(files));
+		});
+		return addExe;
 	}
 
 	/**
@@ -97,10 +109,8 @@ public class DiskFileTree extends TreeView<FileItem> {
 		MenuItem addDir = new MenuItem("文件夹");
 		addDir.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
-			if (fatherItem.getValue() instanceof Directory) {
-				Directory directory = ((Directory) fatherItem.getValue()).createDirectory();
-				fatherItem.getChildren().add(new DiskFileTreeItem(directory));
-			}
+			Directory directory = ((Directory) fatherItem.getValue()).createDirectory();
+			fatherItem.getChildren().add(new DiskFileTreeItem(directory));
 		});
 		return addDir;
 	}

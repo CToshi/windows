@@ -9,7 +9,9 @@ public class Controller {
 	}
 
 	private Controller(){
-
+		
 	}
 
+	public static 
+	
 }

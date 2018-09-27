@@ -57,6 +57,12 @@ public class PCBManager {
 	}
 
 	public void recoverPCB(PCB pcb) {
+		/**
+		 * 不回收闲逛进程
+		 */
+		if(pcb.getID() == 0) {
+			return;
+		}
 		map.remove(pcb.getID(), pcb);
 		try {
 			queue.put(pcb.getID());
