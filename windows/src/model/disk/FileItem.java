@@ -1,6 +1,6 @@
 package model.disk;
 
-public abstract class FileItem  implements Cloneable{
+public abstract class FileItem implements Cloneable {
 	/**
 	 * @author BFELFISH 该类为目录项，包括了文件名，文件扩展名，文件大小，文件起始块号，文件属性（只读0，可写1，可执行2）
 	 */
@@ -11,17 +11,20 @@ public abstract class FileItem  implements Cloneable{
 	protected int capacity;
 	protected int startNum;
 	protected int attributes;
-	protected boolean canBeDeleted=true;
-	
-	
-	
-	public FileItem(Directory father,String fileName, String fileExtentionName, int capacity, int startNum, int attributes) {
-		this.fatherFile=father;
+	protected boolean canBeDeleted = true;
+
+	public FileItem(Directory father, String fileName, String fileExtentionName, int capacity, int startNum,
+			int attributes) {
+		this.fatherFile = father;
 		this.fileName = fileName;
 		this.fileExtentionName = fileExtentionName;
 		this.capacity = capacity;
 		this.startNum = startNum;
-		this.attributes = attributes;
+		if (fileExtentionName.equals(".e")) {
+			this.attributes = 2;
+		} else {
+			this.attributes = attributes;
+		}
 	}
 
 	/**
@@ -37,37 +40,37 @@ public abstract class FileItem  implements Cloneable{
 		}
 		return directory;
 	}
-	
+
 	/**
 	 * 该方法为修改文件的文件名
+	 * 
 	 * @param原文件名与修改后的文件名
 	 * @return int:0:修改成功，1:文件名字数超出限制,2：文件名已存在,3:文件名含非法字符，4：文件名不得为空
 	 */
-	public int changeFilesName(String fileName,String newFileName) {
-		int errorCode=0;
-		if(newFileName==null||newFileName.equals("")) {
+	public int changeFilesName(String fileName, String newFileName) {
+		int errorCode = 0;
+		if (newFileName == null || newFileName.equals("")) {
 			return 4;
 		}
-		if(newFileName.getBytes().length>=FileItem.MAX_SIZE_OF_FILE_NAME) {
+		if (newFileName.getBytes().length >= FileItem.MAX_SIZE_OF_FILE_NAME) {
 			return 1;
 		}
-		if(	fatherFile.isExistedName(newFileName)) {
+		if (fatherFile.isExistedName(newFileName)) {
 			return 2;
 		}
-		if(newFileName.contains("$")||newFileName.contains(".")||newFileName.contains("/")) {
+		if (newFileName.contains("$") || newFileName.contains(".") || newFileName.contains("/")) {
 			return 3;
 		}
-		this.fileName=newFileName;
+		this.fileName = newFileName;
 		return errorCode;
 	}
-	
+
 	public abstract boolean deleteFiles();
 
 	public String getFileName() {
 		return fileName;
 	}
 
-	
 	public String getFileExtentionName() {
 		return fileExtentionName;
 	}
@@ -111,14 +114,13 @@ public abstract class FileItem  implements Cloneable{
 	public Directory getFatherFile() {
 		return fatherFile;
 	}
-	
+
 	/**
 	 * 该方法用于修改文件属性
+	 * 
 	 * @param int:attributes
 	 * @return boolean:修改是否成功
 	 */
-	public abstract boolean changeAttributes(int attributes) ;
-	
-	
+	public abstract boolean changeAttributes(int attributes);
 
 }

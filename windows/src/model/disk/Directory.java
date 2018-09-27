@@ -18,7 +18,7 @@ public class Directory extends FileItem implements Cloneable{
 	}
 
 	/**
-	 * 该方法用于判断该文件夹是否已空
+	 * 该方法用于判断该文件夹是否已满
 	 * 
 	 * @return boolean:是否满了
 	 */
@@ -36,7 +36,7 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createTxtFile() {
-		return createFile(".txt");
+		return createFile(("新" + files.size()),".txt",8,1,"");
 	}
 
 	/**
@@ -44,10 +44,10 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Files:返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createExeFile() {
-		return createFile(".e");
+		return createFile(("新" + files.size()),".e",8,1,"");
 	}
 	
-	private Files createFile(String fileExtentionName ) {
+	public Files createFile(String fileName,String fileExtentionName,int capacity,int attribute,String content) {
 			Files f=null;
 		// 检查文件夹下文件数目是否已超过最大值
 		if (!isFull()) {
@@ -55,7 +55,7 @@ public class Directory extends FileItem implements Cloneable{
 			if (FAT.getInstance().capacityOfDisk()> 0) {
 				int startNum = FAT.getInstance().changeFAT(8);
 				// 默认生成可写且空白的文件
-				f = new Files(this, ("新" + files.size()),fileExtentionName, 8, startNum, 1, "");
+				f = new Files(this,fileName,fileExtentionName, capacity, startNum, attribute, content);
 				this.files.add(f);
 			} 
 		}
@@ -67,19 +67,21 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Directory:返回文件夹，如果为null则创建失败
 	 */
 	public Directory createDirectory() {
+		return createDirectory(("新" + files.size()));
+	}
+	public Directory createDirectory(String fileName) {
 		Directory f=null;
 		if (!isFull()) {
 			// 检查磁盘是否已满
 			if (FAT.getInstance().capacityOfDisk()>0) {
 				int startNum = FAT.getInstance().changeFAT(8);
 				// 默认生成可写且空白的文件
-				 f = new Directory(this, ("新" + files.size()), 8, startNum, 1);
+				 f = new Directory(this,fileName, 8, startNum, 1);
 				this.files.add(f);
 			} 
 		}
 		return f;
 	}
-
 	
 
 	/**
@@ -101,11 +103,16 @@ public class Directory extends FileItem implements Cloneable{
 
 	/**
 	 * 删除文件夹下的某个文件，主要是对文件夹的数组操作
-	 * @return 删除成功
+	 * @return boolean：false表示文件不可删除
 	 */
 	public boolean removeFiles(FileItem f) {
 		boolean succeed =true;
-		files.remove(f);
+		if(f.isCanBeDeleted()) {
+			files.remove(f);
+		}else {
+			succeed =false;
+		}
+		
 		return succeed;
 	}
 

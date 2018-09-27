@@ -17,7 +17,7 @@ public class Disk {
 	/**
 	 * 磁盘管理root
 	 */
-	private Directory root;
+	private static Directory root;
 
 	public Disk() {
 		init();
@@ -25,7 +25,7 @@ public class Disk {
 	}
 
 	//创建根目录
-	private void init() {
+	private static void init() {
 		root = new Directory(null,"root", 0, 2, 1);
 		root.setCanBeDeleted(false);
 	}
@@ -38,7 +38,7 @@ public class Disk {
 	 * 磁盘格式化
 	 * @return boolean:返回删除是否成功
 	 */
-	public boolean format() {
+	public static boolean format() {
 		boolean succeed=true;
 		root.setCanBeDeleted(true);
 		root.deleteFiles();
