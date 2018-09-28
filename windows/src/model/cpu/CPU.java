@@ -45,6 +45,8 @@ public class CPU {
 
 	private InsExecutor insExecutor;
 	private int currentTime;
+	private DeviceManager deviceManager = DeviceManager.getInstance();
+
 	static {
 		cpu = new CPU();
 	}
@@ -94,7 +96,7 @@ public class CPU {
 	 * 阻塞当前进程
 	 */
 	private void block() {
-
+		deviceManager.request(runningProcess, insExecutor.getDeviceID(), insExecutor.getDeviceTime());
 	}
 
 	/**
@@ -161,17 +163,18 @@ public class CPU {
 		}
 	}
 
-
 	/**
 	 * 轮转，使就绪队列头的进程运行
-	 * @param isEnd 为false时, 将当前进程置于就绪队列
+	 *
+	 * @param isEnd
+	 *            为false时, 将当前进程置于就绪队列
 	 */
 	private void takeTurn(boolean isEnd) {
 		// try {
 		// runningProcess =
 		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
 		// TimeUnit.MILLISECONDS);
-		if(!isEnd){
+		if (!isEnd) {
 			runningProcess.setRegisters(insExecutor.getRegisters());
 			try {
 				getQueue(Queue_Type.READY).put(runningProcess);
@@ -217,7 +220,8 @@ public class CPU {
 	public int getRunningPid() {
 		return runningProcess.getID();
 	}
-	public Collection<Integer> getReadyQueue(){
+
+	public Collection<Integer> getReadyQueue() {
 		return getQueue(Queue_Type.READY).stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
 	}
 }
