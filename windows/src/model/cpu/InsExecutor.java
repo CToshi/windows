@@ -13,6 +13,8 @@ public class InsExecutor {
 	private ProcessCode code;
 	private CPURegisters registers;
 	private int timeLeft;
+	private char deviceID;
+	private int deviceTime;
 
 	public InsExecutor() {
 		code = new ProcessCode();
@@ -48,6 +50,9 @@ public class InsExecutor {
 			registers = registers.decreace();
 		} else if (111 <= ins && ins <= 139) {
 			registers = registers.setPSW(PSW_Type.IO_INTERRUPT);
+			String inst = Compiler.decode(ins);
+			deviceID = inst.charAt(1);
+			deviceTime = Integer.valueOf(inst.substring(2));
 		} else {
 			registers = registers.setPSW(PSW_Type.END);
 		}
@@ -58,5 +63,11 @@ public class InsExecutor {
 
 	public int getTimeLeft() {
 		return timeLeft;
+	}
+	public char getDeviceID(){
+		return deviceID;
+	}
+	public int getDeviceTime() {
+		return deviceTime;
 	}
 }

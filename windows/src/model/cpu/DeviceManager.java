@@ -8,7 +8,7 @@ import java.util.Queue;
 import model.cpu.process.PCB;
 
 public class DeviceManager {
-	private static DeviceManager deviceManager = new DeviceManager();
+	private static DeviceManager deviceManager;
 	private static int MAX_NUMBER_OF_A_DEVICE = 2;
 	private static int MAX_NUMBER_OF_B_DEVICE = 3;
 	private static int MAX_NUMBER_OF_C_DEVICE = 3;
@@ -17,12 +17,15 @@ public class DeviceManager {
 	private HashMap<Character, Queue<PCB>> map_of_pcbQueue;
 	private HashMap<PCB, Integer> map_of_time;
 	private HashMap<Character, Queue<Device>> map_of_freeDeviceQueue;
-
+	static{
+		deviceManager = new DeviceManager();
+	}
 	private DeviceManager() {
 		usingProcess = new ArrayList<>(MAX_NUMBER_OF_A_DEVICE + MAX_NUMBER_OF_B_DEVICE + MAX_NUMBER_OF_C_DEVICE);
 		map_of_device = new HashMap<>();
 		map_of_pcbQueue = new HashMap<>();
 		map_of_time = new HashMap<>();
+		map_of_freeDeviceQueue = new HashMap<>();
 
 		for (int i = 0; i < MAX_NUMBER_OF_A_DEVICE + MAX_NUMBER_OF_B_DEVICE + MAX_NUMBER_OF_C_DEVICE; i++) {
 			usingProcess.add(0);

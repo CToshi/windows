@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.cpu.CPU;
 import model.cpu.SystemClock;
 
@@ -44,10 +45,10 @@ public class Test extends Application {
 			});
 		});
 		runlater(()->{
-			for(int i = 0;i<2;i++){
-				CPU.getInstance().create("x++ x-- x=99 x++");
-			}
-//			CPU.getInstance().create("x++ x--");
+//			for(int i = 0;i<2;i++){
+//				CPU.getInstance().create("x++ x-- x=99 x++");
+//			}
+			CPU.getInstance().create("!A5");
 
 		});
 		Scene scene = new Scene(root, 1280, 720);

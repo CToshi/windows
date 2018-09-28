@@ -56,9 +56,9 @@ public class Compiler {
 		} else if (code.equals("x--")) {
 			result = 101;
 		} else if (code.startsWith("!") && code.length() == 3) {
-			if ('A' <= code.charAt(1) && code.charAt(1) <= 'B') {
+			if ('A' <= code.charAt(1) && code.charAt(1) <= 'C') {
 				try {
-					result = 100 + code.charAt(1) - 'A' + Integer.valueOf(code.substring(2));
+					result = 110 + code.charAt(1) - 'A' + Integer.valueOf(code.substring(2));
 				} catch (NumberFormatException e) {
 				}
 			}
@@ -80,8 +80,8 @@ public class Compiler {
 		}else if (code== 101){
 			return "x--";
 		}else if (111<= code && code <= 139){
-			code -= 100;
-			return (char)('A' + code/10) + String.valueOf(code%10);
+			code -= 110;
+			return "?" + (char)('A' + code/10) + String.valueOf(code%10);
 		}else if (code == END_CODE){
 			return "end";
 		}
