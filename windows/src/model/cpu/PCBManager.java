@@ -1,5 +1,6 @@
 package model.cpu;
 
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -57,12 +58,12 @@ public class PCBManager {
 	}
 
 	public void recoverPCB(PCB pcb) {
-		/**
-		 * 不回收闲逛进程
-		 */
-		if(pcb.getID() == 0) {
-			return;
-		}
+//		/**
+//		 * 不回收闲逛进程
+//		 */
+//		if (pcb.getID() == 0) {
+//			return;
+//		}
 		map.remove(pcb.getID(), pcb);
 		try {
 			queue.put(pcb.getID());
@@ -74,7 +75,18 @@ public class PCBManager {
 	/**
 	 *
 	 * @return 是否可以申请pcb
-	 */	public boolean available() {
+	 */
+	public boolean available() {
 		return !queue.isEmpty();
+	}
+
+	public int getPID(MemoryBlock block) {
+		for (Entry<Integer, PCB> entry : map.entrySet()) {
+			PCB pcb = entry.getValue();
+			if (pcb.getMemoryBlock().equals(block)) {
+				return pcb.getID();
+			}
+		}
+		return -1;
 	}
 }

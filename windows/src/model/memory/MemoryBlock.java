@@ -9,7 +9,6 @@ package model.memory;
 public class MemoryBlock {
 	private int startPosition;
 	private int length;
-	private String message;
 	private boolean isEmpty;
 
 	/**
@@ -47,14 +46,6 @@ public class MemoryBlock {
 		return length;
 	}
 
-	/**
-	 *
-	 * @return 规定 空串表示空闲区，否则表示占用的进程
-	 */
-	public String getMessage() {
-		return message;
-	}
-
 	// public void setEmpty(boolean isEmpty) {
 	// this.isEmpty = isEmpty;
 	// }
@@ -76,4 +67,5 @@ public class MemoryBlock {
 	public MemoryBlock add(int length) {
 		return new MemoryBlock(getStartPosition(), getLength() + length, isEmpty);
 	}
+
 }

@@ -2,6 +2,7 @@ package model.cpu;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
 import model.memory.Memory;
 import model.memory.MemoryBlock;
+import model.memory.MemoryOccupy;
 
 public class CPU {
 	private static CPU cpu;
@@ -45,6 +47,8 @@ public class CPU {
 
 	private InsExecutor insExecutor;
 	private int currentTime;
+	private DeviceManager deviceManager = DeviceManager.getInstance();
+
 	static {
 		cpu = new CPU();
 	}
@@ -56,7 +60,8 @@ public class CPU {
 		}
 		memory = Memory.getInstance();
 		pcbManager = new PCBManager();
-		runningProcess = strollingProcess = pcbManager.allocatePCB(new MemoryBlock(0, 0), new ProcessCode(new int[0]));
+		ProcessCode systemCode = new ProcessCode(new int[64]);
+		runningProcess = strollingProcess = pcbManager.allocatePCB(memory.allocate(systemCode), systemCode);
 		waitingQueue = new LinkedBlockingQueue<>();
 		insExecutor = new InsExecutor();
 	}
@@ -87,14 +92,17 @@ public class CPU {
 	 * 回收PCB
 	 */
 	private void destroy() {
-		pcbManager.recoverPCB(runningProcess);
+		if(runningProcess.getID() != 0){
+			pcbManager.recoverPCB(runningProcess);
+			memory.release(runningProcess.getMemoryBlock());
+		}
 	}
 
 	/**
 	 * 阻塞当前进程
 	 */
 	private void block() {
-
+		deviceManager.request(runningProcess, insExecutor.getDeviceID(), insExecutor.getDeviceTime());
 	}
 
 	/**
@@ -118,7 +126,6 @@ public class CPU {
 	 */
 	private void allocatePCB(ProcessCode code) {
 		MemoryBlock block = memory.allocate(code);
-		Main.test(block, !pcbManager.available());
 		if (block == null || !pcbManager.available()) {
 			try {
 				waitingQueue.put(code);
@@ -144,16 +151,18 @@ public class CPU {
 		switch (insExecutor.getRegisters().getPSW()) {
 		case TIME_OUT:
 			Main.test("taketune");
-			takeTurn(false);
+			setToReady();
+			takeTurn();
 			break;
 		case IO_INTERRUPT:
 			Main.test("block");
 			block();
+			takeTurn();
 			break;
 		case END:
 			Main.test("destroy");
 			destroy();
-			takeTurn(true);
+			takeTurn();
 			break;
 		default:
 			Main.test("nothing");
@@ -161,24 +170,26 @@ public class CPU {
 		}
 	}
 
+	/**
+	 * 保存现场，并将正在运行的进程的状态设置为就绪
+	 */
+	private void setToReady() {
+		runningProcess.setRegisters(insExecutor.getRegisters());
+		try {
+			getQueue(Queue_Type.READY).put(runningProcess);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
-	 * 轮转，使就绪队列头的进程运行
-	 * @param isEnd 为false时, 将当前进程置于就绪队列
+	 * 轮转，使就绪队列头的进程变为运行态
 	 */
-	private void takeTurn(boolean isEnd) {
+	private void takeTurn() {
 		// try {
 		// runningProcess =
 		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
 		// TimeUnit.MILLISECONDS);
-		if(!isEnd){
-			runningProcess.setRegisters(insExecutor.getRegisters());
-			try {
-				getQueue(Queue_Type.READY).put(runningProcess);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		runningProcess = getQueue(Queue_Type.READY).poll();
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
@@ -217,7 +228,12 @@ public class CPU {
 	public int getRunningPid() {
 		return runningProcess.getID();
 	}
-	public Collection<Integer> getReadyQueue(){
+
+	public Collection<Integer> getReadyQueue() {
 		return getQueue(Queue_Type.READY).stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
+	}
+
+	public int getPID(MemoryBlock block) {
+		return pcbManager.getPID(block);
 	}
 }
