@@ -1,5 +1,6 @@
 package view.cpu;
 
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,11 +15,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 import model.cpu.CPU;
 import model.cpu.DeviceManager;
 import model.cpu.SystemClock;
 import model.disk.FAT;
+import model.memory.Memory;
+import model.memory.MemoryBlock;
 
 public class CPUWindowController {
 	@FXML
@@ -72,6 +79,8 @@ public class CPUWindowController {
 	private Label timeLabel7;
 	@FXML
 	private Label timeLabel8;
+	@FXML
+	private VBox memoryVBox;
 
 	private void updateReadyQueue(Collection<Integer> idQueue) {
 		// Main.test(readyQueue);
@@ -135,6 +144,7 @@ public class CPUWindowController {
 				deviceBorderPane5, deviceBorderPane6, deviceBorderPane7, deviceBorderPane8 };
 		Label[] timeLabels = { timeLabel1, timeLabel2, timeLabel3, timeLabel4, timeLabel5, timeLabel6, timeLabel7,
 				timeLabel8 };
+		devicePanes = new DevicePanes[borderPanes.length];
 		for (int i = 0; i < borderPanes.length; i++) {
 			StackPane stackPane = (StackPane) borderPanes[i].getCenter();
 			Label idLabel = (Label) stackPane.getChildren().get(1);
@@ -154,16 +164,43 @@ public class CPUWindowController {
 			initDevicePane();
 			return;
 		}
+		List<Pair<Integer, Integer>> deviceMsgs = DeviceManager.getInstance().getUsingProcess();
+		for (int i = 0; i < devicePanes.length; i++) {
+			DevicePanes devicePane = devicePanes[i];
+			int pid = deviceMsgs.get(i).getKey();
+			int time = deviceMsgs.get(i).getValue();
+			if(pid == 0){
+				devicePane.setVisible(false);
+			}else{
+				devicePane.setVisible(true);
+				devicePane.setID(pid);
+				devicePane.setTime(time);
+			}
+		}
+	}
+	private void updateMemoryPane(){
+		memoryVBox.getChildren().clear();
+		MemoryBlock[] blocks = Memory.getInstance().listStatus();
+		for(MemoryBlock block:blocks){
+			double height = memoryVBox.getHeight() * block.getLength() / Memory.getMEMORY_SIZE();
+			int pid = CPU.getInstance().getPID(block);
+			String text = "#" + String.valueOf(pid);
+			if(pid == 0){
+				text = "系统占用";
+			}else if (pid == -1){
+				text = "";
+			}
+			memoryVBox.getChildren().addAll(new MemoryBlockView(text, height));
+		}
 
-//		for (int i = 0; i < devicePanes.length; i++) {
-//			DevicePanes devicePane = devicePanes[i];
-////			devicePane.set
-//		}
+//		memoryVBox.getChildren().addAll(pane);
+
 	}
 
 	public void update() {
 		updateRunningPane();
 		updateDiskPane();
 		updateDevicePane();
+		updateMemoryPane();
 	}
 }

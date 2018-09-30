@@ -1,6 +1,5 @@
 package model.memory;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import application.Main;
@@ -25,7 +24,7 @@ public class Memory {
 	static{
 		memory = new Memory();
 	}
-	
+
 	private Memory() {
 		blocks = new LinkedList<>();
 		blocks.add(new MemoryBlock(0, MEMORY_SIZE));
@@ -61,6 +60,7 @@ public class Memory {
 	 * @param releaseBlock
 	 */
 	public void release(MemoryBlock releaseBlock) {
+		Main.test("release", releaseBlock);
 		for (int i = 0; i < blocks.size(); i++) {
 			MemoryBlock block = blocks.get(i);
 			if (block.equals(releaseBlock)) {
@@ -96,5 +96,8 @@ public class Memory {
 		return blocks.toArray(new MemoryBlock[0]);
 		// return (MemoryBlock[]) blocks.stream().filter(block ->
 		// !block.isEmpty()).toArray();
+	}
+	public static int getMEMORY_SIZE() {
+		return MEMORY_SIZE;
 	}
 }

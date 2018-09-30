@@ -21,7 +21,7 @@ public class Device {
 
 	public void run(ArrayList<Pair<Integer, Integer>> usingProcess) {
 		if (!isFree()) {
-			usingProcess.set(index_of_usingProcess, new Pair<Integer, Integer>(pcb.getID(), remainTime--));
+			usingProcess.set(index_of_usingProcess, new Pair<Integer, Integer>(pcb.getID(), --remainTime));
 			if (remainTime == 0) {
 				DeviceManager.getInstance().release(this);
 				DeviceManager.getInstance().occupy(device_ID);

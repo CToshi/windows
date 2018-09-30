@@ -42,6 +42,9 @@ public class InsExecutor {
 		int ins = code.getIns();
 
 		code.toNext();
+		if (timeLeft <= 0) {
+			registers = registers.setPSW(PSW_Type.TIME_OUT);
+		}
 		if (ins < 100) {
 			registers = registers.setAX(ins);
 		} else if (ins == 100) {
@@ -56,9 +59,7 @@ public class InsExecutor {
 		} else {
 			registers = registers.setPSW(PSW_Type.END);
 		}
-		if (timeLeft <= 0) {
-			registers = registers.setPSW(PSW_Type.TIME_OUT);
-		}
+		
 	}
 
 	public int getTimeLeft() {
