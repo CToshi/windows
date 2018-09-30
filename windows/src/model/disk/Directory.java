@@ -57,6 +57,7 @@ public class Directory extends FileItem implements Cloneable{
 				// 默认生成可写且空白的文件
 				f = new Files(this,fileName,fileExtentionName, capacity, startNum, attribute, content);
 				this.files.add(f);
+				this.capacity+=f.capacity;
 			} 
 		}
 		return f;
@@ -78,6 +79,7 @@ public class Directory extends FileItem implements Cloneable{
 				// 默认生成可写且空白的文件
 				 f = new Directory(this,fileName, 8, startNum, 1);
 				this.files.add(f);
+				this.capacity+=f.capacity;
 			} 
 		}
 		return f;
@@ -109,6 +111,7 @@ public class Directory extends FileItem implements Cloneable{
 		boolean succeed =true;
 		if(f.isCanBeDeleted()) {
 			files.remove(f);
+			this.capacity-=f.capacity;
 		}else {
 			succeed =false;
 		}
