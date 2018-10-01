@@ -158,7 +158,7 @@ public class CmdUtil {
 	 */
 	public static boolean format() {
 		boolean succeed = true;
-		Disk.format();
+		Disk.getInstance().format();
 		return succeed;
 	}
 }

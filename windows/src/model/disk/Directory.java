@@ -132,8 +132,12 @@ public class Directory extends FileItem implements Cloneable{
 				files.get(0).deleteFiles();
 			}
 			files.clear();
-			fatherFile.removeFiles(this);
-			FAT.getInstance().recovery(this.startNum);
+			if(this.canBeDeleted&&this.fatherFile!=null) {
+				fatherFile.removeFiles(this);
+				FAT.getInstance().recovery(this.startNum);
+			}
+			
+			
 		}else {
 			succeed=false;
 		}
