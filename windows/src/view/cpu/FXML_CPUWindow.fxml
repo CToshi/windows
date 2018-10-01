@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.cpu.CPUWindowController">
    <children>
@@ -41,7 +41,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane>
+                  <GridPane style="-fx-border-insets: 0 0 5 0;" styleClass="paneWithBorder" stylesheets="@Pane.css">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                      </columnConstraints>
@@ -108,101 +108,18 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                   </GridPane>
-                  <VBox prefHeight="431.0" prefWidth="132.0" GridPane.rowIndex="1">
-                     <children>
-                        <Label alignment="CENTER" prefHeight="49.0" prefWidth="166.0" text="设备信息" />
-                        <GridPane prefHeight="91.0" prefWidth="147.0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <GridPane GridPane.columnIndex="1">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                              </GridPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <center>
-                                    <Label text="A: " BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                           </children>
-                        </GridPane>
-                        <GridPane prefHeight="91.0" prefWidth="147.0">
-                           <children>
-                              <GridPane GridPane.columnIndex="1">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                              </GridPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <center>
-                                    <Label text="B: " BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                           </children>
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                        </GridPane>
-                        <GridPane prefHeight="91.0" prefWidth="147.0">
-                           <children>
-                              <GridPane GridPane.columnIndex="1">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                              </GridPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <center>
-                                    <Label text="C: " BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                           </children>
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                        </GridPane>
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </VBox>
                   <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="34.0" vgrow="NEVER" />
-                      <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="73.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="47.0" vgrow="NEVER" />
+                      <RowConstraints maxHeight="79.0" minHeight="42.0" prefHeight="70.0" vgrow="NEVER" />
+                      <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="NEVER" />
+                      <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="NEVER" />
+                        <RowConstraints maxHeight="63.0" minHeight="0.0" prefHeight="47.0" vgrow="NEVER" />
+                        <RowConstraints maxHeight="114.0" minHeight="10.0" prefHeight="70.0" vgrow="NEVER" />
+                        <RowConstraints maxHeight="28.0" minHeight="0.0" prefHeight="18.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <HBox fx:id="aQueue" prefHeight="52.0" prefWidth="430.0" styleClass="paneWithBorder" stylesheets="@Pane.css" GridPane.rowIndex="1">
@@ -230,11 +147,226 @@
                               <Label text="B队列" BorderPane.alignment="CENTER" />
                            </bottom>
                         </BorderPane>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+                        <BorderPane prefHeight="48.0" prefWidth="463.0" GridPane.rowIndex="4">
                            <bottom>
                               <Label text="C队列" BorderPane.alignment="CENTER" />
                            </bottom>
                         </BorderPane>
+                     </children>
+                  </GridPane>
+                  <GridPane stylesheets="@Pane.css" GridPane.rowIndex="1">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="111.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="187.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="111.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="133.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER" prefHeight="49.0" prefWidth="166.0" text="设备信息" />
+                        <GridPane prefHeight="91.0" prefWidth="147.0" styleClass="paneWithBorder" GridPane.rowIndex="1">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <GridPane GridPane.columnIndex="1">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <BorderPane fx:id="deviceBorderPane1" prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane fx:id="deviceBorderPane2" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane GridPane.columnIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel1" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                    <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel2" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                 </children>
+                              </GridPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <center>
+                                    <Label text="A: " BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
+                           </children>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </GridPane>
+                        <GridPane prefHeight="100.0" prefWidth="145.0" styleClass="paneWithBorder" GridPane.rowIndex="2">
+                           <children>
+                              <GridPane GridPane.columnIndex="1">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <BorderPane fx:id="deviceBorderPane3" prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane fx:id="deviceBorderPane4" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane fx:id="deviceBorderPane5" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane GridPane.columnIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel3" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                    <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel4" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                    <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <center>
+                                          <Label fx:id="timeLabel5" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                 </children>
+                              </GridPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <center>
+                                    <Label text="B: " BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                        <GridPane prefHeight="91.0" prefWidth="147.0" styleClass="paneWithBorder" GridPane.rowIndex="3">
+                           <children>
+                              <GridPane GridPane.columnIndex="1">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <BorderPane fx:id="deviceBorderPane6" prefHeight="200.0" prefWidth="200.0">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane fx:id="deviceBorderPane7" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane fx:id="deviceBorderPane8" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                       <center>
+                                          <StackPane BorderPane.alignment="CENTER">
+                                             <children>
+                                                <Circle fill="transparent" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+                                                <Label text="#1" />
+                                             </children>
+                                          </StackPane>
+                                       </center></BorderPane>
+                                    <BorderPane GridPane.columnIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel6" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                    <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <center>
+                                          <Label fx:id="timeLabel7" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                    <BorderPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <center>
+                                          <Label fx:id="timeLabel8" text="9" />
+                                       </center>
+                                    </BorderPane>
+                                 </children>
+                              </GridPane>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                 <center>
+                                    <Label text="C: " BorderPane.alignment="CENTER" />
+                                 </center>
+                              </BorderPane>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
                      </children>
                   </GridPane>
                </children>
@@ -244,10 +376,7 @@
             </GridPane>
          </children>
       </StackPane>
-      <VBox prefHeight="720.0" prefWidth="203.0" styleClass="paneWithBorder" stylesheets="@Pane.css">
-         <children>
-            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#ff3737" height="78.0" stroke="BLACK" strokeType="INSIDE" width="203.0" />
-         </children>
+      <VBox fx:id="memoryVBox" prefHeight="720.0" prefWidth="203.0" styleClass="paneWithBorder" stylesheets="@Pane.css">
          <HBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </HBox.margin>
