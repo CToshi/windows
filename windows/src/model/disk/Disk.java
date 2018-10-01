@@ -35,7 +35,7 @@ public class Disk {
 		root.setCanBeDeleted(false);
 	}
 
-	public static Directory getRoot() {
+	public  Directory getRoot() {
 		return root;
 	}
 
