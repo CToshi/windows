@@ -1,11 +1,12 @@
 package model.disk;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import utility.CmdUtil;
 
 public class DiskFileTree extends TreeView<FileItem> {
 	/**
@@ -82,7 +83,11 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addTxt.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files files = ((Directory) fatherItem.getValue()).createTxtFile();
-			fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			if (files != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addTxt;
 	}
@@ -96,7 +101,11 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addExe.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files files = ((Directory) fatherItem.getValue()).createExeFile();
-			fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			if (files != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addExe;
 	}
@@ -110,9 +119,19 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addDir.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Directory directory = ((Directory) fatherItem.getValue()).createDirectory();
-			fatherItem.getChildren().add(new DiskFileTreeItem(directory));
+			if (directory != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(directory));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addDir;
+	}
+
+	private void error_of_missingCapacity() {
+		Alert alert = new Alert(Alert.AlertType.ERROR, "文件夹容量不足");
+		alert.setHeaderText(null);
+		alert.show();
 	}
 
 	/**
@@ -122,10 +141,8 @@ public class DiskFileTree extends TreeView<FileItem> {
 	private MenuItem addDeleteMenuItem() {
 		MenuItem addDelete = new MenuItem("删除");
 		addDelete.setOnAction(e -> {
-			TreeItem<FileItem> item = getSelectionModel().getSelectedItem();
-			item.getValue().deleteFiles();
-			int index = item.getParent().getChildren().indexOf(item);
-			item.getParent().getChildren().remove(index);
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			item.getParent().getChildren().remove(item);
 		});
 		return addDelete;
 	}
