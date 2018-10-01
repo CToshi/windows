@@ -185,6 +185,7 @@ public class CmdUtil {
 	public static boolean format() {
 		boolean succeed = true;
 		Disk.getInstance().format();
+		DiskFileTree.getInstance().getRoot().getChildren().clear();
 		return succeed;
 	}
 }

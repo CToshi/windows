@@ -47,6 +47,7 @@ public class Disk {
 		boolean succeed=true;
 		root.setCanBeDeleted(true);
 		root.deleteFiles();
+		root.setCanBeDeleted(false);
 		return succeed;
 	}
 	
