@@ -36,15 +36,15 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createTxtFile() {
-		return createFile(("新" + files.size()),".txt",8,1,"");
+		return createFile(createFileName(),".txt",8,1,"");
 	}
 
 	/**
 	 * 该方法为在该目录下创建exe文件
 	 * @return Files:返回一个文件，如果文件为null则表明创建失败
 	 */
-	public Files createExeFile() {
-		return createFile(("新" + files.size()),".e",8,1,"");
+	public Files createExeFile() {	
+		return createFile(createFileName(),".e",8,1,"");
 	}
 	
 	public Files createFile(String fileName,String fileExtentionName,int capacity,int attribute,String content) {
@@ -68,7 +68,7 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Directory:返回文件夹，如果为null则创建失败
 	 */
 	public Directory createDirectory() {
-		return createDirectory(("新" + files.size()));
+		return createDirectory(createFileName());
 	}
 	public Directory createDirectory(String fileName) {
 		Directory f=null;
@@ -86,6 +86,18 @@ public class Directory extends FileItem implements Cloneable{
 	}
 	
 
+	private String createFileName() {
+		String fileName="新";
+		for(Integer i=0;i<8;i++) {
+			if(isExistedName((fileName+i.toString()))) {
+				continue;
+			}else {
+				fileName+=i.toString();
+				break;
+			}
+		}
+		return fileName;
+	}
 	/**
 	 * 判断文件是否已经存在
 	 * 
