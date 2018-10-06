@@ -5,10 +5,61 @@ import model.disk.Disk;
 import model.disk.DiskFileTree;
 import model.disk.DiskFileTreeItem;
 import model.disk.FAT;
+import model.disk.FileItem;
 import model.disk.Files;
 
 public class CmdUtil {
 
+	/**
+	 * 通过路径找到该文件
+	 * @param  String:route
+	 * @return Files:f返回找到的文件，若为null则路径错误
+	 */
+	public Files findFile(String route) {
+		Files f =  null;
+		route="root"+route;
+		String[] names=route.split("\\");
+		Directory d=Disk.getInstance().getRoot();
+		FileItem f2=null;
+		for(int i=1;i<names.length;i++) {
+			f2=d.findFiles(names[i]);
+			//该目录下没有该文件
+			if(f2==null) {
+				break;
+			}else if(Directory.isDirectory(f2)){//这是一个文件夹
+				d=(Directory)f2;
+			}else if(i!=names.length-1) { //这是一个文件但在路径上不是在最后，路径错误
+				break;
+			}else {//是一个文件而且路径正确
+				f=(Files)f2;
+			}
+		}
+		return f;
+	}
+	
+	/**通过路径找到文件夹
+	 * @param String : route
+	 * @return Directory :d 返回找到的文件夹，若null则路径错误
+	 */
+	
+	public Directory findDirectory(String route) {
+		Directory d =null;
+		route="root"+route;
+		String[] names=route.split("\\");
+		Directory d2=Disk.getInstance().getRoot();
+		FileItem f=null;
+		for(int i=1;i<names.length;i++) {
+			f=d2.findFiles(names[i]);
+			if(f==null) {//该文件不存在
+				break;
+			}else if(!Directory.isDirectory(f)) {//这不是一个文件夹
+				break;
+			}else {
+				d2=(Directory)f;
+			}
+		}
+		return d;
+	}
 	/**
 	 * 创建文件，给出父目录和文件名，以及文件属性
 	 * 

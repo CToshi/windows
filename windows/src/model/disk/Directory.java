@@ -130,6 +130,22 @@ public class Directory extends FileItem implements Cloneable{
 		
 		return succeed;
 	}
+	
+	/**
+	 * 通过文件名来查找文件或者文件夹
+	 * @param String:fileName
+	 * @return FileItem:f 找到的内容，若为null则查找失败
+	 */
+	public FileItem findFiles(String fileName) {
+		FileItem f=null;
+		for(FileItem f2:files) {
+			if(f2.fileName.equals(fileName)) {
+				f=f2;
+				break;
+			}
+		}
+		return f;
+	}
 
 	/**
 	 * 该方法为删除整个文件夹
