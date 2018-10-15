@@ -2,15 +2,13 @@ package utility;
 
 import model.disk.Directory;
 import model.disk.Disk;
-import model.disk.FAT;
-import model.disk.FileItem;
 import model.disk.Files;
 
 public class CmdUtil {
 
 	/**
 	 * 创建文件，给出父目录和文件名，以及文件属性
-	 * 
+	 *
 	 * @param Directory:father
 	 * @param String: fileName
 	 * @param String:fileExtentionName
@@ -39,7 +37,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法为删除文件
-	 * 
+	 *
 	 * @param Files：f
 	 * @return boolean：表示删除成功与否，false则表示改文件不可删除
 	 */
@@ -56,7 +54,7 @@ public class CmdUtil {
 
 	/**
 	 * 将某文件复制到某目录下
-	 * 
+	 *
 	 * @param Files:f 在剪贴板的文件
 	 * @param Directory:d 复制到该目录
 	 * @return int:errorCode 0：复制成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在
@@ -92,7 +90,7 @@ public class CmdUtil {
 		}else if(d.isFull()) {
 			errorCode=1;
 		}else {
-			
+
 			Directory newDirectory=d.createDirectory(fileName);
 			if(newDirectory==null) {
 				errorCode=2;
@@ -100,7 +98,7 @@ public class CmdUtil {
 		}
 		return errorCode;
 	}
-	
+
 	/**
 	 * 该方法用于删除非空文件夹
 	 * @return int:errorCode 0:删除成功，1：文件夹非空，2：文件夹不可删除
@@ -116,7 +114,7 @@ public class CmdUtil {
 		}
 		return errorCode;
 	}
-	
+
 	/**
 	 * 该方法用于删除文件夹，无论空还是满
 	 * @return boolean :文件夹如果为不可删除文件夹则删除失败
@@ -130,7 +128,7 @@ public class CmdUtil {
 		}
 		return succeed;
 	}
-	
+
 	/**
 	 * 该方法用于修改文件属性
 	 * @param f
@@ -151,7 +149,7 @@ public class CmdUtil {
 		}
 		return succeed;
 	}
-	
+
 	/***
 	 * 磁盘格式化
 	 * @return 格式化成功还是失败

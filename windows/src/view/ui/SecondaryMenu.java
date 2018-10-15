@@ -9,18 +9,18 @@ import javafx.stage.Screen;
 
 public class SecondaryMenu extends Label {
 
-	private static final Color BACKGROUND_COLOR = Color.WHITE;
-	private static final double LABEL_WIDTH = 325;
-	private static final double LABEL_HEIGHT = 30;
-	private static Label[] backLabels;
-	private static Label[] iconLabels;
+	private final Color BACKGROUND_COLOR = Color.WHITE;
+	private final double LABEL_WIDTH = 325;
+	private final double LABEL_HEIGHT = 30;
+	private Label[] backLabels;
+	private Label[] iconLabels;
 	private static final String[] BACK_STRINGS = { "    查看", "    排列方式", "    刷新", "    粘贴", "    在此处打开Powershell窗口" };
 	private static final String[] ICON_STRINGS = { "    修改名字" };
-	private static Rectangle2D primaryScreenBounds;
+	private Rectangle2D primaryScreenBounds;
+	private final int BACKGROUND = 1;
+	private final int ICON = 2;
+	private int priority = BACKGROUND;
 	private static SecondaryMenu secondaryMenu = new SecondaryMenu();
-	public static final int BACKGROUND = 1;
-	public static final int ICON = 2;
-	private static int priority = BACKGROUND;
 
 	public static SecondaryMenu getInstance() {
 		return secondaryMenu;
@@ -46,10 +46,10 @@ public class SecondaryMenu extends Label {
 			}
 			if (i == 4) {
 				label.setOnMouseClicked(e -> {
-					if(!IconManager.getCmd().isShowing()){
-						IconManager.getCmd().show();
-					}else {
-						IconManager.getCmd().toFront();
+					if (!IconManager.getInstance().getWindow(IconManager.Type.CMD).isShowing()) {
+						IconManager.getInstance().getWindow(IconManager.Type.CMD).show();
+					} else {
+						IconManager.getInstance().getWindow(IconManager.Type.CMD).toFront();
 					}
 				});
 			}
@@ -70,7 +70,7 @@ public class SecondaryMenu extends Label {
 		}
 	}
 
-	public static void display(double mouseX, double mouseY, int type) {
+	public void display(double mouseX, double mouseY, int type) {
 		double positionX = Math.min(mouseX, primaryScreenBounds.getWidth() - LABEL_WIDTH);
 		double positionY = mouseY;
 		if (mouseY > primaryScreenBounds.getHeight() / 2) {
@@ -82,28 +82,36 @@ public class SecondaryMenu extends Label {
 				backLabels[i].setLayoutY(positionY);
 				positionY = positionY + LABEL_HEIGHT;
 			}
-			MainPane.display(backLabels);
+			MainPane.getInstance().display(backLabels);
 		} else if (type == ICON) {
 			for (int i = 0; i < iconLabels.length; i++) {
 				iconLabels[i].setLayoutX(positionX);
 				iconLabels[i].setLayoutY(positionY);
 				positionY = positionY + LABEL_HEIGHT;
 			}
-			MainPane.display(iconLabels);
+			MainPane.getInstance().display(iconLabels);
 			priority = ICON;
 		}
 	}
 
-	public static void disappear() {
-		MainPane.disappear(backLabels);
-		MainPane.disappear(iconLabels);
+	public void disappear() {
+		MainPane.getInstance().disappear(backLabels);
+		MainPane.getInstance().disappear(iconLabels);
 	}
 
-	public static int getPriority() {
+	public int getICON() {
+		return ICON;
+	}
+
+	public int getBACKGROUND() {
+		return BACKGROUND;
+	}
+
+	public int getPriority() {
 		return priority;
 	}
 
-	public static void setPriority(int priority) {
-		SecondaryMenu.priority = priority;
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }

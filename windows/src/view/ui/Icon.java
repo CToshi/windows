@@ -1,5 +1,7 @@
 package view.ui;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import application.Main;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -31,7 +33,8 @@ public class Icon extends Label {
 	private static final Color CLICK = new Color(0.4, 0.8, 1, 0.2);
 	private boolean isClick = false;
 
-	public Icon(String url, double width, double height, double x, double y, Type type, String fileName) {
+	public Icon(String url, double width, double height, double x, double y, Type type, String fileName,Window window) {
+		this.window = window;
 		this.type = type;
 		this.image = new Image(url);
 		imageView = new ImageView(image);
@@ -53,25 +56,18 @@ public class Icon extends Label {
 		BorderStroke borderStroke = new BorderStroke(Color.WHITE, BorderStrokeStyle.DASHED, new CornerRadii(0),
 				new BorderWidths(1));
 		stroke = new Border(borderStroke);
-		if (type == Type.HELP) {
-			window = IconManager.getHelp();
-		} else if (type == Type.FOLDER) {
-			window = IconManager.getFolder();
-		} else if (type == Type.CMD) {
-			window = IconManager.getCmd();
-		}
 		this.setOnMouseClicked(e -> {
 			if (!isClick) {
-				IconManager.canselSelected();
-				IconManager.canselBorder();
+				IconManager.getInstance().canselSelected();
+				IconManager.getInstance().canselBorder();
 				this.setBorder(stroke);
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 				isClick = true;
-				IconManager.setBeClick(true);
+				IconManager.getInstance().setBeClick(true);
 			} else {
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 				isClick = false;
-				IconManager.setBeClick(false);
+				IconManager.getInstance().setBeClick(false);
 			}
 			if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() % 2 == 0) {
 				if (type == Type.TXT) {
@@ -86,23 +82,23 @@ public class Icon extends Label {
 				isClick = false;
 				canselBorder();
 				canselSelected();
-				IconManager.setBeClick(false);
+				IconManager.getInstance().setBeClick(false);
 			}
 		});
 		this.setOnMouseEntered(e -> {
-			SecondaryMenu.setPriority(SecondaryMenu.ICON);
+			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getICON());
 			if (!isClick)
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 			else
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 		});
 		this.setOnMouseExited(e -> {
-			SecondaryMenu.setPriority(SecondaryMenu.BACKGROUND);
+			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getBACKGROUND());
 			if (!isClick)
 				this.setBackground(null);
 			else
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
-			IconManager.setBeClick(false);
+			IconManager.getInstance().setBeClick(false);
 		});
 	}
 

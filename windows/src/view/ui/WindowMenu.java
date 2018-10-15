@@ -130,10 +130,10 @@ public class WindowMenu{
 		EventHandler<MouseEvent> folderHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if(!IconManager.getFolder().isShowing()){
-					IconManager.getFolder().show();
+				if(!IconManager.getInstance().getWindow(IconManager.Type.FOLDER).isShowing()){
+					IconManager.getInstance().getWindow(IconManager.Type.FOLDER).show();
 				}else {
-					IconManager.getFolder().toFront();
+					IconManager.getInstance().getWindow(IconManager.Type.FOLDER).toFront();
 				}
 			}
 		};
@@ -141,10 +141,10 @@ public class WindowMenu{
 		EventHandler<MouseEvent> helpHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if(!IconManager.getHelp().isShowing()){
-					IconManager.getHelp().show();
+				if(!IconManager.getInstance().getWindow(IconManager.Type.HELP).isShowing()){
+					IconManager.getInstance().getWindow(IconManager.Type.HELP).show();
 				}else {
-					IconManager.getHelp().toFront();
+					IconManager.getInstance().getWindow(IconManager.Type.HELP).toFront();
 				}
 			}
 		};

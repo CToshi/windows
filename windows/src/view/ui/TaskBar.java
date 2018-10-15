@@ -78,7 +78,7 @@ public class TaskBar extends HBox {
 					if (!menu.isShowing()) {
 						label.setBackground(new Background(new BackgroundFill(SELECTED, null, null)));
 						menu.setShowing(true);
-						MainPane.display(menu.getVBox());
+						MainPane.getInstance().display(menu.getVBox());
 					} else {
 						canselMenu();
 					}
@@ -153,7 +153,7 @@ public class TaskBar extends HBox {
 			WindowMenu menu = menus.get(i);
 			if (menu.isShowing() && !menu.isOn()) {
 				labels.get(i).setBackground(new Background(new BackgroundFill(UNSELECTED, null, null)));
-				MainPane.disappear(menu.getVBox());
+				MainPane.getInstance().disappear(menu.getVBox());
 				menu.setShowing(false);
 			}
 		}

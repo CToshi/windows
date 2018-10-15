@@ -1,16 +1,9 @@
 package view.ui;
 
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -58,9 +51,6 @@ public class Window extends Stage {
 		this.setOnShowing(e -> {
 			TaskBar.addWindow(fileName, this);
 		});
-		this.setOnCloseRequest(e -> {
-			TaskBar.removeWindow(fileName, this);
-		});
 		this.setEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			TaskBar.Selected();
 		});
@@ -76,25 +66,35 @@ public class Window extends Stage {
 		console.prefWidthProperty().bind(root.widthProperty());
 		console.prefHeightProperty().bind(root.heightProperty());
 		root.getChildren().add(console);
-//		this.setOnShown(e->{
-//			System.out.println(255);
-//			console.setRoute(console.DEFAULT_ROUTE);
-//			console.clear();
-//		});
+		this.setOnCloseRequest(e->{
+			TaskBar.removeWindow(fileName, this);
+			console.setRoute(console.getDEFAULT_ROUTE());
+			console.setText(console.getDEFAULT_ROUTE());
+			console.positionCaret(console.getLength());
+		});
 		this.setTitle("CMD");
 	}
 
 	private void createTxtWindow() {
+		this.setOnCloseRequest(e->{
+			TaskBar.removeWindow(fileName, this);
+		});
 		this.setTitle(fileName);
 	}
 
 	private void createFolderWindow() {
+		this.setOnCloseRequest(e->{
+			TaskBar.removeWindow(fileName, this);
+		});
 		root.getChildren().add(DiskFileTreePane.getInstance());
 		DiskFileTreePane.getInstance().prefHeightProperty().bind(root.heightProperty());
 		this.setTitle(fileName);
 	}
 
 	private void createHelpWindow() {
+		this.setOnCloseRequest(e->{
+			TaskBar.removeWindow(fileName, this);
+		});
 		this.setTitle(fileName);
 	}
 

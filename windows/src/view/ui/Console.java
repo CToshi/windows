@@ -2,6 +2,7 @@ package view.ui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
@@ -9,7 +10,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 public class Console extends TextArea {
-	public static final String DEFAULT_ROUTE = "root:\\";
+	private final String DEFAULT_ROUTE = "root:\\";
 	private String currentRoute;
 
 	public Console() {
@@ -35,17 +36,13 @@ public class Console extends TextArea {
 		});
 
 		this.textProperty().addListener(new ChangeListener<String>() {
+
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				String[] temps = newValue.split("\n");
-				System.out.println(newValue + "," + oldValue);
 				String lastLine = temps[temps.length - 1];
-				// if(lastLine.contains(currentRoute)){
-				// System.out.println(233);
-				// }
 				if (!lastLine.contains(currentRoute)) {
-					System.out.println(lastLine + "," + currentRoute);
-					// setText(oldValue);
+					setText(oldValue);
 				}
 			}
 		});
@@ -75,5 +72,9 @@ public class Console extends TextArea {
 
 	public void setRoute(String route) {
 		this.currentRoute = route;
+	}
+
+	public String getDEFAULT_ROUTE() {
+		return DEFAULT_ROUTE;
 	}
 }
