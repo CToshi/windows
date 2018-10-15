@@ -1,9 +1,11 @@
 package model.disk;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 
@@ -11,7 +13,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	/**
 	 * 单例模式生成目录树
 	 */
-	private static DiskFileTreeItem rootItem = new DiskFileTreeItem(new Disk().getRoot());
+	private static DiskFileTreeItem rootItem = new DiskFileTreeItem(Disk.getInstance().getRoot());
 	private static DiskFileTree diskFileTree = new DiskFileTree(rootItem);
 
 	/**
@@ -31,7 +33,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private void addContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-		contextMenu.getItems().addAll(addMenu(), addDeleteMenuItem(), addRenameMenuItem());
+		contextMenu.getItems().addAll(addMenu(), addDeleteMenuItem(), addRenameMenuItem(), addChangeAttributeMenu());
 
 		/**
 		 * 设置右键事件,文件Item不显示新建项，根Item不显示删除和重命名项
@@ -45,8 +47,25 @@ public class DiskFileTree extends TreeView<FileItem> {
 					contextMenu.hide();
 					if (getSelectionModel().getSelectedItem().getValue() instanceof Files) {
 						((Menu) contextMenu.getItems().get(0)).setVisible(false);
+						((Menu) contextMenu.getItems().get(3)).setVisible(true);
+						if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 0) {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(0))
+									.setSelected(true);
+						} else if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 1) {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(1))
+									.setSelected(true);
+						} else {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2))
+									.setSelected(true);
+						}
+						if(getSelectionModel().getSelectedItem().getValue().getFileExtentionName().equals(".txt")) {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2)).setDisable(true);
+						} else {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2)).setDisable(false);
+						}
 					} else {
 						((Menu) contextMenu.getItems().get(0)).setVisible(true);
+						((Menu) contextMenu.getItems().get(3)).setVisible(false);
 					}
 					if (getSelectionModel().getSelectedItem().getValue().isCanBeDeleted()) {
 						((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
@@ -82,7 +101,11 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addTxt.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files files = ((Directory) fatherItem.getValue()).createTxtFile();
-			fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			if (files != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addTxt;
 	}
@@ -96,7 +119,11 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addExe.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files files = ((Directory) fatherItem.getValue()).createExeFile();
-			fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			if (files != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(files));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addExe;
 	}
@@ -110,9 +137,19 @@ public class DiskFileTree extends TreeView<FileItem> {
 		addDir.setOnAction(e -> {
 			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Directory directory = ((Directory) fatherItem.getValue()).createDirectory();
-			fatherItem.getChildren().add(new DiskFileTreeItem(directory));
+			if (directory != null) {
+				fatherItem.getChildren().add(new DiskFileTreeItem(directory));
+			} else {
+				error_of_missingCapacity();
+			}
 		});
 		return addDir;
+	}
+
+	private void error_of_missingCapacity() {
+		Alert alert = new Alert(Alert.AlertType.ERROR, "文件夹容量不足");
+		alert.setHeaderText(null);
+		alert.show();
 	}
 
 	/**
@@ -120,14 +157,13 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 * @return 删除菜单
 	 */
 	private MenuItem addDeleteMenuItem() {
-		MenuItem addDelete = new MenuItem("删除");
-		addDelete.setOnAction(e -> {
-			TreeItem<FileItem> item = getSelectionModel().getSelectedItem();
+		MenuItem delete = new MenuItem("删除");
+		delete.setOnAction(e -> {
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			item.getValue().deleteFiles();
-			int index = item.getParent().getChildren().indexOf(item);
-			item.getParent().getChildren().remove(index);
+			item.getParent().getChildren().remove(item);
 		});
-		return addDelete;
+		return delete;
 	}
 
 	/**
@@ -135,11 +171,31 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 * @return 重命名选项
 	 */
 	private MenuItem addRenameMenuItem() {
-		MenuItem addRename = new MenuItem("重命名");
-		addRename.setOnAction(e -> {
+		MenuItem rename = new MenuItem("重命名");
+		rename.setOnAction(e -> {
 			edit(getSelectionModel().getSelectedItem());
 		});
-		return addRename;
+		return rename;
+	}
+
+	public Menu addChangeAttributeMenu() {
+		Menu changeAttribute = new Menu("修改属性");
+		RadioMenuItem readOnly = new RadioMenuItem("只读");
+		RadioMenuItem canWrite = new RadioMenuItem("可写");
+		RadioMenuItem canExecute = new RadioMenuItem("可执行");
+		readOnly.setOnAction(e -> {
+			getSelectionModel().getSelectedItem().getValue().changeAttributes(0);
+		});
+		canWrite.setOnAction(e -> {
+			getSelectionModel().getSelectedItem().getValue().changeAttributes(1);
+		});
+		canExecute.setOnAction(e -> {
+			getSelectionModel().getSelectedItem().getValue().changeAttributes(2);
+		});
+		ToggleGroup tGroup = new ToggleGroup();
+		tGroup.getToggles().addAll(readOnly, canWrite, canExecute);
+		changeAttribute.getItems().addAll(readOnly, canWrite, canExecute);
+		return changeAttribute;
 	}
 
 	public static DiskFileTree getInstance() {

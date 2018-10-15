@@ -3,7 +3,6 @@ package model.disk;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Pair;
 
 public class DiskFileTreeItem extends TreeItem<FileItem> {
 	private final ImageView directoryIcon = new ImageView(
