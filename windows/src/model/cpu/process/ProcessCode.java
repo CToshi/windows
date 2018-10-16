@@ -17,7 +17,7 @@ public class ProcessCode implements MemoryOccupy {
 
 	@Override
 	public int length() {
-		return instructions.length;
+		return Math.max(20, instructions.length);
 	}
 
 	/**

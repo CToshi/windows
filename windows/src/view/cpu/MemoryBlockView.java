@@ -18,6 +18,8 @@ public class MemoryBlockView extends BorderPane{
 //		rectanglePane.setPrefHeight(height);
 //		this.getChildren().addAll(borderPane, rectanglePane);
 		this.setPrefHeight(height);
+//		this.setMinHeight(height);
+//		this.setMaxHeight(height);
 		this.setCenter(label);
 //		this.setBackground(new Background(new BackgroundFill(color, null, null)));
 		this.setStyle("-fx-border-color: #000000");
