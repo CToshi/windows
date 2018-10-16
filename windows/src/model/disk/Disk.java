@@ -9,28 +9,33 @@ public class Disk {
 	 * 磁盘最大容量
 	 */
 
-	public final static int MAX_SPACE_OF_DISK = 256;
+	public final  int MAX_SPACE_OF_DISK = 256;
 
 	// 磁盘块大小
-	public final static int CAPACITY_OF_DISK_BLOCKS = 64;
+	public final  int CAPACITY_OF_DISK_BLOCKS = 64;
 
 	/**
 	 * 磁盘管理root
 	 */
-	private static Directory root;
+	private  Directory root;
 
+	private static Disk disk=new Disk();
+	
+	public static Disk getInstance() {
+		return disk;
+	}
 	public Disk() {
 		init();
 
 	}
 
 	//创建根目录
-	private static void init() {
+	private  void init() {
 		root = new Directory(null,"root", 0, 2, 1);
 		root.setCanBeDeleted(false);
 	}
 
-	public Directory getRoot() {
+	public  Directory getRoot() {
 		return root;
 	}
 
@@ -38,11 +43,11 @@ public class Disk {
 	 * 磁盘格式化
 	 * @return boolean:返回删除是否成功
 	 */
-	public static boolean format() {
+	public  boolean format() {
 		boolean succeed=true;
 		root.setCanBeDeleted(true);
 		root.deleteFiles();
-		init();
+		root.setCanBeDeleted(false);
 		return succeed;
 	}
 	

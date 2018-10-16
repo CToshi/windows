@@ -36,15 +36,15 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createTxtFile() {
-		return createFile(("新" + files.size()),".txt",8,1,"");
+		return createFile(createFileName(),".txt",8,1,"");
 	}
 
 	/**
 	 * 该方法为在该目录下创建exe文件
 	 * @return Files:返回一个文件，如果文件为null则表明创建失败
 	 */
-	public Files createExeFile() {
-		return createFile(("新" + files.size()),".e",8,1,"");
+	public Files createExeFile() {	
+		return createFile(createFileName(),".e",8,1,"");
 	}
 	
 	public Files createFile(String fileName,String fileExtentionName,int capacity,int attribute,String content) {
@@ -68,7 +68,7 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Directory:返回文件夹，如果为null则创建失败
 	 */
 	public Directory createDirectory() {
-		return createDirectory(("新" + files.size()));
+		return createDirectory(createFileName());
 	}
 	public Directory createDirectory(String fileName) {
 		Directory f=null;
@@ -86,6 +86,18 @@ public class Directory extends FileItem implements Cloneable{
 	}
 	
 
+	private String createFileName() {
+		String fileName="新";
+		for(Integer i=0;i<8;i++) {
+			if(isExistedName((fileName+i.toString()))) {
+				continue;
+			}else {
+				fileName+=i.toString();
+				break;
+			}
+		}
+		return fileName;
+	}
 	/**
 	 * 判断文件是否已经存在
 	 * 
@@ -118,6 +130,22 @@ public class Directory extends FileItem implements Cloneable{
 		
 		return succeed;
 	}
+	
+	/**
+	 * 通过文件名来查找文件或者文件夹
+	 * @param String:fileName
+	 * @return FileItem:f 找到的内容，若为null则查找失败
+	 */
+	public FileItem findFiles(String fileName) {
+		FileItem f=null;
+		for(FileItem f2:files) {
+			if(f2.fileName.equals(fileName)) {
+				f=f2;
+				break;
+			}
+		}
+		return f;
+	}
 
 	/**
 	 * 该方法为删除整个文件夹
@@ -132,8 +160,12 @@ public class Directory extends FileItem implements Cloneable{
 				files.get(0).deleteFiles();
 			}
 			files.clear();
-			fatherFile.removeFiles(this);
-			FAT.getInstance().recovery(this.startNum);
+			if(this.canBeDeleted&&this.fatherFile!=null) {
+				fatherFile.removeFiles(this);
+				FAT.getInstance().recovery(this.startNum);
+			}
+			
+			
 		}else {
 			succeed=false;
 		}
