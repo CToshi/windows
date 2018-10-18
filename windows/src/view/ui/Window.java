@@ -18,8 +18,10 @@ public class Window extends Stage {
 	private Type type;
 	private Rectangle2D primaryScreenBounds;
 	private String fileName;
+	private Console console;
 
 	public Window(Stage stage,Type type,String fileName) {
+		this.console = null;
 		this.root = new Pane();
 		this.scene = new Scene(root);
 		this.setScene(scene);
@@ -65,6 +67,7 @@ public class Window extends Stage {
 		Console console = new Console();
 		console.prefWidthProperty().bind(root.widthProperty());
 		console.prefHeightProperty().bind(root.heightProperty());
+		setConsole(console);
 		root.getChildren().add(console);
 		this.setOnCloseRequest(e->{
 			TaskBar.removeWindow(fileName, this);
@@ -110,4 +113,12 @@ public class Window extends Stage {
 		this.label = label;
 	}
 
+	public Console getConsole() {
+		if(console!=null)return console;
+		return null;
+	}
+
+	private void setConsole(Console console) {
+		this.console = console;
+	}
 }

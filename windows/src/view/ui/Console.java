@@ -1,8 +1,8 @@
 package view.ui;
 
+import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
@@ -47,6 +47,21 @@ public class Console extends TextArea {
 			}
 		});
 
+		this.setOnKeyPressed(e->{
+			if(e.getCode() == KeyCode.ENTER){
+				String current = getText();
+				String[] tmp = current.split("\n");
+				String lastLine = tmp[tmp.length-1];
+				if(lastLine.length()>currentRoute.length()){
+					String oparetion = (lastLine.substring(currentRoute.length(),lastLine.length())).trim();
+					Controller.getInstance().setMessage(oparetion, currentRoute);
+				}
+//				String string = getText();
+//				Main.test("-", string, '-');
+//				setText(string);
+			}
+		});
+
 	}
 
 	@Override
@@ -59,10 +74,12 @@ public class Console extends TextArea {
 
 	@Override
 	public void replaceSelection(String text) {
+		if(!text.equals("\n"))return;
 		String current = getText();
 		int selectionStart = getSelection().getStart();
+		if(selectionStart==0)return;
 		if (!current.substring(selectionStart).contains("\n")) {
-			super.replaceSelection(text + text + currentRoute);
+			super.replaceSelection("\n" + currentRoute);
 		}
 	}
 
