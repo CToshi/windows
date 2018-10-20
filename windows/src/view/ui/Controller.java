@@ -20,9 +20,22 @@ public class Controller {
 		console = IconManager.getInstance().getWindow(Type.CMD).getConsole();
 	}
 
+	/**
+	 * 所有的指令：
+	 * ll   		显示文件夹内容
+	 * cd 		 	入文件夹或者上一级目录
+	 * mkdir	 	创建文件夹
+	 * create 		创建文件
+	 * vim			编辑文件
+	 * copy 		复制文件
+	 * delete		删除文件
+	 * rmdir		删除空目录
+	 * @param operation
+	 * @param route
+	 */
 	public void setMessage(String operation, String route) {
-		Directory directory = CmdUtil.findDirectory(route);
 		String[] temps = operation.split("\\s+");
+		Directory directory = CmdUtil.findDirectory(route);
 		String operate = temps[0];
 		if(temps.length == 1){
 			switch (operate) {
@@ -39,17 +52,29 @@ public class Controller {
 				break;
 			}
 		}else{
+			if(temps[1].charAt(0) == '\\'){
+
+			}else if(temps[1].charAt(0) == '.'){
+
+			}
 			switch (operate) {
 			case "create":
 				String[] fileName = temps[1].split("\\.");
-				console.addMsg(CREATE_ERROR[CmdUtil.creatFiles(directory, fileName[0], fileName[1])]);
+				int result = CmdUtil.creatFiles(directory, fileName[0], fileName[1]);
+				if(result!=0)
+					console.addMsg(CREATE_ERROR[result]);
 				break;
 			case "cd":
-				if (CmdUtil.findDirectory(route + temps[1]) != null) {
-					console.setRoute(route + temps[1] + "\\");
-				} else {
-					console.addMsg("当前文件夹不存在");
+				if (temps[1].equals(".")){
+					break;
+				}else if (temps[1].equals("..")) {
+					console.returnBack();
+				}else if(CmdUtil.findDirectory(route + temps[1])!=null){
+					console.setRoute(route+temps[1]+"\\");
+				}else {
+					console.addMsg("文件夹不存在");
 				}
+
 				break;
 			case "delete":
 

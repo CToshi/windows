@@ -41,36 +41,39 @@ public class Console extends TextArea {
 		});
 
 		this.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
-	        @Override
-	        public void onChanged(javafx.collections.ListChangeListener.
-	            Change<? extends Node> c) {
-	            while(c.next()){
-	                if(c.wasAdded()){
-	                    for(Node n : getChildrenUnmodifiable()){
-	                        if(n.getClass().isAssignableFrom(ScrollPane.class)){
-	                            //just trying to be cool here ^^
-	                            ScrollPane sp = (ScrollPane) n;
-	                            sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	    });
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Node> c) {
+				while (c.next()) {
+					if (c.wasAdded()) {
+						for (Node n : getChildrenUnmodifiable()) {
+							if (n.getClass().isAssignableFrom(ScrollPane.class)) {
+								// just trying to be cool here ^^
+								ScrollPane sp = (ScrollPane) n;
+								sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+							}
+						}
+					}
+				}
+			}
+		});
 
 		this.textProperty().addListener(new ChangeListener<String>() {
 			private boolean isInSide = false;
+
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (!isInSide && !isMsg) {
 					isInSide = !isInSide;
-					boolean isEnter = (newValue.substring(preCount,newValue.length())).contains("\n");
+					boolean isEnter = (newValue.substring(preCount, newValue.length())).contains("\n");
 					if (isEnter) {
-						setText(oldValue +"\n");
-						if((oldValue.substring(preCount+currentRoute.length(),oldValue.length())).trim().length()!=0){
-							Controller.getInstance().setMessage((oldValue.substring(preCount+currentRoute.length(),oldValue.length())).trim(),currentRoute);
+						setText(oldValue + "\n");
+						if ((oldValue.substring(preCount + currentRoute.length(), oldValue.length())).trim()
+								.length() != 0) {
+							Controller.getInstance().setMessage(
+									(oldValue.substring(preCount + currentRoute.length(), oldValue.length())).trim(),
+									currentRoute);
 						}
-						setText(getText()+currentRoute);
+						setText(getText() + currentRoute);
 						preCount = getLength() - currentRoute.length();
 						positionCaret(getLength());
 						setScrollTop(Double.MAX_VALUE);
@@ -88,6 +91,18 @@ public class Console extends TextArea {
 
 	}
 
+	public void returnBack() {
+		if (currentRoute.equals(DEFAULT_ROUTE))
+			return;
+		else {
+			String[] temps = currentRoute.split("(:\\\\)|(\\\\)");
+			currentRoute = DEFAULT_ROUTE;
+			for (int i = 1; i < temps.length - 1; i++) {
+				currentRoute = currentRoute + temps[i] + "\\";
+			}
+		}
+	}
+
 	public void initConsole() {
 		currentRoute = DEFAULT_ROUTE;
 		this.preCount = 0;
@@ -97,7 +112,7 @@ public class Console extends TextArea {
 
 	public void addMsg(String msg) {
 		isMsg = !isMsg;
-		setText(getText()+ msg + "\n");
+		setText(getText() + "\n" + msg + "\n\n");
 		isMsg = !isMsg;
 	}
 

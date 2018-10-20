@@ -1,7 +1,6 @@
 package view.ui;
 
 import application.Main;
-import model.disk.FileItem;
 import model.disk.Files;
 import view.ui.IconManager.Type;
 
