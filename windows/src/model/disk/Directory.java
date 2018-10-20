@@ -1,6 +1,6 @@
 package model.disk;
 /***
- * 
+ *
  * @author jiaru
  *该类为文件夹类，除了目录项外，还有管理最多8个文件或文件夹
  */
@@ -19,7 +19,7 @@ public class Directory extends FileItem implements Cloneable{
 
 	/**
 	 * 该方法用于判断该文件夹是否已满
-	 * 
+	 *
 	 * @return boolean:是否满了
 	 */
 	public boolean isFull() {
@@ -32,11 +32,11 @@ public class Directory extends FileItem implements Cloneable{
 
 	/**
 	 * 该方法为在该目录下创建txt文件
-	 * 
+	 *
 	 * @return Files :返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createTxtFile() {
-		return createFile(("新" + files.size()),".txt",8,1,"");
+		return createFile(createFileName(),".txt",8,1,"");
 	}
 
 	/**
@@ -44,9 +44,9 @@ public class Directory extends FileItem implements Cloneable{
 	 * @return Files:返回一个文件，如果文件为null则表明创建失败
 	 */
 	public Files createExeFile() {
-		return createFile(("新" + files.size()),".e",8,1,"");
+		return createFile(createFileName(),".e",8,1,"");
 	}
-	
+
 	public Files createFile(String fileName,String fileExtentionName,int capacity,int attribute,String content) {
 			Files f=null;
 		// 检查文件夹下文件数目是否已超过最大值
@@ -58,17 +58,17 @@ public class Directory extends FileItem implements Cloneable{
 				f = new Files(this,fileName,fileExtentionName, capacity, startNum, attribute, content);
 				this.files.add(f);
 				this.capacity+=f.capacity;
-			} 
+			}
 		}
 		return f;
 	}
 	/**
 	 * 该方法为在该目录下创建文件夹
-	 * 
+	 *
 	 * @return Directory:返回文件夹，如果为null则创建失败
 	 */
 	public Directory createDirectory() {
-		return createDirectory(("新" + files.size()));
+		return createDirectory(createFileName());
 	}
 	public Directory createDirectory(String fileName) {
 		Directory f=null;
@@ -80,15 +80,27 @@ public class Directory extends FileItem implements Cloneable{
 				 f = new Directory(this,fileName, 8, startNum, 1);
 				this.files.add(f);
 				this.capacity+=f.capacity;
-			} 
+			}
 		}
 		return f;
 	}
-	
 
+
+	private String createFileName() {
+		String fileName="新";
+		for(Integer i=0;i<8;i++) {
+			if(isExistedName((fileName+i.toString()))) {
+				continue;
+			}else {
+				fileName+=i.toString();
+				break;
+			}
+		}
+		return fileName;
+	}
 	/**
 	 * 判断文件是否已经存在
-	 * 
+	 *
 	 * @param name：String
 	 * @return boolean：是否存在
 	 */
@@ -115,8 +127,24 @@ public class Directory extends FileItem implements Cloneable{
 		}else {
 			succeed =false;
 		}
-		
+
 		return succeed;
+	}
+
+	/**
+	 * 通过文件名来查找文件或者文件夹
+	 * @param String:fileName
+	 * @return FileItem:f 找到的内容，若为null则查找失败
+	 */
+	public FileItem findFiles(String fileName) {
+		FileItem f=null;
+		for(FileItem f2:files) {
+			if(f2.fileName.equals(fileName)) {
+				f=f2;
+				break;
+			}
+		}
+		return f;
 	}
 
 	/**
@@ -136,12 +164,12 @@ public class Directory extends FileItem implements Cloneable{
 				fatherFile.removeFiles(this);
 				FAT.getInstance().recovery(this.startNum);
 			}
-			
-			
+
+
 		}else {
 			succeed=false;
 		}
-		
+
 		return succeed;
 	}
 
@@ -156,6 +184,18 @@ public class Directory extends FileItem implements Cloneable{
 		}
 		return succeed;
 	}
-	
-	
+
+	/**
+	 * 该方法获取该目录下的所有文件夹和文件名
+	 * @return
+	 */
+	public  ArrayList<String> getAllFilesName(){
+		ArrayList<String> names= new ArrayList<String>();
+		for(FileItem f:files) {
+			names.add(f.getFileName()+f.getFileExtentionName());
+		}
+		return names;
+
+	}
+
 }

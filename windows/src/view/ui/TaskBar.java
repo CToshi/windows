@@ -30,8 +30,8 @@ public class TaskBar extends HBox {
 	 * ROUTES和TYPES数组要一一对应
 	 */
 	private static final String[] ROUTES = { "images/help.png", "images/folder.png", "images/txt.png",
-			"images/begin.png" };
-	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START };
+			"images/begin.png", "images/cmd.png" , "images/cpu.png", "images/exe.png"};
+	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START ,Type.CMD, Type.CPU, Type.EXE};
 
 	private static ArrayList<Window> windows;
 	private static ArrayList<WindowMenu> menus;
@@ -78,7 +78,7 @@ public class TaskBar extends HBox {
 					if (!menu.isShowing()) {
 						label.setBackground(new Background(new BackgroundFill(SELECTED, null, null)));
 						menu.setShowing(true);
-						MainPane.display(menu.getVBox());
+						MainPane.getInstance().display(menu.getVBox());
 					} else {
 						canselMenu();
 					}
@@ -153,7 +153,7 @@ public class TaskBar extends HBox {
 			WindowMenu menu = menus.get(i);
 			if (menu.isShowing() && !menu.isOn()) {
 				labels.get(i).setBackground(new Background(new BackgroundFill(UNSELECTED, null, null)));
-				MainPane.disappear(menu.getVBox());
+				MainPane.getInstance().disappear(menu.getVBox());
 				menu.setShowing(false);
 			}
 		}

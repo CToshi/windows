@@ -34,70 +34,58 @@ public class MainPane extends Pane {
 		this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(screensize.getWidth(),
 						screensize.getHeight() - TaskBar.getHboxMaxSize(), false, false, false, false))));
-		Icon[] icons = IconManager.getIcons();
+		Icon[] icons = IconManager.getInstance().getIcons();
 		for (int i = 0; i < icons.length; i++) {
 			this.getChildren().add(icons[i]);
 		}
 		this.setOnMouseClicked(e -> {
 			TaskBar.canselMenu();
 			TaskBar.Selected();
-			SecondaryMenu.disappear();
-			if (!IconManager.isBeClick())
-				IconManager.canselSelected();
+			SecondaryMenu.getInstance().disappear();
+			if (!IconManager.getInstance().isBeClick())
+				IconManager.getInstance().canselSelected();
 			if (e.getButton() == MouseButton.SECONDARY) {
-				SecondaryMenu.display(e.getX(), e.getY());
+				SecondaryMenu.getInstance().display(e.getX(), e.getY(), SecondaryMenu.getInstance().getPriority());
 			}
 		});
 	}
 
 	public void reStart() {
-
 		Platform.runLater(() -> {
-			disappear(IconManager.getIcons());
+			disappear(IconManager.getInstance().getIcons());
 			IconManager.getInstance().initIcon();
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
 		});
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				Platform.runLater(() -> {
-					display(IconManager.getIcons());
+					display(IconManager.getInstance().getIcons());
 				});
 			}
 		}, 100);
-		// this.requestLayout();
 	}
 
 	public void addIcon(Icon icon) {
 		this.getChildren().add(icon);
 	}
 
-	public static void display(Node[] nodes) {
+	public void display(Node[] nodes) {
 		for (Node node : nodes) {
 			MainPane.getInstance().getChildren().add(node);
 		}
 	}
 
-	public static void display(Node node){
+	public void display(Node node) {
 		MainPane.getInstance().getChildren().add(node);
 	}
 
-	public static void disappear(Node[] nodes) {
+	public void disappear(Node[] nodes) {
 		for (Node node : nodes) {
 			MainPane.getInstance().getChildren().remove(node);
 		}
 	}
 
-	public static void disappear(Node node){
+	public void disappear(Node node) {
 		MainPane.getInstance().getChildren().remove(node);
 	}
 }

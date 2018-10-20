@@ -46,7 +46,7 @@ public class Compiler {
 		if (code.startsWith("x=")) {
 			try {
 				result = Integer.valueOf(code.substring(2));
-				if(result >= 100){
+				if (result >= 100) {
 					result = 255;
 				}
 			} catch (NumberFormatException e) {
@@ -56,9 +56,11 @@ public class Compiler {
 		} else if (code.equals("x--")) {
 			result = 101;
 		} else if (code.startsWith("!") && code.length() == 3) {
-			if ('A' <= code.charAt(1) && code.charAt(1) <= 'C') {
+			char deviceID = code.charAt(1);
+			int time = Integer.valueOf(code.substring(2));
+			if ('A' <= deviceID && deviceID <= 'C' && time > 0) {
 				try {
-					result = 110 + code.charAt(1) - 'A' + Integer.valueOf(code.substring(2));
+					result = 110 + code.charAt(1) - 'A' + time;
 				} catch (NumberFormatException e) {
 				}
 			}
@@ -72,19 +74,20 @@ public class Compiler {
 		return END_CODE;
 	}
 
-	public static String decode(int code){
-		if(0<=code && code <= 99){
-			return "x="+String.valueOf(code);
-		}else if (code == 100){
+	public static String decode(int code) {
+		if (0 <= code && code <= 99) {
+			return "x=" + String.valueOf(code);
+		} else if (code == 100) {
 			return "x++";
-		}else if (code== 101){
+		} else if (code == 101) {
 			return "x--";
-		}else if (111<= code && code <= 139){
+		} else if (111 <= code && code <= 139) {
 			code -= 110;
-			return "?" + (char)('A' + code/10) + String.valueOf(code%10);
-		}else if (code == END_CODE){
+			return "?" + (char) ('A' + code / 10) + String.valueOf(code % 10);
+		} else if (code == END_CODE) {
 			return "end";
 		}
 		return "";
 	}
+
 }

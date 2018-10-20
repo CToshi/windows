@@ -1,6 +1,5 @@
 package view.cpu;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,12 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import model.cpu.CPU;
 import model.cpu.SystemClock;
 
@@ -34,23 +31,35 @@ public class Test extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		URL location = getClass().getResource("/view/cpu/FXML_CPUWindow.fxml");
-//		URL location = getClass().getResource("/view/cpu/FXML_CPU.fxml");
-		FXMLLoader loader = new FXMLLoader(location);
-		Pane root = loader.load();
-		CPUWindowController controller = loader.getController();
-		SystemClock.getInstance().addEvent(()->{
-			Platform.runLater(()->{
-				controller.update();
-			});
-		});
 		runlater(()->{
+			for(int i = 0;i<10;i++){
+				CPU.getInstance().create("!A1");
+			}
+//			CPU.getInstance().create("x++ x++ x++ x++ x++ x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++"
+//					+ " x++ x++ x++ x++ x++");
+//
+//			CPU.getInstance().create("x=99");
+//			CPU.getInstance().create("x--");
 //			for(int i = 0;i<2;i++){
 //				CPU.getInstance().create("x++ x-- x=99 x++");
 //			}
-			CPU.getInstance().create("!A5");
-
+			CPU.getInstance().create("!A9 x++ x++ x++ x++ x++");
+			CPU.getInstance().create("!A9");
+			CPU.getInstance().create("!A9");
+			CPU.getInstance().create("!A9");
 		});
+		Pane root = CPUWindow.getInstance().getMainPane();
 		Scene scene = new Scene(root, 1280, 720);
 		scene.setOnMouseClicked(e -> {
 			Main.test(e.getX(), e.getY());
@@ -89,4 +98,6 @@ public class Test extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+
 }

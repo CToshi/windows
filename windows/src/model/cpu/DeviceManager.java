@@ -1,9 +1,17 @@
 package model.cpu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import application.Main;
 import javafx.util.Pair;
 import model.cpu.process.PCB;
 
@@ -17,9 +25,10 @@ public class DeviceManager {
 	private HashMap<Character, Queue<PCB>> map_of_pcbQueue;
 	private HashMap<PCB, Integer> map_of_time;
 	private HashMap<Character, Queue<Device>> map_of_freeDeviceQueue;
-	static{
+	static {
 		deviceManager = new DeviceManager();
 	}
+
 	private DeviceManager() {
 		usingProcess = new ArrayList<>(MAX_NUMBER_OF_A_DEVICE + MAX_NUMBER_OF_B_DEVICE + MAX_NUMBER_OF_C_DEVICE);
 		map_of_device = new HashMap<>();
@@ -94,8 +103,10 @@ public class DeviceManager {
 		return usingProcess;
 	}
 
-	public HashMap<Character, Queue<Device>> getMap_of_freeDeviceQueue() {
-		return map_of_freeDeviceQueue;
+	public Collection<Queue<PCB>> getRequestQueues() {
+		Iterator<Entry<Character, Queue<PCB>>> iterator = map_of_pcbQueue.entrySet().iterator();
+		return Stream.generate(iterator::next).limit(map_of_pcbQueue.size()).map(entry -> entry.getValue())
+				.collect(Collectors.toList());
 	}
 
 	public static DeviceManager getInstance() {

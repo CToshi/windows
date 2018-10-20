@@ -23,7 +23,7 @@ public class Files extends FileItem {
 
 	/**
 	 * 该方法是修改该内容
-	 * 
+	 *
 	 * @param 传入修改后的内容
 	 * @return int:返回一个数字，0：修改成功，1：只读属性文件不可修改，2：磁盘空间不足
 	 */
@@ -65,7 +65,6 @@ public class Files extends FileItem {
 		} else {
 			succeed = false;
 		}
-
 		return succeed;
 	}
 
