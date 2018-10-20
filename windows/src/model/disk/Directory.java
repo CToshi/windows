@@ -184,6 +184,18 @@ public class Directory extends FileItem implements Cloneable{
 		}
 		return succeed;
 	}
-
+	
+	/**
+	 * 该方法获取该目录下的所有文件夹和文件名
+	 * @return
+	 */
+	public  ArrayList<String> getAllFilesName(){
+		ArrayList<String> names= new ArrayList<String>();
+		for(FileItem f:files) {
+			names.add(f.getFileName()+f.getFileExtentionName());
+		}
+		return names;
+		
+	}
 
 }
