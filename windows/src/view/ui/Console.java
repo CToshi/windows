@@ -2,7 +2,11 @@ package view.ui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -13,6 +17,7 @@ public class Console extends TextArea {
 	private String currentRoute;
 	private int preCount;
 	private int lastPos;
+	private boolean isMsg = false;
 
 	public Console() {
 		initConsole();
@@ -35,28 +40,45 @@ public class Console extends TextArea {
 			}
 		});
 
+		this.getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
+	        @Override
+	        public void onChanged(javafx.collections.ListChangeListener.
+	            Change<? extends Node> c) {
+	            while(c.next()){
+	                if(c.wasAdded()){
+	                    for(Node n : getChildrenUnmodifiable()){
+	                        if(n.getClass().isAssignableFrom(ScrollPane.class)){
+	                            //just trying to be cool here ^^
+	                            ScrollPane sp = (ScrollPane) n;
+	                            sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    });
+
 		this.textProperty().addListener(new ChangeListener<String>() {
 			private boolean isInSide = false;
-
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!isInSide) {
+				if (!isInSide && !isMsg) {
 					isInSide = !isInSide;
 					boolean isEnter = (newValue.substring(preCount,newValue.length())).contains("\n");
 					if (isEnter) {
+						setText(oldValue +"\n");
 						if((oldValue.substring(preCount+currentRoute.length(),oldValue.length())).trim().length()!=0){
 							Controller.getInstance().setMessage((oldValue.substring(preCount+currentRoute.length(),oldValue.length())).trim(),currentRoute);
-						}else{
-							setText(oldValue +"\n"+currentRoute);
 						}
-						preCount = getText().length() - currentRoute.length();
+						setText(getText()+currentRoute);
+						preCount = getLength() - currentRoute.length();
 						positionCaret(getLength());
-						setScrollTop(getHeight());
+						setScrollTop(Double.MAX_VALUE);
 					} else {
 						if (!(newValue.substring(preCount, newValue.length())).contains(currentRoute)) {
 							setText(oldValue);
 							positionCaret(getLength());
-							setScrollTop(getHeight());
+							setScrollTop(Double.MAX_VALUE);
 						}
 					}
 					isInSide = !isInSide;
@@ -74,7 +96,9 @@ public class Console extends TextArea {
 	}
 
 	public void addMsg(String msg) {
-		setText(getText()+"\n"+ msg + "\n\n" + currentRoute);
+		isMsg = !isMsg;
+		setText(getText()+ msg + "\n");
+		isMsg = !isMsg;
 	}
 
 	public String getRoute() {

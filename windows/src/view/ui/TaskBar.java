@@ -54,7 +54,7 @@ public class TaskBar extends HBox {
 		this.setBorder(border);
 
 		screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		fitY = screensize.getHeight() - getHboxMaxSize();
+		fitY = screensize.getHeight() - TaskBar.getHboxMaxSize();
 		windows = new ArrayList<Window>();
 		menus = new ArrayList<WindowMenu>();
 		labels = new ArrayList<Label>();
@@ -105,11 +105,11 @@ public class TaskBar extends HBox {
 		});
 	}
 
-	public double getHboxMaxSize() {
+	public static double getHboxMaxSize() {
 		return HBOX_MAX_SIZE;
 	}
 
-	public void addWindow(String fileName, Window window) {
+	public static void addWindow(String fileName, Window window) {
 		for (int i = 0; i < menus.size(); i++) {
 			if (menus.get(i).getType() == window.getType()) {
 				WindowMenu menu = menus.get(i);
@@ -127,7 +127,7 @@ public class TaskBar extends HBox {
 		windows.add(window);
 	}
 
-	public void removeWindow(String fileName, Window window) {
+	public static void removeWindow(String fileName, Window window) {
 		for (int i = 0; i < menus.size(); i++) {
 			WindowMenu menu = menus.get(i);
 			if (menus.get(i).getType() == window.getType()) {
@@ -148,7 +148,7 @@ public class TaskBar extends HBox {
 		windows.remove(window);
 	}
 
-	public void canselMenu() {
+	public static void canselMenu() {
 		for (int i = 0; i < menus.size() && i < labels.size(); i++) {
 			WindowMenu menu = menus.get(i);
 			if (menu.isShowing() && !menu.isOn()) {
@@ -159,7 +159,7 @@ public class TaskBar extends HBox {
 		}
 	}
 
-	public void Selected() {
+	public static void Selected() {
 		for (Window window : windows) {
 			if (window.isFocused()) {
 				window.getLabel().setBackground(new Background(new BackgroundFill(SELECTED, null, null)));

@@ -43,7 +43,7 @@ public class Directory extends FileItem implements Cloneable{
 	 * 该方法为在该目录下创建exe文件
 	 * @return Files:返回一个文件，如果文件为null则表明创建失败
 	 */
-	public Files createExeFile() {	
+	public Files createExeFile() {
 		return createFile(createFileName(),".e",8,1,"");
 	}
 
@@ -130,7 +130,7 @@ public class Directory extends FileItem implements Cloneable{
 
 		return succeed;
 	}
-	
+
 	/**
 	 * 通过文件名来查找文件或者文件夹
 	 * @param String:fileName
@@ -164,8 +164,8 @@ public class Directory extends FileItem implements Cloneable{
 				fatherFile.removeFiles(this);
 				FAT.getInstance().recovery(this.startNum);
 			}
-			
-			
+
+
 		}else {
 			succeed=false;
 		}
@@ -185,5 +185,15 @@ public class Directory extends FileItem implements Cloneable{
 		return succeed;
 	}
 
-
+	public String getAllFileNames(){
+		String names = ".\n..";
+		System.out.println(files.size());
+		for (int i=0;i<files.size();i++) {
+			if(i != files.size()-1){
+				names ="\n" + names + "\n";
+				names = names + files.get(i).getFileName();
+			}
+		}
+		return names;
+	}
 }

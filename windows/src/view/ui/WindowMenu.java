@@ -99,7 +99,7 @@ public class WindowMenu{
 	private void initStart() {
 		vBox = new VBox();
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		double fitY = screensize.getHeight() - TaskBar.getInstance().getHboxMaxSize();
+		double fitY = screensize.getHeight() - TaskBar.getHboxMaxSize();
 		vBox.setLayoutX(0);
 		vBox.setLayoutY(fitY - ROUTES.length * LABEL_HEIGHT);
 		handlers = new ArrayList<EventHandler<MouseEvent>>();

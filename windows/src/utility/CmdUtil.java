@@ -76,27 +76,26 @@ public class CmdUtil {
 		int errorCode = 0;
 		if (father.isExistedName(fileName)) {
 			errorCode = 3;
-			
+
 		} else if (father.isFull()) {
 			errorCode = 1;
 		} else {
 			Files f = null;
 			if (fileExtentionName.equals("txt")) {
 				f = father.createTxtFile();
-				
+
 			} else if (fileExtentionName.equals("exe")) {
 				f = father.createExeFile();
 			} else {
 				errorCode = 4;
 			}
 			if (f == null) {
-				errorCode = 2;				
+				errorCode = 2;
 			}
 			// ¶Ô½ÓÄ¿Â¼Ê÷
 			else {
 				DiskFileTreeItem fatherItem = father.getMyItem();
 				fatherItem.getChildren().add(new DiskFileTreeItem(f));
-				System.out.println(233);
 			}
 		}
 		return errorCode;
