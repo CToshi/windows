@@ -1,6 +1,8 @@
 package view.ui;
 
 import application.Main;
+import model.disk.FileItem;
+import model.disk.Files;
 import view.ui.IconManager.Type;
 
 public class CreateWindows {
@@ -15,13 +17,12 @@ public class CreateWindows {
 
 	}
 
-	public void create(String fileExtentionName,String fileName, String content){
+	public void create(Files file){
 		Type type = null;
-		if(fileName.equals("txt"))type = Type.TXT;
-		else if (fileName.equals("exe"))type = Type.EXE;
+		if(file.getFileExtentionName().equals(".txt"))type = Type.TXT;
+		else if (file.equals(".exe"))type = Type.EXE;
 		else System.out.println("目录树输入的文件扩展名错误");
-		Window window = new Window(Main.getPrimaryStage(), type, fileName);
-		window.getTextArea().setText(content);
+		Window window = new Window(Main.getPrimaryStage(), type, file);
 		window.show();
 	}
 

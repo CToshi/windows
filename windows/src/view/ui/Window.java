@@ -1,5 +1,7 @@
 package view.ui;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -8,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.disk.Files;
 import view.cpu.CPUWindow;
 import view.disk.DiskFileTreePane;
 import view.ui.IconManager.Type;
@@ -23,7 +26,49 @@ public class Window extends Stage {
 	private Console console;
 	private TextArea textArea;
 
+	public Window(Stage stage,Type type, Files files) {
+		this.initOwner(stage);
+		this.type = type;
+		this.fileName = files.getFileName();
+		init();
+		switch (type) {
+		case TXT:
+			createTxtWindow(files);
+			break;
+		case EXE:
+			createExeWindow(files);
+			break;
+		default:
+			System.out.println("Window的switch 出问题了！！！");
+			break;
+		}
+	}
+
 	public Window(Stage stage,Type type,String fileName) {
+		this.initOwner(stage);
+		this.type = type;
+		this.fileName = fileName;
+		init();
+		switch (type) {
+		case HELP:
+			createHelpWindow();
+			break;
+		case FOLDER:
+			createFolderWindow();
+			break;
+		case CMD:
+			createCMDWindow();
+			break;
+		case CPU:
+			createCPUWindow();
+			break;
+		default:
+			System.out.println("Window的switch 出问题了！！！");
+			break;
+		}
+	}
+
+	public void init() {
 		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		this.setX(primaryScreenBounds.getWidth()/4);
 		this.setY(primaryScreenBounds.getHeight()/4);
@@ -34,42 +79,12 @@ public class Window extends Stage {
 		this.root = new Pane();
 		this.scene = new Scene(root);
 		this.setScene(scene);
-		this.initOwner(stage);
-		this.type = type;
-		this.fileName = fileName;
 		this.setResizable(false);
-		init(type);
-	}
-
-	public void init(Type type) {
-		switch (type) {
-		case HELP:
-			createHelpWindow();
-			break;
-		case FOLDER:
-			createFolderWindow();
-			break;
-		case TXT:
-			createTxtWindow();
-			break;
-		case CMD:
-			createCMDWindow();
-			break;
-		case CPU:
-			createCPUWindow();
-			break;
-		case EXE:
-			createExeWindow();
-			break;
-		default:
-			System.out.println("Window的switch 出问题了！！！");
-			break;
-		}
 		this.setOnShowing(e -> {
-			TaskBar.getInstance().addWindow(fileName, this);
+			TaskBar.addWindow(fileName, this);
 		});
 		this.setEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			TaskBar.getInstance().Selected();
+			TaskBar.Selected();
 		});
 	}
 
@@ -79,37 +94,41 @@ public class Window extends Stage {
 		console.prefHeightProperty().bind(root.heightProperty());
 		root.getChildren().add(console);
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
 			console.initConsole();
 		});
 		this.setTitle(fileName);
 	}
 
-	private void createTxtWindow() {
+	private void createTxtWindow(Files file) {
 		textArea = new TextArea();
 		textArea.prefWidthProperty().bind(root.widthProperty());
 		textArea.prefHeightProperty().bind(root.heightProperty());
+		textArea.setText(file.getContent());
 		root.getChildren().add(textArea);
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
+			file.changeFilesContent(textArea.getText());
 		});
 		this.setTitle(fileName);
 	}
 
-	private void createExeWindow(){
+	private void createExeWindow(Files file){
 		textArea = new TextArea();
 		textArea.prefWidthProperty().bind(root.widthProperty());
 		textArea.prefHeightProperty().bind(root.heightProperty());
+		textArea.setText(file.getContent());
 		root.getChildren().add(textArea);
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
+			file.changeFilesContent(textArea.getText());
 		});
 		this.setTitle(fileName);
 	}
 
 	private void createFolderWindow() {
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
 		});
 		root.getChildren().add(DiskFileTreePane.getInstance());
 		DiskFileTreePane.getInstance().prefHeightProperty().bind(root.heightProperty());
@@ -118,14 +137,14 @@ public class Window extends Stage {
 
 	private void createHelpWindow() {
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
 		});
 		this.setTitle(fileName);
 	}
 
 	private void createCPUWindow(){
 		this.setOnCloseRequest(e->{
-			TaskBar.getInstance().removeWindow(fileName, this);
+			TaskBar.removeWindow(fileName, this);
 		});
 		scene.setRoot(CPUWindow.getInstance().getMainPane());
 		this.setX(primaryScreenBounds.getWidth()/2-640);

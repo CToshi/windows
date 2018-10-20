@@ -1,5 +1,7 @@
 package view.ui;
 
+import java.util.ArrayList;
+
 import model.disk.Directory;
 import utility.CmdUtil;
 import view.ui.IconManager.Type;
@@ -25,7 +27,12 @@ public class Controller {
 		if(temps.length == 1){
 			switch (operate) {
 			case "ll":
-				console.addMsg(directory.getAllFileNames());
+				ArrayList<String> names = directory.getAllFilesName();
+				String msg = ".\n..";
+				for(int i=0;i<names.size();i++){
+					msg = msg + "\n" + names.get(i);
+				}
+				console.addMsg(msg);
 				break;
 			default:
 				console.addMsg("没有这条指令");
