@@ -185,15 +185,17 @@ public class Directory extends FileItem implements Cloneable{
 		return succeed;
 	}
 
-	public String getAllFileNames(){
-		String names = ".\n..";
-		System.out.println(files.size());
-		for (int i=0;i<files.size();i++) {
-			if(i != files.size()-1){
-				names ="\n" + names + "\n";
-				names = names + files.get(i).getFileName();
-			}
+	/**
+	 * 该方法获取该目录下的所有文件夹和文件名
+	 * @return
+	 */
+	public  ArrayList<String> getAllFilesName(){
+		ArrayList<String> names= new ArrayList<String>();
+		for(FileItem f:files) {
+			names.add(f.getFileName()+f.getFileExtentionName());
 		}
 		return names;
+
 	}
+
 }

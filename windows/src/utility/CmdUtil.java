@@ -83,9 +83,10 @@ public class CmdUtil {
 			Files f = null;
 			if (fileExtentionName.equals("txt")) {
 				f = father.createTxtFile();
-
+				f.changeFilesName(f.getFileName(), fileName);
 			} else if (fileExtentionName.equals("exe")) {
 				f = father.createExeFile();
+				f.changeFilesName(f.getFileName(), fileName);
 			} else {
 				errorCode = 4;
 			}
