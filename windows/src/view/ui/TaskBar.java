@@ -30,8 +30,8 @@ public class TaskBar extends HBox {
 	 * ROUTES和TYPES数组要一一对应
 	 */
 	private static final String[] ROUTES = { "images/help.png", "images/folder.png", "images/txt.png",
-			"images/begin.png", "images/cmd.png"};
-	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START ,Type.CMD};
+			"images/begin.png", "images/cmd.png" , "images/cpu.png", "images/exe.png"};
+	private static final Type[] TYPES = { Type.HELP, Type.FOLDER, Type.TXT, Type.START ,Type.CMD, Type.CPU, Type.EXE};
 
 	private static ArrayList<Window> windows;
 	private static ArrayList<WindowMenu> menus;
@@ -54,7 +54,7 @@ public class TaskBar extends HBox {
 		this.setBorder(border);
 
 		screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		fitY = screensize.getHeight() - TaskBar.getHboxMaxSize();
+		fitY = screensize.getHeight() - getHboxMaxSize();
 		windows = new ArrayList<Window>();
 		menus = new ArrayList<WindowMenu>();
 		labels = new ArrayList<Label>();
@@ -105,11 +105,11 @@ public class TaskBar extends HBox {
 		});
 	}
 
-	public static double getHboxMaxSize() {
+	public double getHboxMaxSize() {
 		return HBOX_MAX_SIZE;
 	}
 
-	public static void addWindow(String fileName, Window window) {
+	public void addWindow(String fileName, Window window) {
 		for (int i = 0; i < menus.size(); i++) {
 			if (menus.get(i).getType() == window.getType()) {
 				WindowMenu menu = menus.get(i);
@@ -127,7 +127,7 @@ public class TaskBar extends HBox {
 		windows.add(window);
 	}
 
-	public static void removeWindow(String fileName, Window window) {
+	public void removeWindow(String fileName, Window window) {
 		for (int i = 0; i < menus.size(); i++) {
 			WindowMenu menu = menus.get(i);
 			if (menus.get(i).getType() == window.getType()) {
@@ -148,7 +148,7 @@ public class TaskBar extends HBox {
 		windows.remove(window);
 	}
 
-	public static void canselMenu() {
+	public void canselMenu() {
 		for (int i = 0; i < menus.size() && i < labels.size(); i++) {
 			WindowMenu menu = menus.get(i);
 			if (menu.isShowing() && !menu.isOn()) {
@@ -159,7 +159,7 @@ public class TaskBar extends HBox {
 		}
 	}
 
-	public static void Selected() {
+	public void Selected() {
 		for (Window window : windows) {
 			if (window.isFocused()) {
 				window.getLabel().setBackground(new Background(new BackgroundFill(SELECTED, null, null)));

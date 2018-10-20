@@ -3,10 +3,12 @@ package view.ui;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import view.cpu.CPUWindow;
 import view.disk.DiskFileTreePane;
 import view.ui.IconManager.Type;
 
@@ -19,9 +21,16 @@ public class Window extends Stage {
 	private Rectangle2D primaryScreenBounds;
 	private String fileName;
 	private Console console;
+	private TextArea textArea;
 
 	public Window(Stage stage,Type type,String fileName) {
+		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+		this.setX(primaryScreenBounds.getWidth()/4);
+		this.setY(primaryScreenBounds.getHeight()/4);
+		this.setWidth(primaryScreenBounds.getWidth()/2);
+		this.setHeight(primaryScreenBounds.getHeight()/2);
 		this.console = null;
+		this.textArea = null;
 		this.root = new Pane();
 		this.scene = new Scene(root);
 		this.setScene(scene);
@@ -46,48 +55,61 @@ public class Window extends Stage {
 		case CMD:
 			createCMDWindow();
 			break;
+		case CPU:
+			createCPUWindow();
+			break;
+		case EXE:
+			createExeWindow();
+			break;
 		default:
 			System.out.println("Window的switch 出问题了！！！");
 			break;
 		}
 		this.setOnShowing(e -> {
-			TaskBar.addWindow(fileName, this);
+			TaskBar.getInstance().addWindow(fileName, this);
 		});
 		this.setEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			TaskBar.Selected();
+			TaskBar.getInstance().Selected();
 		});
-		primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		this.setX(primaryScreenBounds.getWidth()/4);
-		this.setY(primaryScreenBounds.getHeight()/4);
-		this.setWidth(primaryScreenBounds.getWidth()/2);
-		this.setHeight(primaryScreenBounds.getHeight()/2);
 	}
 
 	private void createCMDWindow(){
-		Console console = new Console();
+		console = new Console();
 		console.prefWidthProperty().bind(root.widthProperty());
 		console.prefHeightProperty().bind(root.heightProperty());
-		setConsole(console);
 		root.getChildren().add(console);
 		this.setOnCloseRequest(e->{
-			TaskBar.removeWindow(fileName, this);
-			console.setRoute(console.getDEFAULT_ROUTE());
-			console.setText(console.getDEFAULT_ROUTE());
-			console.positionCaret(console.getLength());
+			TaskBar.getInstance().removeWindow(fileName, this);
+			console.initConsole();
 		});
-		this.setTitle("CMD");
+		this.setTitle(fileName);
 	}
 
 	private void createTxtWindow() {
+		textArea = new TextArea();
+		textArea.prefWidthProperty().bind(root.widthProperty());
+		textArea.prefHeightProperty().bind(root.heightProperty());
+		root.getChildren().add(textArea);
 		this.setOnCloseRequest(e->{
-			TaskBar.removeWindow(fileName, this);
+			TaskBar.getInstance().removeWindow(fileName, this);
+		});
+		this.setTitle(fileName);
+	}
+
+	private void createExeWindow(){
+		textArea = new TextArea();
+		textArea.prefWidthProperty().bind(root.widthProperty());
+		textArea.prefHeightProperty().bind(root.heightProperty());
+		root.getChildren().add(textArea);
+		this.setOnCloseRequest(e->{
+			TaskBar.getInstance().removeWindow(fileName, this);
 		});
 		this.setTitle(fileName);
 	}
 
 	private void createFolderWindow() {
 		this.setOnCloseRequest(e->{
-			TaskBar.removeWindow(fileName, this);
+			TaskBar.getInstance().removeWindow(fileName, this);
 		});
 		root.getChildren().add(DiskFileTreePane.getInstance());
 		DiskFileTreePane.getInstance().prefHeightProperty().bind(root.heightProperty());
@@ -96,9 +118,25 @@ public class Window extends Stage {
 
 	private void createHelpWindow() {
 		this.setOnCloseRequest(e->{
-			TaskBar.removeWindow(fileName, this);
+			TaskBar.getInstance().removeWindow(fileName, this);
 		});
 		this.setTitle(fileName);
+	}
+
+	private void createCPUWindow(){
+		this.setOnCloseRequest(e->{
+			TaskBar.getInstance().removeWindow(fileName, this);
+		});
+		scene.setRoot(CPUWindow.getInstance().getMainPane());
+		this.setX(primaryScreenBounds.getWidth()/2-640);
+		this.setY(primaryScreenBounds.getHeight()/2-350);
+		this.setWidth(1280);
+		this.setHeight(700);
+		this.setTitle(fileName);
+	}
+
+	public TextArea getTextArea() {
+		return textArea;
 	}
 
 	public Type getType() {
@@ -118,7 +156,4 @@ public class Window extends Stage {
 		return null;
 	}
 
-	private void setConsole(Console console) {
-		this.console = console;
-	}
 }

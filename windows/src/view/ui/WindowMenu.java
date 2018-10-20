@@ -30,8 +30,8 @@ import view.ui.IconManager.Type;
 
 public class WindowMenu{
 
-	private final String[] TIPS = { "此电脑", "帮助", "关机" };
-	private final String[] ROUTES = { "images/computer.png", "images/help.png", "images/close.png" };
+	private final String[] TIPS = { "CPU", "此电脑", "帮助", "关机"};
+	private final String[] ROUTES = { "images/txt.png", "images/computer.png", "images/help.png", "images/close.png"};
 	private final Color BACKGROUND_COLOR = new Color(0, 0, 0, 0.7);
 	private final Color ON_COLOR = new Color(0, 0, 0, 0.5);
 	private final double LABEL_WIDTH = 140;
@@ -44,7 +44,7 @@ public class WindowMenu{
 	private boolean on = false;
 	private VBox vBox;
 
-	private static final String[] FILENAMES = { "1", "2" };
+//	private static final String[] FILENAMES = { "1", "2" };
 
 	public WindowMenu(Type type) {
 		init(type);
@@ -99,7 +99,7 @@ public class WindowMenu{
 	private void initStart() {
 		vBox = new VBox();
 		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		double fitY = screensize.getHeight() - TaskBar.getHboxMaxSize();
+		double fitY = screensize.getHeight() - TaskBar.getInstance().getHboxMaxSize();
 		vBox.setLayoutX(0);
 		vBox.setLayoutY(fitY - ROUTES.length * LABEL_HEIGHT);
 		handlers = new ArrayList<EventHandler<MouseEvent>>();
@@ -155,7 +155,18 @@ public class WindowMenu{
 				Main.getPrimaryStage().close();
 			}
 		};
-		handlers.addAll(Arrays.asList(folderHandler, helpHandler, closeHandler));
+
+		EventHandler<MouseEvent> cpuHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if(!IconManager.getInstance().getWindow(IconManager.Type.CPU).isShowing()){
+					IconManager.getInstance().getWindow(IconManager.Type.CPU).show();
+				}else {
+					IconManager.getInstance().getWindow(IconManager.Type.CPU).toFront();
+				}
+			}
+		};
+		handlers.addAll(Arrays.asList(cpuHandler,folderHandler, helpHandler, closeHandler));
 	}
 
 	public Type getType() {

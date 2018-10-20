@@ -145,27 +145,27 @@ public class CPU {
 	}
 
 	public void handle() {
-		Main.test("handle", getCurrentInstruction());
+//		Main.test("handle", getCurrentInstruction());
 		insExecutor.execute();
 		// runningProcess.setRegisters(insExecutor.getRegisters());
 		switch (insExecutor.getRegisters().getPSW()) {
 		case TIME_OUT:
-			Main.test("taketune");
+//			Main.test("taketune");
 			setToReady();
 			takeTurn();
 			break;
 		case IO_INTERRUPT:
-			Main.test("block");
+//			Main.test("block");
 			block();
 			takeTurn();
 			break;
 		case END:
-			Main.test("destroy");
+//			Main.test("destroy");
 			destroy();
 			takeTurn();
 			break;
 		default:
-			Main.test("nothing");
+//			Main.test("nothing");
 			break;
 		}
 	}

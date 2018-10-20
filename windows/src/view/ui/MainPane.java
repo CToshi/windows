@@ -33,14 +33,14 @@ public class MainPane extends Pane {
 		Image image = new Image(url, true);
 		this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(screensize.getWidth(),
-						screensize.getHeight() - TaskBar.getHboxMaxSize(), false, false, false, false))));
+						screensize.getHeight() - TaskBar.getInstance().getHboxMaxSize(), false, false, false, false))));
 		Icon[] icons = IconManager.getInstance().getIcons();
 		for (int i = 0; i < icons.length; i++) {
 			this.getChildren().add(icons[i]);
 		}
 		this.setOnMouseClicked(e -> {
-			TaskBar.canselMenu();
-			TaskBar.Selected();
+			TaskBar.getInstance().canselMenu();
+			TaskBar.getInstance().Selected();
 			SecondaryMenu.getInstance().disappear();
 			if (!IconManager.getInstance().isBeClick())
 				IconManager.getInstance().canselSelected();
