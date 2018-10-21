@@ -46,12 +46,11 @@ public class FAT {
 		int number = 0;
 		int last = 0;
 		int startNum = -1;
-		int numberOfDiskBlocks = capacity / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS+1;
+		int numberOfDiskBlocks = capacity / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS;
 //		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
-		if (capacity % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS != 0) {
+		if (capacity % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS != 0||capacity==0) {
 			numberOfDiskBlocks++;
 		}
-
 		/**
 		 * i从Disk.MAX_SPACE_OF_DISK /
 		 * Disk.CAPACITY_OF_DISK_BLOCKS开始，最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
@@ -71,11 +70,10 @@ public class FAT {
 			}
 
 		}
-
 		/**
 		 * 最后一项内容为-1。
 		 */
-		fat[number] = -1;
+			fat[number] = -1;	
 		return startNum;
 
 	}
