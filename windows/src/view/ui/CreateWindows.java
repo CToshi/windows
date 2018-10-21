@@ -35,11 +35,12 @@ public class CreateWindows {
 		}
 	}
 
-	public void create(String string){
+	public void create(String string) {
 		MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
 		Label label = new Label(string);
 		label.setTextAlignment(TextAlignment.CENTER);
 		msgWindow.setAlwaysOnTop(true);
+		msgWindow.addLabel(label);
 		msgWindow.show();
 	}
 
