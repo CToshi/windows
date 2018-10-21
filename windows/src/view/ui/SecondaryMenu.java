@@ -10,12 +10,13 @@ import javafx.stage.Screen;
 public class SecondaryMenu extends Label {
 
 	private final Color BACKGROUND_COLOR = Color.WHITE;
+	private static final Color ON = new Color(0.5, 0.5, 0.5, 1);
 	private final double LABEL_WIDTH = 325;
 	private final double LABEL_HEIGHT = 30;
 	private Label[] backLabels;
 	private Label[] iconLabels;
 	private static final String[] BACK_STRINGS = { "    查看", "    排列方式", "    刷新", "    粘贴", "    在此处打开Powershell窗口" };
-	private static final String[] ICON_STRINGS = { "    修改名字" };
+	private static final String[] ICON_STRINGS = { "    打开" };
 	private Rectangle2D primaryScreenBounds;
 	private final int BACKGROUND = 1;
 	private final int ICON = 2;
@@ -53,6 +54,12 @@ public class SecondaryMenu extends Label {
 					}
 				});
 			}
+			label.setOnMouseEntered(e -> {
+				label.setBackground(new Background(new BackgroundFill(ON, null, null)));
+			});
+			label.setOnMouseExited(e -> {
+				label.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
+			});
 			backLabels[i] = label;
 		}
 
@@ -61,11 +68,9 @@ public class SecondaryMenu extends Label {
 			label.setMinSize(LABEL_WIDTH, LABEL_HEIGHT);
 			label.setMaxSize(LABEL_WIDTH, LABEL_HEIGHT);
 			label.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
-			if (i == 0) {
-				label.setOnMouseClicked(e -> {
+			label.setOnMouseClicked(e -> {
 
-				});
-			}
+			});
 			iconLabels[i] = label;
 		}
 	}

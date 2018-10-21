@@ -164,8 +164,6 @@ public class Directory extends FileItem implements Cloneable{
 				fatherFile.removeFiles(this);
 				FAT.getInstance().recovery(this.startNum);
 			}
-
-
 		}else {
 			succeed=false;
 		}

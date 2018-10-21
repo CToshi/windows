@@ -168,4 +168,13 @@ public class TaskBar extends HBox {
 			}
 		}
 	}
+
+	public static Window getWindow(String fileName){
+		for (Window window : windows) {
+			if(window.getFileName() == fileName){
+				return window;
+			}
+		}
+		return null;
+	}
 }

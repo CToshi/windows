@@ -1,5 +1,9 @@
 package utility;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import application.Main;
 import model.disk.Directory;
 import model.disk.Disk;
 import model.disk.DiskFileTree;
@@ -15,20 +19,18 @@ public class CmdUtil {
 	 * @param String:route
 	 * @return Files:f返回找到的文件，若为null则路径错误
 	 */
-	public static Files findFile(String route) {
+	public static Files findFile(LinkedList<String> names) {
 		Files f = null;
-		route = "root" + route;
-		String[] names = route.split("\\");
 		Directory d = Disk.getInstance().getRoot();
 		FileItem f2 = null;
-		for (int i = 1; i < names.length; i++) {
-			f2 = d.findFiles(names[i]);
+		for (int i = 1; i < names.size(); i++) {
+			f2 = d.findFiles(names.get(i));
 			// 该目录下没有该文件
 			if (f2 == null) {
 				break;
 			} else if (Directory.isDirectory(f2)) {// 这是一个文件夹
 				d = (Directory) f2;
-			} else if (i != names.length - 1) { // 这是一个文件但在路径上不是在最后，路径错误
+			} else if (i != names.size() - 1) { // 这是一个文件但在路径上不是在最后，路径错误
 				break;
 			} else {// 是一个文件而且路径正确
 				f = (Files) f2;
@@ -45,22 +47,25 @@ public class CmdUtil {
 	 * @return Directory :d 返回找到的文件夹，若null则路径错误
 	 */
 
-	public static Directory findDirectory(String route) {
-		Directory d = Disk.getInstance().getRoot();
-		String[] names = route.split("(:\\\\)|(\\\\)");
-		if(names.length == 1)return d;
-		FileItem f = null;
-		for (int i = 1; i < names.length; i++) {
-			f = d.findFiles(names[i]);
-			if (f == null) {// 该文件不存在
+	public static Directory findDirectory(LinkedList<String> list) {
+		Directory directory = Disk.getInstance().getRoot();
+//		String[] names = route.split("(:\\\\)|(\\\\)");
+		if(list.size() == 1 && list.get(0).equals("root")){
+			return directory;
+		}
+		FileItem file = null;
+		for (int i = 1; i < list.size(); i++) {
+			file = directory.findFiles(list.get(i));
+			if (file == null) {// 该文件不存在
 				break;
-			} else if (!Directory.isDirectory(f)) {// 这不是一个文件夹
+			} else if (!Directory.isDirectory(file)) {// 这不是一个文件夹
+				file = null;
 				break;
 			} else {
-				d = (Directory) f;
+				directory = (Directory) file;
 			}
 		}
-		return d;
+		return (Directory)file;
 	}
 
 	/**
@@ -74,11 +79,13 @@ public class CmdUtil {
 	 */
 	public static int creatFiles(Directory father, String fileName, String fileExtentionName) {
 		int errorCode = 0;
+		boolean error = false;
 		if (father.isExistedName(fileName)) {
 			errorCode = 3;
-
+			error = true;
 		} else if (father.isFull()) {
 			errorCode = 1;
+			error = true;
 		} else {
 			Files f = null;
 			if (fileExtentionName.equals("txt")) {
@@ -87,14 +94,15 @@ public class CmdUtil {
 			} else if (fileExtentionName.equals("exe")) {
 				f = father.createExeFile();
 				f.changeFilesName(f.getFileName(), fileName);
-			} else {
+			} else if(!error){
 				errorCode = 4;
+				error = true;
 			}
-			if (f == null) {
+			if (f == null && !error) {
 				errorCode = 2;
 			}
 			// 对接目录树
-			else {
+			else if(!error){
 				DiskFileTreeItem fatherItem = father.getMyItem();
 				fatherItem.getChildren().add(new DiskFileTreeItem(f));
 			}

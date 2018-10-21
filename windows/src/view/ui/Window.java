@@ -1,12 +1,20 @@
 package view.ui;
 
-import com.sun.java.swing.plaf.windows.resources.windows;
 
+import application.Main;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -101,27 +109,99 @@ public class Window extends Stage {
 	}
 
 	private void createTxtWindow(Files file) {
+		BorderPane borderPane = new BorderPane();
+		MenuBar menuBar = new MenuBar();
+		Menu menu = new Menu("文件");
+		MenuItem menuItem = new MenuItem("保存");
+		menuItem.setOnAction(e->{
+			file.changeFilesContent(textArea.getText());
+		});
+		menu.getItems().add(menuItem);
+		menuBar.getMenus().add(menu);
+		menuBar.prefWidthProperty().bind(this.widthProperty());
+		menuBar.prefHeight(50);
 		textArea = new TextArea();
 		textArea.prefWidthProperty().bind(root.widthProperty());
 		textArea.prefHeightProperty().bind(root.heightProperty());
 		textArea.setText(file.getContent());
-		root.getChildren().add(textArea);
+		textArea.positionCaret(textArea.getLength());
+		borderPane.setTop(menuBar);
+		borderPane.setCenter(textArea);
+		scene.setRoot(borderPane);
 		this.setOnCloseRequest(e->{
+			e.consume();
+			MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
+			Button[] buttons = new Button[]{
+					new Button("保存并退出"),
+					new Button("退出"),
+					new Button("取消"),
+			};
+			buttons[0].setOnAction(action->{
+				file.changeFilesContent(textArea.getText());
+				msgWindow.close();
+				this.close();
+			});
+			buttons[1].setOnAction(action->{
+				msgWindow.close();
+				this.close();
+			});
+			buttons[2].setOnAction(action->{
+				msgWindow.close();
+			});
+			msgWindow.addNode(buttons);
+			if(!textArea.getText().equals(file.getContent())){
+				msgWindow.show();
+			}
 			TaskBar.removeWindow(fileName, this);
-			file.changeFilesContent(textArea.getText());
 		});
 		this.setTitle(fileName);
 	}
 
 	private void createExeWindow(Files file){
+		BorderPane borderPane = new BorderPane();
+		MenuBar menuBar = new MenuBar();
+		Menu menu = new Menu("文件");
+		MenuItem menuItem = new MenuItem("保存");
+		menuItem.setOnAction(e->{
+			file.changeFilesContent(textArea.getText());
+		});
+		menu.getItems().add(menuItem);
+		menuBar.getMenus().add(menu);
+		menuBar.prefWidthProperty().bind(this.widthProperty());
+		menuBar.prefHeight(50);
 		textArea = new TextArea();
 		textArea.prefWidthProperty().bind(root.widthProperty());
 		textArea.prefHeightProperty().bind(root.heightProperty());
 		textArea.setText(file.getContent());
-		root.getChildren().add(textArea);
+		textArea.positionCaret(textArea.getLength());
+		borderPane.setTop(menuBar);
+		borderPane.setCenter(textArea);
+		scene.setRoot(borderPane);
 		this.setOnCloseRequest(e->{
+			e.consume();
+			MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
+			Button[] buttons = new Button[]{
+					new Button("保存并退出"),
+					new Button("退出"),
+					new Button("取消"),
+			};
+			buttons[0].setOnAction(action->{
+				file.changeFilesContent(textArea.getText());
+				msgWindow.close();
+				this.close();
+			});
+			buttons[1].setOnAction(action->{
+				msgWindow.close();
+				this.close();
+			});
+			buttons[2].setOnAction(action->{
+				msgWindow.close();
+			});
+			msgWindow.addNode(buttons);
+			if(!textArea.getText().equals(file.getContent())){
+				msgWindow.show();
+			}
 			TaskBar.removeWindow(fileName, this);
-			file.changeFilesContent(textArea.getText());
 		});
 		this.setTitle(fileName);
 	}
@@ -152,6 +232,10 @@ public class Window extends Stage {
 		this.setWidth(1280);
 		this.setHeight(700);
 		this.setTitle(fileName);
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public TextArea getTextArea() {
