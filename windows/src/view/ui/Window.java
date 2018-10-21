@@ -159,7 +159,7 @@ public class Window extends Stage {
 			buttons[2].setOnAction(action->{
 				msgWindow.close();
 			});
-			msgWindow.addNode(buttons);
+			msgWindow.addButtons(buttons);
 			if(!textArea.getText().equals(file.getContent())){
 				e.consume();
 				msgWindow.show();
@@ -208,7 +208,7 @@ public class Window extends Stage {
 			buttons[2].setOnAction(action->{
 				msgWindow.close();
 			});
-			msgWindow.addNode(buttons);
+			msgWindow.addButtons(buttons);
 			if(!textArea.getText().equals(file.getContent())){
 				e.consume();
 				msgWindow.show();

@@ -1,6 +1,8 @@
 package view.ui;
 
 import application.Main;
+import javafx.scene.control.Label;
+import javafx.scene.text.TextAlignment;
 import model.disk.Files;
 import view.ui.IconManager.Type;
 
@@ -31,6 +33,14 @@ public class CreateWindows {
 			window = new Window(Main.getPrimaryStage(), type, file);
 			window.show();
 		}
+	}
+
+	public void create(String string){
+		MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
+		Label label = new Label(string);
+		label.setTextAlignment(TextAlignment.CENTER);
+		msgWindow.setAlwaysOnTop(true);
+		msgWindow.show();
 	}
 
 }

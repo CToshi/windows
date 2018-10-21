@@ -5,6 +5,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -44,12 +45,16 @@ public class MsgWindow extends Stage {
 		this.setResizable(false);
 	}
 
-	public void addNode(Button[] buttons) {
+	public void addButtons(Button[] buttons) {
 		for (int i = 0; i < buttons.length; i++) {
 //			buttons[i].setLayoutY((DEFAULT_HEIGHT - 50) / 2);
 //			buttons[i].setLayoutX(i * (DEFAULT_WIDTH / 3)+20);
 			hBox.getChildren().add(buttons[i]);
 		}
+	}
+
+	public void addLabel(Label label){
+		hBox.getChildren().add(label);
 	}
 
 }
