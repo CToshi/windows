@@ -32,6 +32,14 @@ public class Test extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		runlater(()->{
+			for(int i = 0;i<11;i++){
+				Main.test(CPU.getInstance().create("x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ "));
+			}
+//			CPU.getInstance().create("!A9 x++ x++ x++ x++ x++");
+//			CPU.getInstance().create("!A9");
+//			CPU.getInstance().create("!A9");
+//			CPU.getInstance().create("!A9");
+
 			for(int i = 0;i<10;i++){
 				CPU.getInstance().create("!A1");
 			}
