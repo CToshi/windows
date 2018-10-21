@@ -18,7 +18,7 @@ public class CmdUtil {
 	public static Files findFile(String route) {
 		Files f = null;
 		route = "root" + route;
-		String[] names = route.split("\\");
+		String[] names = route.split("\\\\");
 		Directory d = Disk.getInstance().getRoot();
 		FileItem f2 = null;
 		for (int i = 1; i < names.length; i++) {
@@ -73,12 +73,14 @@ public class CmdUtil {
 	 * @return int:errorCode 0：创建成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在,4:文件后缀名不正确
 	 */
 	public static int creatFiles(Directory father, String fileName, String fileExtentionName) {
+		boolean error =false;
 		int errorCode = 0;
 		if (father.isExistedName(fileName)) {
 			errorCode = 3;
-			
+			error= true;
 		} else if (father.isFull()) {
 			errorCode = 1;
+			error=true;
 		} else {
 			Files f = null;
 			if (fileExtentionName.equals("txt")) {
@@ -87,14 +89,15 @@ public class CmdUtil {
 			} else if (fileExtentionName.equals("exe")) {
 				f = father.createExeFile();
 				f.changeFilesName(f.getFileName(), fileName);
-			} else {
+			} else if(!error) {
 				errorCode = 4;
+				error =true;
 			}
-			if (f == null) {
-				errorCode = 2;				
+			if (f == null&&!error) {
+				errorCode = 2;
 			}
 			// 对接目录树
-			else {
+			else if(!error) {
 				DiskFileTreeItem fatherItem = father.getMyItem();
 				fatherItem.getChildren().add(new DiskFileTreeItem(f));
 				System.out.println(233);
