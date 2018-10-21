@@ -46,7 +46,7 @@ public class FAT {
 		int number = 0;
 		int last = 0;
 		int startNum = -1;
-		int numberOfDiskBlocks = capacity / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS;
+		int numberOfDiskBlocks = capacity / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS+1;
 //		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
 		if (capacity % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS != 0) {
 			numberOfDiskBlocks++;

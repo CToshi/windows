@@ -51,7 +51,9 @@ public class Files extends FileItem {
 				break;
 			}else {
 				FAT.getInstance().recovery(this.startNum);
+				System.out.println(capacities);
 				this.startNum=FAT.getInstance().changeFAT(capacities);
+				
 				this.capacity=capacities;
 				this.content = content;
 				
