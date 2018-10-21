@@ -2,10 +2,7 @@ package view.ui;
 
 
 import application.Main;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,6 +13,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.disk.Files;
@@ -33,6 +34,17 @@ public class Window extends Stage {
 	private String fileName;
 	private Console console;
 	private TextArea textArea;
+	private static final String HELP_CONTENT = "cmd指令："
+			+ "\nll: 显示当前路径下的文件"
+			+ "\ncreate a.txt：创建一个名为a的txt文件，后缀名可为txt或exe"
+			+ "\ndelete a: 删除一个名为a的文件"
+			+ "\nmkdir haha：创建一个名为haha的文件夹"
+			+ "\nrmdir haha：删除一个名为haha的空文件夹"
+			+ "\ncopy a haha：复制文件a到haha目录下"
+			+ "\nvim a：编辑一个文件，包括txt和exe"
+			+ "\ncd haha：进入一个文件夹，.和..分别表示当前目录和上一级目录"
+			+ "\ntype a：表示显示一个文件的内容"
+			+ "\n（目录和文件名支持绝对路径，即以\\root开头，以及当前路径.\\开头）";
 
 	public Window(Stage stage,Type type, Files files) {
 		this.initOwner(stage);
@@ -216,6 +228,16 @@ public class Window extends Stage {
 	}
 
 	private void createHelpWindow() {
+		Label content = new Label();
+		this.setX((primaryScreenBounds.getWidth()-700)/2);
+		this.setY((primaryScreenBounds.getHeight()-350)/2);
+		this.setWidth(700);
+		this.setHeight(350);
+		Font font = Font.font("LiSu", FontWeight.BOLD, FontPosture.ITALIC, 20);
+		content.setFont(font);
+		content.setText(HELP_CONTENT);
+		content.setTextAlignment(TextAlignment.LEFT);
+		root.getChildren().add(content);
 		this.setOnCloseRequest(e->{
 			TaskBar.removeWindow(fileName, this);
 		});
