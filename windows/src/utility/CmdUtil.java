@@ -1,10 +1,13 @@
 package utility;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import application.Main;
 import model.disk.Directory;
 import model.disk.Disk;
 import model.disk.DiskFileTree;
 import model.disk.DiskFileTreeItem;
-import model.disk.FAT;
 import model.disk.FileItem;
 import model.disk.Files;
 
@@ -12,80 +15,97 @@ public class CmdUtil {
 
 	/**
 	 * 通过路径找到该文件
-	 * @param  String:route
+	 *
+	 * @param String:route
 	 * @return Files:f返回找到的文件，若为null则路径错误
 	 */
-	public Files findFile(String route) {
-		Files f =  null;
-		route="root"+route;
-		String[] names=route.split("\\");
-		Directory d=Disk.getInstance().getRoot();
-		FileItem f2=null;
-		for(int i=1;i<names.length;i++) {
-			f2=d.findFiles(names[i]);
-			//该目录下没有该文件
-			if(f2==null) {
+	public static Files findFile(LinkedList<String> names) {
+		Files f = null;
+		Directory d = Disk.getInstance().getRoot();
+		FileItem f2 = null;
+		for (int i = 1; i < names.size(); i++) {
+			f2 = d.findFiles(names.get(i));
+			// 该目录下没有该文件
+			if (f2 == null) {
 				break;
-			}else if(Directory.isDirectory(f2)){//这是一个文件夹
-				d=(Directory)f2;
-			}else if(i!=names.length-1) { //这是一个文件但在路径上不是在最后，路径错误
+			} else if (Directory.isDirectory(f2)) {// 这是一个文件夹
+				d = (Directory) f2;
+			} else if (i != names.size() - 1) { // 这是一个文件但在路径上不是在最后，路径错误
 				break;
-			}else {//是一个文件而且路径正确
-				f=(Files)f2;
+			} else {// 是一个文件而且路径正确
+				f = (Files) f2;
 			}
 		}
 		return f;
 	}
-	
-	/**通过路径找到文件夹
-	 * @param String : route
+
+	/**
+	 * 通过路径找到文件夹
+	 *
+	 * @param String
+	 *            : route
 	 * @return Directory :d 返回找到的文件夹，若null则路径错误
 	 */
-	
-	public Directory findDirectory(String route) {
-		Directory d =null;
-		route="root"+route;
-		String[] names=route.split("\\");
-		Directory d2=Disk.getInstance().getRoot();
-		FileItem f=null;
-		for(int i=1;i<names.length;i++) {
-			f=d2.findFiles(names[i]);
-			if(f==null) {//该文件不存在
+
+	public static Directory findDirectory(LinkedList<String> list) {
+		Directory directory = Disk.getInstance().getRoot();
+//		String[] names = route.split("(:\\\\)|(\\\\)");
+		if(list.size() == 1 && list.get(0).equals("root")){
+			return directory;
+		}
+		FileItem file = null;
+		for (int i = 1; i < list.size(); i++) {
+			file = directory.findFiles(list.get(i));
+			if (file == null) {// 该文件不存在
 				break;
-			}else if(!Directory.isDirectory(f)) {//这不是一个文件夹
+			} else if (!Directory.isDirectory(file)) {// 这不是一个文件夹
+				file = null;
 				break;
-			}else {
-				d2=(Directory)f;
+			} else {
+				directory = (Directory) file;
 			}
 		}
-		return d;
+		return (Directory)file;
 	}
+
 	/**
 	 * 创建文件，给出父目录和文件名，以及文件属性
-	 * 
+	 *
 	 * @param Directory:father
-	 * @param String: fileName
+	 * @param String:
+	 *            fileName
 	 * @param String:fileExtentionName
-	 * @return int:errorCode 0：创建成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在
+	 * @return int:errorCode 0：创建成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在,4:文件后缀名不正确
 	 */
 	public static int creatFiles(Directory father, String fileName, String fileExtentionName) {
+		boolean error =false;
 		int errorCode = 0;
 		if (father.isExistedName(fileName)) {
 			errorCode = 3;
+			error= true;
 		} else if (father.isFull()) {
 			errorCode = 1;
+			error=true;
 		} else {
 			Files f = null;
-			if (fileExtentionName.equals(".txt")) {
+			if (fileExtentionName.equals("txt")) {
 				f = father.createTxtFile();
-			} else {
+				f.changeFilesName(f.getFileName(), fileName);
+			} else if (fileExtentionName.equals("exe")) {
 				f = father.createExeFile();
+				f.changeFilesName(f.getFileName(), fileName);
+
+			} else if(!error){
+				errorCode = 4;
+				error = true;
 			}
-			if (f == null) {
+
+			if (f == null&&!error) {
 				errorCode = 2;
 			}
 			// 对接目录树
-			else {
+
+			else if(!error){
 				DiskFileTreeItem fatherItem = father.getMyItem();
 				fatherItem.getChildren().add(new DiskFileTreeItem(f));
 			}
@@ -95,7 +115,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法为删除文件
-	 * 
+	 *
 	 * @param Files：f
 	 * @return boolean：表示删除成功与否，false则表示改文件不可删除
 	 */
@@ -114,9 +134,11 @@ public class CmdUtil {
 
 	/**
 	 * 将某文件复制到某目录下
-	 * 
-	 * @param Files:f 在剪贴板的文件
-	 * @param Directory:d 复制到该目录
+	 *
+	 * @param Files:f
+	 *            在剪贴板的文件
+	 * @param Directory:d
+	 *            复制到该目录
 	 * @return int:errorCode 0：复制成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在
 	 */
 	public static int copyFiles(Files f, Directory d) {
@@ -143,7 +165,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法用于创建文件夹
-	 * 
+	 *
 	 * @param d
 	 * @param fileName
 	 * @return int:errorCode 0：复制成功，1：该目录文件数超过最大限制，2：容量不足,3:文件已存在
@@ -170,7 +192,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法用于删除非空文件夹
-	 * 
+	 *
 	 * @return int:errorCode 0:删除成功，1：文件夹非空，2：文件夹不可删除
 	 */
 	public static int deleteEmptyDirectory(Directory d) {
@@ -190,7 +212,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法用于删除文件夹，无论空还是满
-	 * 
+	 *
 	 * @return boolean :文件夹如果为不可删除文件夹则删除失败
 	 */
 	public static boolean deleteDirectory(Directory d) {
@@ -208,7 +230,7 @@ public class CmdUtil {
 
 	/**
 	 * 该方法用于修改文件属性
-	 * 
+	 *
 	 * @param f
 	 * @param attribute
 	 * @return boolean:当输入属性并不存在时则修改失败
@@ -230,7 +252,7 @@ public class CmdUtil {
 
 	/***
 	 * 磁盘格式化
-	 * 
+	 *
 	 * @return 格式化成功还是失败
 	 */
 	public static boolean format() {

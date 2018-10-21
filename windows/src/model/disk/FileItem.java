@@ -1,7 +1,5 @@
 package model.disk;
 
-import javafx.util.Pair;
-
 public abstract class FileItem implements Cloneable {
 	/**
 	 * @author BFELFISH 该类为目录项，包括了文件名，文件扩展名，文件大小，文件起始块号，文件属性（只读0，可写1，可执行2）
@@ -32,7 +30,7 @@ public abstract class FileItem implements Cloneable {
 
 	/**
 	 * 该方法判断该文件是文件还是文件夹
-	 * 
+	 *
 	 * @param FileItem f
 	 * @return boolean:是否为文件夹
 	 */
@@ -46,7 +44,7 @@ public abstract class FileItem implements Cloneable {
 
 	/**
 	 * 该方法为修改文件的文件名
-	 * 
+	 *
 	 * @param原文件名与修改后的文件名
 	 * @return int:0:修改成功，1:文件名字数超出限制,2：文件名已存在,3:文件名含非法字符，4：文件名不得为空
 	 */
@@ -128,7 +126,7 @@ public abstract class FileItem implements Cloneable {
 
 	/**
 	 * 该方法用于修改文件属性
-	 * 
+	 *
 	 * @param int:attributes
 	 * @return boolean:修改是否成功
 	 */
