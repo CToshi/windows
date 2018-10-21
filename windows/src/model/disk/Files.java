@@ -50,10 +50,10 @@ public class Files extends FileItem {
 				break;
 			}else {
 				FAT.getInstance().recovery(this.startNum);
-				System.out.println(FAT.getInstance().capacityOfDisk());
-				System.out.println(numberOfBlocks);
+//				System.out.println(FAT.getInstance().capacityOfDisk());
+//				System.out.println(numberOfBlocks);
 				this.startNum=FAT.getInstance().changeFAT(capacities);
-				System.out.println(FAT.getInstance().capacityOfDisk());
+//				System.out.println(FAT.getInstance().capacityOfDisk());
 			}
 			this.content = content;
 			break;
