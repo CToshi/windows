@@ -46,7 +46,6 @@ public class FAT {
 		int number = 0;
 		int last = 0;
 		int startNum = -1;
-
 		int numberOfDiskBlocks = capacity / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS;
 //		System.out.println("所需要的磁盘块"+numberOfDiskBlocks);
 		if (capacity % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS != 0) {
@@ -87,6 +86,7 @@ public class FAT {
 	 * @return boolean:返回false则说明起始块号错误，越界
 	 */
 	public boolean recovery(int startNumber) {
+//		System.out.println("回收");
 		boolean succeed=true;
 		if(startNumber>Disk.getInstance().MAX_SPACE_OF_DISK) {
 			succeed=false;
