@@ -1,7 +1,5 @@
 package view.ui;
 
-import com.sun.java.swing.plaf.windows.resources.windows;
-
 import application.Main;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;

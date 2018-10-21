@@ -8,6 +8,8 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import model.cpu.CPU;
+import view.ui.CreateWindows;
 
 public class DiskFileTree extends TreeView<FileItem> {
 	/**
@@ -33,7 +35,8 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private void addContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-		contextMenu.getItems().addAll(addMenu(), addDeleteMenuItem(), addRenameMenuItem(), addChangeAttributeMenu());
+		contextMenu.getItems().addAll(addMenu(), addEditItem(), addExecuteItem(), addDeleteMenuItem(),
+				addRenameMenuItem(), addChangeAttributeMenu());
 
 		/**
 		 * 设置右键事件,文件Item不显示新建项，根Item不显示删除和重命名项
@@ -47,32 +50,39 @@ public class DiskFileTree extends TreeView<FileItem> {
 					contextMenu.hide();
 					if (getSelectionModel().getSelectedItem().getValue() instanceof Files) {
 						((Menu) contextMenu.getItems().get(0)).setVisible(false);
-						((Menu) contextMenu.getItems().get(3)).setVisible(true);
+						((MenuItem) contextMenu.getItems().get(1)).setVisible(true);
+						((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
+						((Menu) contextMenu.getItems().get(5)).setVisible(true);
 						if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 0) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(0))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(0))
 									.setSelected(true);
 						} else if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 1) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(1))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(1))
 									.setSelected(true);
 						} else {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2))
 									.setSelected(true);
 						}
-						if(getSelectionModel().getSelectedItem().getValue().getFileExtentionName().equals(".txt")) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2)).setDisable(true);
+						if (getSelectionModel().getSelectedItem().getValue().getFileExtentionName().equals(".txt")) {
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2)).setDisable(true);
+							((MenuItem) contextMenu.getItems().get(2)).setVisible(false);
 						} else {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(3)).getItems().get(2)).setDisable(false);
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2))
+									.setDisable(false);
+							((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
 						}
 					} else {
 						((Menu) contextMenu.getItems().get(0)).setVisible(true);
-						((Menu) contextMenu.getItems().get(3)).setVisible(false);
+						((MenuItem) contextMenu.getItems().get(1)).setVisible(false);
+						((MenuItem) contextMenu.getItems().get(2)).setVisible(false);
+						((Menu) contextMenu.getItems().get(5)).setVisible(false);
 					}
 					if (getSelectionModel().getSelectedItem().getValue().isCanBeDeleted()) {
-						((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
-						((MenuItem) contextMenu.getItems().get(1)).setVisible(true);
+						((MenuItem) contextMenu.getItems().get(4)).setVisible(true);
+						((MenuItem) contextMenu.getItems().get(3)).setVisible(true);
 					} else {
-						((MenuItem) contextMenu.getItems().get(2)).setVisible(false);
-						((MenuItem) contextMenu.getItems().get(1)).setVisible(false);
+						((MenuItem) contextMenu.getItems().get(4)).setVisible(false);
+						((MenuItem) contextMenu.getItems().get(3)).setVisible(false);
 					}
 					contextMenu.show(this, e.getScreenX(), e.getScreenY());
 				} else {
@@ -90,6 +100,26 @@ public class DiskFileTree extends TreeView<FileItem> {
 		Menu addMenu = new Menu("新建");
 		addMenu.getItems().addAll(addTxtMenuItem(), addExeMenuItem(), addDirMenuItem());
 		return addMenu;
+	}
+
+	private MenuItem addEditItem() {
+		MenuItem edit = new MenuItem("编辑");
+		edit.setOnAction(e -> {
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			Files file = (Files) item.getValue();
+			CreateWindows.getInstance().create(file);
+		});
+		return edit;
+	}
+
+	private MenuItem addExecuteItem() {
+		MenuItem execute = new MenuItem("运行");
+		execute.setOnAction(e -> {
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			Files file = (Files) item.getValue();
+			CPU.getInstance().create(file.getContent());
+		});
+		return execute;
 	}
 
 	/**

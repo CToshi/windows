@@ -46,6 +46,8 @@ public class Files extends FileItem {
 			if (numberOfBlocks > FAT.getInstance().capacityOfDisk()) {
 				errorCode = 2;
 				break;
+			}else {
+				FAT.getInstance().changeFAT(numberOfBlocks);
 			}
 			this.content = content;
 			break;

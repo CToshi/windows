@@ -3,6 +3,8 @@ package application;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.cpu.DeviceManager;
+import view.disk.DiskFileTreePane;
 import javafx.stage.StageStyle;
 import model.disk.FAT;
 import view.ui.RootPane;
