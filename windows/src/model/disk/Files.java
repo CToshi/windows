@@ -35,19 +35,25 @@ public class Files extends FileItem {
 				break;
 			}
 			int numberOfBlocks;
+			int capacities;
 			// 计算这个文件占用多少个磁盘块,如果是可执行文件，一行一字节
 			if (this.fileExtentionName.equals(".txt")) {
-				numberOfBlocks = content.getBytes().length / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
+				 capacities = content.getBytes().length;
+				numberOfBlocks = capacities / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
 			} else {
 				String[] contents = content.split("\n");
-				numberOfBlocks = contents.length;
-				numberOfBlocks = numberOfBlocks % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
+				 capacities = contents.length;
+				numberOfBlocks = capacities % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
 			}
 			if (numberOfBlocks > FAT.getInstance().capacityOfDisk()) {
 				errorCode = 2;
 				break;
 			}else {
-				FAT.getInstance().changeFAT(numberOfBlocks);
+				FAT.getInstance().recovery(this.startNum);
+//				System.out.println(FAT.getInstance().capacityOfDisk());
+//				System.out.println(numberOfBlocks);
+				this.startNum=FAT.getInstance().changeFAT(capacities);
+//				System.out.println(FAT.getInstance().capacityOfDisk());
 			}
 			this.content = content;
 			break;
