@@ -36,6 +36,7 @@ public class Files extends FileItem {
 			}
 			int numberOfBlocks;
 			int capacities;
+			int numberOfUsedBlocks = this.capacity/ Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
 			// 计算这个文件占用多少个磁盘块,如果是可执行文件，一行一字节
 			if (this.fileExtentionName.equals(".txt")) {
 				 capacities = content.getBytes().length;
@@ -43,21 +44,21 @@ public class Files extends FileItem {
 			} else {
 				String[] contents = content.split("\n");
 				 capacities = contents.length;
-				numberOfBlocks = capacities % Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
+				numberOfBlocks = capacities / Disk.getInstance().CAPACITY_OF_DISK_BLOCKS + 1;
 			}
-			if (numberOfBlocks > FAT.getInstance().capacityOfDisk()) {
+			if (numberOfBlocks > FAT.getInstance().capacityOfDisk()+numberOfUsedBlocks) {
 				errorCode = 2;
 				break;
 			}else {
 				FAT.getInstance().recovery(this.startNum);
-//				System.out.println(FAT.getInstance().capacityOfDisk());
-//				System.out.println(numberOfBlocks);
 				this.startNum=FAT.getInstance().changeFAT(capacities);
-//				System.out.println(FAT.getInstance().capacityOfDisk());
-			}
-			this.content = content;
+				this.capacity=capacities;
+				this.content = content;
+				
+			}		
 			break;
 		}
+		
 		return errorCode;
 	}
 
