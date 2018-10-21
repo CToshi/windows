@@ -141,7 +141,6 @@ public class Window extends Stage {
 		borderPane.setCenter(textArea);
 		scene.setRoot(borderPane);
 		this.setOnCloseRequest(e->{
-			e.consume();
 			MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
 			Button[] buttons = new Button[]{
 					new Button("保存并退出"),
@@ -162,6 +161,7 @@ public class Window extends Stage {
 			});
 			msgWindow.addNode(buttons);
 			if(!textArea.getText().equals(file.getContent())){
+				e.consume();
 				msgWindow.show();
 			}
 			TaskBar.removeWindow(fileName, this);
@@ -190,7 +190,6 @@ public class Window extends Stage {
 		borderPane.setCenter(textArea);
 		scene.setRoot(borderPane);
 		this.setOnCloseRequest(e->{
-			e.consume();
 			MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
 			Button[] buttons = new Button[]{
 					new Button("保存并退出"),
@@ -211,6 +210,7 @@ public class Window extends Stage {
 			});
 			msgWindow.addNode(buttons);
 			if(!textArea.getText().equals(file.getContent())){
+				e.consume();
 				msgWindow.show();
 			}
 			TaskBar.removeWindow(fileName, this);
