@@ -2,16 +2,13 @@ package model.cpu;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
-import application.Main;
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
 import model.memory.Memory;
 import model.memory.MemoryBlock;
-import model.memory.MemoryOccupy;
 
 public class CPU {
 	private static CPU cpu;
@@ -49,6 +46,9 @@ public class CPU {
 	private int currentTime;
 	private DeviceManager deviceManager = DeviceManager.getInstance();
 
+	public enum Result{
+		OK, COMPILE_ERROR, PCB_NOT_ENOUGH, MEMORY_NOT_ENOUGH
+	}
 	static {
 		cpu = new CPU();
 	}
@@ -60,7 +60,7 @@ public class CPU {
 		}
 		memory = Memory.getInstance();
 		pcbManager = new PCBManager();
-		ProcessCode systemCode = new ProcessCode(new int[64]);
+		ProcessCode systemCode = new ProcessCode(new int[10]);
 		runningProcess = strollingProcess = pcbManager.allocatePCB(memory.allocate(systemCode), systemCode);
 		waitingQueue = new LinkedBlockingQueue<>();
 		insExecutor = new InsExecutor();
@@ -70,20 +70,19 @@ public class CPU {
 		return cpu;
 	}
 
-	private boolean create(ProcessCode code) {
+	private Result create(ProcessCode code) {
 		if (code == null) {
-			return false;
+			return Result.COMPILE_ERROR;
 		}
-		allocatePCB(code);
-		return true;
+		return allocatePCB(code);
 	}
 
 	/**
 	 *
-	 * @param instructions
-	 * @return 编译是否成功
+	 * @param instructions 指令字符串
+	 * @return 成功时返回OK，否则返回失败原因
 	 */
-	public boolean create(String instructions) {
+	public Result create(String instructions) {
 		return create(Compiler.compile(instructions));
 	}
 
@@ -124,17 +123,22 @@ public class CPU {
 	 *
 	 * @param code
 	 */
-	private void allocatePCB(ProcessCode code) {
-		MemoryBlock block = memory.allocate(code);
-		if (block == null || !pcbManager.available()) {
+	private Result allocatePCB(ProcessCode code) {
+		MemoryBlock block = null;
+		if (!pcbManager.available() || (block = memory.allocate(code)) == null) {
 			try {
 				waitingQueue.put(code);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			return;
+			if(block == null){
+				return Result.MEMORY_NOT_ENOUGH;
+			}else{
+				return Result.PCB_NOT_ENOUGH;
+			}
 		}
 		getQueue(Queue_Type.READY).add(pcbManager.allocatePCB(block, code));
+		return Result.OK;
 	}
 
 	public void work() {
@@ -145,27 +149,27 @@ public class CPU {
 	}
 
 	public void handle() {
-		Main.test("handle", getCurrentInstruction());
+//		Main.test("handle", getCurrentInstruction());
 		insExecutor.execute();
 		// runningProcess.setRegisters(insExecutor.getRegisters());
 		switch (insExecutor.getRegisters().getPSW()) {
 		case TIME_OUT:
-			Main.test("taketune");
+//			Main.test("taketune");
 			setToReady();
 			takeTurn();
 			break;
 		case IO_INTERRUPT:
-			Main.test("block");
+//			Main.test("block");
 			block();
 			takeTurn();
 			break;
 		case END:
-			Main.test("destroy");
+//			Main.test("destroy");
 			destroy();
 			takeTurn();
 			break;
 		default:
-			Main.test("nothing");
+//			Main.test("nothing");
 			break;
 		}
 	}
