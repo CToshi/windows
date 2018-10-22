@@ -1,6 +1,5 @@
 package model.disk;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -9,6 +8,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import model.cpu.CPU;
+import model.cpu.CPU.Result;
 import view.ui.CreateWindows;
 
 public class DiskFileTree extends TreeView<FileItem> {
@@ -102,6 +102,10 @@ public class DiskFileTree extends TreeView<FileItem> {
 		return addMenu;
 	}
 
+	/**
+	 * 
+	 * @return 编辑选项
+	 */
 	private MenuItem addEditItem() {
 		MenuItem edit = new MenuItem("编辑");
 		edit.setOnAction(e -> {
@@ -112,12 +116,24 @@ public class DiskFileTree extends TreeView<FileItem> {
 		return edit;
 	}
 
+	/**
+	 * 
+	 * @return 执行选项
+	 */
 	private MenuItem addExecuteItem() {
 		MenuItem execute = new MenuItem("运行");
 		execute.setOnAction(e -> {
 			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files file = (Files) item.getValue();
 			CPU.getInstance().create(file.getContent());
+			Result result = CPU.getInstance().create(file.getContent());
+			if (result == Result.MEMORY_NOT_ENOUGH) {
+				CreateWindows.getInstance().create("内存不够");
+			} else if (result == Result.PCB_NOT_ENOUGH) {
+				CreateWindows.getInstance().create("PCB不够");
+			} else if (result == Result.COMPILE_ERROR) {
+				CreateWindows.getInstance().create("编译错误");
+			}
 		});
 		return execute;
 	}
@@ -134,7 +150,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 			if (files != null) {
 				fatherItem.getChildren().add(new DiskFileTreeItem(files));
 			} else {
-				error_of_missingCapacity();
+				CreateWindows.getInstance().create("文件夹容量不足");
 			}
 		});
 		return addTxt;
@@ -152,7 +168,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 			if (files != null) {
 				fatherItem.getChildren().add(new DiskFileTreeItem(files));
 			} else {
-				error_of_missingCapacity();
+				CreateWindows.getInstance().create("文件夹容量不足");
 			}
 		});
 		return addExe;
@@ -170,16 +186,10 @@ public class DiskFileTree extends TreeView<FileItem> {
 			if (directory != null) {
 				fatherItem.getChildren().add(new DiskFileTreeItem(directory));
 			} else {
-				error_of_missingCapacity();
+				CreateWindows.getInstance().create("文件夹容量不足");
 			}
 		});
 		return addDir;
-	}
-
-	private void error_of_missingCapacity() {
-		Alert alert = new Alert(Alert.AlertType.ERROR, "文件夹容量不足");
-		alert.setHeaderText(null);
-		alert.show();
 	}
 
 	/**
