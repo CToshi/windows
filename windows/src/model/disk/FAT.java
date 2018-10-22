@@ -154,7 +154,6 @@ public class FAT {
 		int index = startNum;
 		while(fat[index]!=-1) {
 			index =fat[index];
-			System.out.println(index);
 		}
 		int j =0;
 		for(int i =3;i<Disk.getInstance().MAX_SPACE_OF_DISK&&j<addNumOfBlocks-1;i++) {
