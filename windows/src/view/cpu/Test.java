@@ -20,6 +20,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import model.cpu.CPU;
+import model.cpu.Compiler;
 import model.cpu.SystemClock;
 
 public class Test extends Application {
@@ -62,10 +63,7 @@ public class Test extends Application {
 //			for(int i = 0;i<2;i++){
 //				CPU.getInstance().create("x++ x-- x=99 x++");
 //			}
-			CPU.getInstance().create("!A9 x++ x++ x++ x++ x++");
-			CPU.getInstance().create("!A9");
-			CPU.getInstance().create("!A9");
-			CPU.getInstance().create("!A9");
+			CPU.getInstance().create("!A9 x++ x=2 x--");
 		});
 		Pane root = CPUWindow.getInstance().getMainPane();
 		Scene scene = new Scene(root, 1280, 720);

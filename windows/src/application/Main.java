@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.cpu.DeviceManager;
+import model.cpu.SystemClock;
 import view.disk.DiskFileTreePane;
 import javafx.stage.StageStyle;
 import model.disk.FAT;
@@ -35,6 +36,9 @@ public class Main extends Application {
 			Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(e->{
+				SystemClock.getInstance().stop();
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

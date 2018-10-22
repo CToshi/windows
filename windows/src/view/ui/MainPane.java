@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import application.Main;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -55,6 +56,7 @@ public class MainPane extends Pane {
 			disappear(IconManager.getInstance().getIcons());
 			IconManager.getInstance().initIcon();
 		});
+		Main.test("restart");
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
