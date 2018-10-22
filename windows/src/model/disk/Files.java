@@ -50,10 +50,12 @@ public class Files extends FileItem {
 				errorCode = 2;
 				break;
 			}else {
-				FAT.getInstance().recovery(this.startNum);
-				System.out.println(capacities);
-				this.startNum=FAT.getInstance().changeFAT(capacities);
-				
+				//减少了磁盘块的占用
+				if(numberOfUsedBlocks>numberOfBlocks) {
+					FAT.getInstance().remove(this.startNum,numberOfUsedBlocks, numberOfBlocks);
+				}else if(numberOfUsedBlocks<numberOfBlocks) {
+					FAT.getInstance().Append(this.startNum, numberOfBlocks-numberOfUsedBlocks);
+				}
 				this.capacity=capacities;
 				this.content = content;
 				

@@ -42,7 +42,6 @@ public class FAT {
 	 * @return int:返回起始块号
 	 */
 	public int changeFAT(int capacity) {
-
 		int number = 0;
 		int last = 0;
 		int startNum = -1;
@@ -52,10 +51,10 @@ public class FAT {
 			numberOfDiskBlocks++;
 		}
 		/**
-		 * i从Disk.MAX_SPACE_OF_DISK /
-		 * Disk.CAPACITY_OF_DISK_BLOCKS开始，最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
+		 * i从3到Disk.MAX_SPACE_OF_DISK-1 /
+		 * 最多到255，j从0开始，要循环numberOfDiskBlocks次，如果循环结束时，j！=numberOfDiskBlocks，则磁盘空间不足，提示保存错误，并回收已分配磁盘。
 		 */
-		for (int i = 0, j = 0; i < Disk.getInstance().MAX_SPACE_OF_DISK && j < numberOfDiskBlocks; i++) {
+		for (int i = 3, j = 0; i < Disk.getInstance().MAX_SPACE_OF_DISK && j < numberOfDiskBlocks; i++) {
 			if (fat[i] != 0) {
 				continue;
 			} else {
@@ -79,12 +78,11 @@ public class FAT {
 	}
 
 	/**
-	 * 该方法用于回收磁盘块
+	 * 该方法用于回收文件占用的磁盘块
 	 * @param startNumber
 	 * @return boolean:返回false则说明起始块号错误，越界
 	 */
 	public boolean recovery(int startNumber) {
-//		System.out.println("回收");
 		boolean succeed=true;
 		if(startNumber>Disk.getInstance().MAX_SPACE_OF_DISK) {
 			succeed=false;
@@ -149,12 +147,47 @@ public class FAT {
 		returnFat=fat.clone();
 		return returnFat;
 	}
-//	/**
-//	 * 重写toString方法，方便存进磁盘。
-//	 */
-//	@Override
-//	public String toString() {
-//		return Arrays.toString(fat);
-//	}
 
+	//追加磁盘块
+	public boolean Append(int startNum,int addNumOfBlocks) {
+		boolean succeed = true;
+		int index = startNum;
+		while(fat[index]!=-1) {
+			index =fat[index];
+			System.out.println(index);
+		}
+		int j =0;
+		for(int i =3;i<Disk.getInstance().MAX_SPACE_OF_DISK&&j<addNumOfBlocks-1;i++) {
+			if(fat[i]==0) {
+				fat[index] = i;
+				index =i;
+				j++;
+			}
+		}
+		fat[index] = -1;
+		if(j!=addNumOfBlocks) {
+			succeed = false;
+		}
+		return succeed;
+	}
+	
+	//回收n个磁盘块  参数列表为起始磁盘块号，原来占的磁盘块数和修改后占的磁盘块数
+	public boolean remove(int startNum,int numOfBlocks,int nowNumOfBlocks) {
+		boolean succeed =true;
+		int index = startNum;
+		for(int i =0;i<nowNumOfBlocks-1;i++) {
+			index = fat[index];
+		}
+		int abandomIndex =  fat[index];
+		//最后一块为-1
+		fat[index] = -1;
+		while(fat[abandomIndex]!=-1) {
+			index = fat[abandomIndex];
+			fat[abandomIndex] = 0;
+			abandomIndex =index;
+		}
+		//原最后一块磁盘块也释放了
+		fat[abandomIndex]=0;
+		return succeed;
+	}
 }
