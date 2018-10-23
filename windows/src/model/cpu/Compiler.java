@@ -3,6 +3,7 @@ package model.cpu;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import application.Main;
 import model.cpu.process.ProcessCode;
 
 public class Compiler {
@@ -89,5 +90,11 @@ public class Compiler {
 		}
 		return "";
 	}
-
+	public static String getExeFileContent(String txtFileContent){
+		ProcessCode code = compile(txtFileContent);
+		if(code == null){
+			return null;
+		}
+		return code.toString();
+	}
 }

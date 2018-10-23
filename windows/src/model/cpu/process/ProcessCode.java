@@ -41,4 +41,13 @@ public class ProcessCode implements MemoryOccupy {
 		return getIns();
 	}
 
+
+	@Override
+	public String toString() {
+		String result = "";
+		for(int inst:instructions){
+			result += Compiler.decode(inst) + '\n';
+		}
+		return result;
+	}
 }
