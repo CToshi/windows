@@ -9,6 +9,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import model.cpu.CPU;
 import model.cpu.CPU.Result;
+import model.cpu.Compiler;
 import view.ui.CreateWindows;
 
 public class DiskFileTree extends TreeView<FileItem> {
@@ -35,7 +36,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private void addContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-		contextMenu.getItems().addAll(addMenu(), addEditItem(), addExecuteItem(),addCompileItem(), addDeleteMenuItem(),
+		contextMenu.getItems().addAll(addMenu(), addEditItem(), addExecuteItem(), addCompileItem(), addDeleteMenuItem(),
 				addRenameMenuItem(), addChangeAttributeMenu());
 
 		/**
@@ -118,7 +119,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 		});
 		return edit;
 	}
-	
+
 	/**
 	 * 
 	 * @return 编译选项
@@ -126,7 +127,22 @@ public class DiskFileTree extends TreeView<FileItem> {
 	private MenuItem addCompileItem() {
 		MenuItem complile = new MenuItem("编译");
 		complile.setOnAction(e -> {
-			
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			Files txtFile = (Files) item.getValue();
+			String content = Compiler.getExeFileContent(txtFile.getContent());
+			if (content != null) {
+				DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem().getParent();
+				Files exeFile = ((Directory) fatherItem.getValue()).createExeFile();
+				if (exeFile != null) {
+					exeFile.setContent(content);
+					exeFile.changeFilesName(exeFile.getFileName(), txtFile.getFileName());
+					fatherItem.getChildren().add(new DiskFileTreeItem(exeFile));
+				} else {
+					CreateWindows.getInstance().create("文件夹容量不足");
+				}
+			} else {
+				CreateWindows.getInstance().create("编译失败");
+			}
 		});
 		return complile;
 	}
@@ -169,24 +185,6 @@ public class DiskFileTree extends TreeView<FileItem> {
 			}
 		});
 		return addTxt;
-	}
-
-	/**
-	 * 
-	 * @return 新建EXE文件选项
-	 */
-	private MenuItem addExeMenuItem() {
-		MenuItem addExe = new MenuItem("EXE文件");
-		addExe.setOnAction(e -> {
-			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
-			Files files = ((Directory) fatherItem.getValue()).createExeFile();
-			if (files != null) {
-				fatherItem.getChildren().add(new DiskFileTreeItem(files));
-			} else {
-				CreateWindows.getInstance().create("文件夹容量不足");
-			}
-		});
-		return addExe;
 	}
 
 	/**
