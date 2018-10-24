@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import model.cpu.CPU;
 import model.cpu.Compiler;
 import model.cpu.SystemClock;
+import model.cpu.process.CodeBuilder;
 
 public class Test extends Application {
 
@@ -33,17 +34,17 @@ public class Test extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		runlater(()->{
-			for(int i = 0;i<11;i++){
-				Main.test(CPU.getInstance().create("x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ "));
-			}
+//			for(int i = 0;i<11;i++){
+//				Main.test(CPU.getInstance().create("x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ x++ "));
+//			}
 //			CPU.getInstance().create("!A9 x++ x++ x++ x++ x++");
 //			CPU.getInstance().create("!A9");
 //			CPU.getInstance().create("!A9");
 //			CPU.getInstance().create("!A9");
 
-			for(int i = 0;i<10;i++){
-				CPU.getInstance().create("!A1");
-			}
+//			for(int i = 0;i<10;i++){
+//				CPU.getInstance().create("!B1");
+//			}
 //			CPU.getInstance().create("x++ x++ x++ x++ x++ x++ x++ x++ x++ x++"
 //					+ " x++ x++ x++ x++ x++"
 //					+ " x++ x++ x++ x++ x++"
@@ -63,10 +64,13 @@ public class Test extends Application {
 //			for(int i = 0;i<2;i++){
 //				CPU.getInstance().create("x++ x-- x=99 x++");
 //			}
-			CPU.getInstance().create("!A9 x++ x=2 x--");
+//			for(int i = 0;i<10;i++){
+//				Main.test(CodeBuilder.getRandomCodes());
+//			}
+//			CPU.getInstance().create("!A9 x++ x=2 x--");
 		});
 		Pane root = CPUWindow.getInstance().getMainPane();
-		Scene scene = new Scene(root, 1280, 720);
+		Scene scene = new Scene(root);
 		scene.setOnMouseClicked(e -> {
 			Main.test(e.getX(), e.getY());
 		});

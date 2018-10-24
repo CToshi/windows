@@ -60,7 +60,6 @@ public class Memory {
 	 * @param releaseBlock
 	 */
 	public void release(MemoryBlock releaseBlock) {
-		Main.test("release", releaseBlock);
 		for (int i = 0; i < blocks.size(); i++) {
 			MemoryBlock block = blocks.get(i);
 			if (block.equals(releaseBlock)) {

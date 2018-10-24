@@ -3,6 +3,7 @@ package view.cpu;
 import java.io.IOException;
 import java.net.URL;
 
+import controller.CPUWindowController;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;

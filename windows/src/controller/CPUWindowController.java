@@ -1,10 +1,12 @@
-package view.cpu;
+package controller;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import application.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -20,6 +22,10 @@ import model.disk.FAT;
 import model.memory.Memory;
 import model.memory.MemoryBlock;
 import utility.Util;
+import view.cpu.DevicePanes;
+import view.cpu.MemoryBlockView;
+import view.cpu.ProcessPane;
+import view.cpu.QueueController;
 
 public class CPUWindowController {
 	@FXML
@@ -200,10 +206,16 @@ public class CPUWindowController {
 
 	}
 
+	@FXML
+	private void buildProcess(ActionEvent event){
+		CPU.getInstance().buildProcess();
+	}
+
 	public void update() {
 		updateRunningPane();
 		updateDiskPane();
 		updateDevicePane();
 		updateMemoryPane();
 	}
+
 }

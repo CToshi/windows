@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
+import application.Main;
+import model.cpu.process.CodeBuilder;
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
 import model.memory.Memory;
@@ -241,5 +243,15 @@ public class CPU {
 		return pcbManager.getPID(block);
 	}
 
-
+	public void buildProcess(){
+		for(int i = 0;i<12;i++){
+			String codes = CodeBuilder.getRandomCodes();
+			Result result = create(codes);
+			if(result != Result.OK){
+//				Main.test(233, result);
+//				Main.test(codes);
+				break;
+			}
+		}
+	}
 }

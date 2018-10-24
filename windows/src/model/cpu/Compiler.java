@@ -18,6 +18,7 @@ public class Compiler {
 				int res = encode(ins);
 				if (res == 255) {
 					compileError = true;
+					Main.test(ins);
 					break;
 				}
 				list.add(res);
@@ -61,7 +62,7 @@ public class Compiler {
 			int time = Integer.valueOf(code.substring(2));
 			if ('A' <= deviceID && deviceID <= 'C' && time > 0) {
 				try {
-					result = 110 + code.charAt(1) - 'A' + time;
+					result = 110 + (code.charAt(1) - 'A') * 10 + time;
 				} catch (NumberFormatException e) {
 				}
 			}
@@ -90,9 +91,10 @@ public class Compiler {
 		}
 		return "";
 	}
-	public static String getExeFileContent(String txtFileContent){
+
+	public static String getExeFileContent(String txtFileContent) {
 		ProcessCode code = compile(txtFileContent);
-		if(code == null){
+		if (code == null) {
 			return null;
 		}
 		return code.toString();
