@@ -108,7 +108,7 @@ public class Directory extends FileItem implements Cloneable{
 	public boolean isExistedName(String name) {
 		boolean existed = false;
 		for (FileItem f : files) {
-			if (name.equals(f.getFileName())) {
+			if ((name+this.fileExtentionName).equals(f.getFileName()+f.fileExtentionName)) {
 				existed = true;
 			}
 		}
