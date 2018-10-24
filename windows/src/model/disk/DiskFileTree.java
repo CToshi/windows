@@ -9,6 +9,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import model.cpu.CPU;
 import model.cpu.CPU.Result;
+import model.cpu.Compiler;
 import view.ui.CreateWindows;
 
 public class DiskFileTree extends TreeView<FileItem> {
@@ -35,7 +36,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private void addContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-		contextMenu.getItems().addAll(addMenu(), addEditItem(), addExecuteItem(), addDeleteMenuItem(),
+		contextMenu.getItems().addAll(addMenu(), addEditItem(), addExecuteItem(), addCompileItem(), addDeleteMenuItem(),
 				addRenameMenuItem(), addChangeAttributeMenu());
 
 		/**
@@ -50,39 +51,42 @@ public class DiskFileTree extends TreeView<FileItem> {
 					contextMenu.hide();
 					if (getSelectionModel().getSelectedItem().getValue() instanceof Files) {
 						((Menu) contextMenu.getItems().get(0)).setVisible(false);
-						((MenuItem) contextMenu.getItems().get(1)).setVisible(true);
-						((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
-						((Menu) contextMenu.getItems().get(5)).setVisible(true);
+						((Menu) contextMenu.getItems().get(6)).setVisible(true);
 						if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 0) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(0))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(6)).getItems().get(0))
 									.setSelected(true);
 						} else if (getSelectionModel().getSelectedItem().getValue().getAttributes() == 1) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(1))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(6)).getItems().get(1))
 									.setSelected(true);
 						} else {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(6)).getItems().get(2))
 									.setSelected(true);
 						}
 						if (getSelectionModel().getSelectedItem().getValue().getFileExtentionName().equals(".txt")) {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2)).setDisable(true);
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(6)).getItems().get(2)).setDisable(true);
+							((MenuItem) contextMenu.getItems().get(3)).setVisible(true);
 							((MenuItem) contextMenu.getItems().get(2)).setVisible(false);
+							((MenuItem) contextMenu.getItems().get(1)).setVisible(true);
 						} else {
-							((RadioMenuItem) ((Menu) contextMenu.getItems().get(5)).getItems().get(2))
+							((RadioMenuItem) ((Menu) contextMenu.getItems().get(6)).getItems().get(2))
 									.setDisable(false);
+							((MenuItem) contextMenu.getItems().get(3)).setVisible(false);
 							((MenuItem) contextMenu.getItems().get(2)).setVisible(true);
+							((MenuItem) contextMenu.getItems().get(1)).setVisible(false);
 						}
 					} else {
 						((Menu) contextMenu.getItems().get(0)).setVisible(true);
 						((MenuItem) contextMenu.getItems().get(1)).setVisible(false);
 						((MenuItem) contextMenu.getItems().get(2)).setVisible(false);
-						((Menu) contextMenu.getItems().get(5)).setVisible(false);
+						((MenuItem) contextMenu.getItems().get(3)).setVisible(false);
+						((Menu) contextMenu.getItems().get(6)).setVisible(false);
 					}
 					if (getSelectionModel().getSelectedItem().getValue().isCanBeDeleted()) {
+						((MenuItem) contextMenu.getItems().get(5)).setVisible(true);
 						((MenuItem) contextMenu.getItems().get(4)).setVisible(true);
-						((MenuItem) contextMenu.getItems().get(3)).setVisible(true);
 					} else {
+						((MenuItem) contextMenu.getItems().get(5)).setVisible(false);
 						((MenuItem) contextMenu.getItems().get(4)).setVisible(false);
-						((MenuItem) contextMenu.getItems().get(3)).setVisible(false);
 					}
 					contextMenu.show(this, e.getScreenX(), e.getScreenY());
 				} else {
@@ -98,7 +102,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 	 */
 	private Menu addMenu() {
 		Menu addMenu = new Menu("新建");
-		addMenu.getItems().addAll(addTxtMenuItem(), addExeMenuItem(), addDirMenuItem());
+		addMenu.getItems().addAll(addTxtMenuItem(), addDirMenuItem());
 		return addMenu;
 	}
 
@@ -118,7 +122,34 @@ public class DiskFileTree extends TreeView<FileItem> {
 
 	/**
 	 * 
-	 * @return 执行选项
+	 * @return 编译选项
+	 */
+	private MenuItem addCompileItem() {
+		MenuItem complile = new MenuItem("编译");
+		complile.setOnAction(e -> {
+			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
+			Files txtFile = (Files) item.getValue();
+			String content = Compiler.getExeFileContent(txtFile.getContent());
+			if (content != null) {
+				DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem().getParent();
+				Files exeFile = ((Directory) fatherItem.getValue()).createExeFile();
+				if (exeFile != null) {
+					exeFile.setContent(content);
+					exeFile.changeFilesName(exeFile.getFileName(), txtFile.getFileName());
+					fatherItem.getChildren().add(new DiskFileTreeItem(exeFile));
+				} else {
+					CreateWindows.getInstance().create("文件夹容量不足");
+				}
+			} else {
+				CreateWindows.getInstance().create("编译失败");
+			}
+		});
+		return complile;
+	}
+
+	/**
+	 * 
+	 * @return 运行选项
 	 */
 	private MenuItem addExecuteItem() {
 		MenuItem execute = new MenuItem("运行");
@@ -154,24 +185,6 @@ public class DiskFileTree extends TreeView<FileItem> {
 			}
 		});
 		return addTxt;
-	}
-
-	/**
-	 * 
-	 * @return 新建EXE文件选项
-	 */
-	private MenuItem addExeMenuItem() {
-		MenuItem addExe = new MenuItem("EXE文件");
-		addExe.setOnAction(e -> {
-			DiskFileTreeItem fatherItem = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
-			Files files = ((Directory) fatherItem.getValue()).createExeFile();
-			if (files != null) {
-				fatherItem.getChildren().add(new DiskFileTreeItem(files));
-			} else {
-				CreateWindows.getInstance().create("文件夹容量不足");
-			}
-		});
-		return addExe;
 	}
 
 	/**
