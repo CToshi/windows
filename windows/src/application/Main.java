@@ -23,9 +23,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
-//		Scene scene = new Scene(DiskFileTreePane.getInstance());
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
+		Scene scene = new Scene(DiskFileTreePane.getInstance());
+		primaryStage.setScene(scene);
+		primaryStage.show();
 
 //		Main.primaryStage = primaryStage;
 //		FAT.getInstance().toString();
@@ -43,21 +43,21 @@ public class Main extends Application {
 //		primaryStage.setScene(scene);
 //		primaryStage.show();
 
-		Main.primaryStage = primaryStage;
-		FAT.getInstance().toString();
-		try {
-			primaryStage.initStyle(StageStyle.UNDECORATED);
-			primaryStage.setMaximized(true);
-			RootPane root = new RootPane(primaryStage);
-			Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
-			primaryStage.setScene(scene);
-			primaryStage.show();
-			primaryStage.setOnCloseRequest(e->{
-				SystemClock.getInstance().stop();
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		Main.primaryStage = primaryStage;
+//		FAT.getInstance().toString();
+//		try {
+//			primaryStage.initStyle(StageStyle.UNDECORATED);
+//			primaryStage.setMaximized(true);
+//			RootPane root = new RootPane(primaryStage);
+//			Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
+//			primaryStage.setScene(scene);
+//			primaryStage.show();
+//			primaryStage.setOnCloseRequest(e->{
+//				SystemClock.getInstance().stop();
+//			});
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void main(String[] args) {
