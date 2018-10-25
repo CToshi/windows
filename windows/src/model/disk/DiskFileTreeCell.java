@@ -60,7 +60,7 @@ public class DiskFileTreeCell extends TreeCell<FileItem> {
 		textField = new TextField(getItem().getFileName());
 		textField.setOnKeyReleased((KeyEvent t) -> {
 			if (t.getCode() == KeyCode.ENTER) {
-				int errorCode = getItem().changeFilesName(getItem().getFileName(), textField.getText());
+				int errorCode = getItem().changeFilesName(getItem().getFileName(), textField.getText(),getItem().getFileExtentionName());
 				if (errorCode != 0) {
 					switch (errorCode) {
 					case 1:

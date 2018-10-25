@@ -48,7 +48,7 @@ public abstract class FileItem implements Cloneable {
 	 * @param原文件名与修改后的文件名
 	 * @return int:0:修改成功，1:文件名字数超出限制,2：文件名已存在,3:文件名含非法字符，4：文件名不得为空
 	 */
-	public int changeFilesName(String fileName, String newFileName) {
+	public int changeFilesName(String fileName, String newFileName,String fileExtentionName) {
 		int errorCode = 0;
 		if (newFileName == null || newFileName.equals("")) {
 			return 4;
@@ -56,7 +56,7 @@ public abstract class FileItem implements Cloneable {
 		if (newFileName.getBytes().length >= FileItem.MAX_SIZE_OF_FILE_NAME) {
 			return 1;
 		}
-		if (fatherFile.isExistedName(newFileName)) {
+		if (fatherFile.isExistedName(newFileName,fileExtentionName)) {
 			return 2;
 		}
 		if (newFileName.contains("$") || newFileName.contains(".") || newFileName.contains("/")) {

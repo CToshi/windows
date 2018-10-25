@@ -80,34 +80,48 @@ public class CmdUtil {
 	public static int creatFiles(Directory father, String fileName, String fileExtentionName) {
 		boolean error =false;
 		int errorCode = 0;
-		if (father.isExistedName(fileName)) {
-			errorCode = 3;
-			error= true;
-		} else if (father.isFull()) {
-			errorCode = 1;
-			error=true;
-		} else {
-			Files f = null;
-			if (fileExtentionName.equals("txt")) {
-				f = father.createTxtFile();
-				f.changeFilesName(f.getFileName(), fileName);
-			} else if (fileExtentionName.equals("exe")) {
-				f = father.createExeFile();
-				f.changeFilesName(f.getFileName(), fileName);
+		//由于修改了创建文件名代码。对于用户输入的，先判断是生成.txt还是.e
+		int situation=0;
+		if(fileExtentionName.equals("txt")) {
+			fileExtentionName = ".txt";
+		}else if(fileExtentionName.equals("exe")||fileExtentionName.equals("e")) {
+			fileExtentionName = ".e";
+			situation = 1;
+		}else {
+			//没有对应的后缀名，则后缀名错误
+			errorCode = 4;
+			error  = true;
+		}
+		if(!error) {
+			if (father.isExistedName(fileName,fileExtentionName)) {
+				errorCode = 3;
+				error= true;
+			} else if (father.isFull()) {
+				errorCode = 1;
+				error=true;
+			} else {
+				Files f = null;
+				if (situation == 0) {
+					f = father.createTxtFile();
+					f.changeFilesName(f.getFileName(), fileName,fileExtentionName);
+				} else if (situation == 1) {
+					f = father.createExeFile();
+					f.changeFilesName(f.getFileName(), fileName,fileExtentionName);
 
-			} else if(!error){
-				errorCode = 4;
-				error = true;
-			}
+				} else{
+					errorCode = 4;
+					error = true;
+				}
 
-			if (f == null&&!error) {
-				errorCode = 2;
-			}
-			// 对接目录树
+				if (f == null&&!error) {
+					errorCode = 2;
+				}
+				// 对接目录树
 
-			else if(!error){
-				DiskFileTreeItem fatherItem = father.getMyItem();
-				fatherItem.getChildren().add(new DiskFileTreeItem(f));
+				else if(!error){
+					DiskFileTreeItem fatherItem = father.getMyItem();
+					fatherItem.getChildren().add(new DiskFileTreeItem(f));
+				}
 			}
 		}
 		return errorCode;
@@ -145,7 +159,7 @@ public class CmdUtil {
 		int errorCode = 0;
 		if (d.isFull()) {
 			errorCode = 1;
-		} else if (d.isExistedName(f.getFileName())) {
+		} else if (d.isExistedName(f.getFileName(),f.getFileExtentionName())) {
 			errorCode = 3;
 		} else {
 			Files newFile = null;
@@ -172,7 +186,7 @@ public class CmdUtil {
 	 */
 	public static int creatDirectory(Directory d, String fileName) {
 		int errorCode = 0;
-		if (d.isExistedName(fileName)) {
+		if (d.isExistedName(fileName,"")) {
 			errorCode = 3;
 		} else if (d.isFull()) {
 			errorCode = 1;
