@@ -135,7 +135,7 @@ public class DiskFileTree extends TreeView<FileItem> {
 				Files exeFile = ((Directory) fatherItem.getValue()).createExeFile();
 				if (exeFile != null) {
 					exeFile.setContent(content);
-					exeFile.changeFilesName(exeFile.getFileName(), txtFile.getFileName());
+					exeFile.changeFilesName(exeFile.getFileName(), txtFile.getFileName(),".e");
 					fatherItem.getChildren().add(new DiskFileTreeItem(exeFile));
 				} else {
 					CreateWindows.getInstance().create("文件夹容量不足");
