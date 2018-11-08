@@ -156,7 +156,6 @@ public class DiskFileTree extends TreeView<FileItem> {
 		execute.setOnAction(e -> {
 			DiskFileTreeItem item = (DiskFileTreeItem) getSelectionModel().getSelectedItem();
 			Files file = (Files) item.getValue();
-			CPU.getInstance().create(file.getContent());
 			Result result = CPU.getInstance().create(file.getContent());
 			if (result == Result.MEMORY_NOT_ENOUGH) {
 				CreateWindows.getInstance().create("ÄÚ´æ²»¹»");
