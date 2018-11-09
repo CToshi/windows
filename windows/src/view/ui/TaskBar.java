@@ -128,6 +128,7 @@ public class TaskBar extends HBox {
 	}
 
 	public static void removeWindow(String fileName, Window window) {
+		System.out.println(233);
 		for (int i = 0; i < menus.size(); i++) {
 			WindowMenu menu = menus.get(i);
 			if (menus.get(i).getType() == window.getType()) {

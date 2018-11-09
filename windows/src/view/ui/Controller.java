@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import application.Main;
 import model.disk.Directory;
 import model.disk.Files;
 import utility.CmdUtil;

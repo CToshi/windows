@@ -1,6 +1,7 @@
 package application;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.cpu.DeviceManager;
@@ -52,7 +53,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			primaryStage.setOnCloseRequest(e->{
+			primaryStage.setOnHidden(e->{
 				SystemClock.getInstance().stop();
 			});
 		} catch (Exception e) {

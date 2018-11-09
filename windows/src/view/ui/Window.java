@@ -151,10 +151,12 @@ public class Window extends Stage {
 				file.changeFilesContent(textArea.getText());
 				msgWindow.close();
 				this.close();
+				TaskBar.removeWindow(fileName, this);
 			});
 			buttons[1].setOnAction(action->{
 				msgWindow.close();
 				this.close();
+				TaskBar.removeWindow(fileName, this);
 			});
 			buttons[2].setOnAction(action->{
 				msgWindow.close();
@@ -163,8 +165,9 @@ public class Window extends Stage {
 			if(!textArea.getText().equals(file.getContent())){
 				e.consume();
 				msgWindow.show();
+			}else{
+				TaskBar.removeWindow(fileName, this);
 			}
-			TaskBar.removeWindow(fileName, this);
 		});
 		this.setTitle(fileName);
 	}
@@ -200,10 +203,12 @@ public class Window extends Stage {
 				file.changeFilesContent(textArea.getText());
 				msgWindow.close();
 				this.close();
+				TaskBar.removeWindow(fileName, this);
 			});
 			buttons[1].setOnAction(action->{
 				msgWindow.close();
 				this.close();
+				TaskBar.removeWindow(fileName, this);
 			});
 			buttons[2].setOnAction(action->{
 				msgWindow.close();
@@ -212,6 +217,8 @@ public class Window extends Stage {
 			if(!textArea.getText().equals(file.getContent())){
 				e.consume();
 				msgWindow.show();
+			}else {
+				TaskBar.removeWindow(fileName, this);
 			}
 			TaskBar.removeWindow(fileName, this);
 		});
