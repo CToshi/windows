@@ -2,8 +2,6 @@ package model.cpu.process;
 
 import java.util.Random;
 
-import application.Main;
-
 public class CodeBuilder {
 	private enum CodeType {
 		Assignment, Increase, Decrease, IO

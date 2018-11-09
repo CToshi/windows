@@ -1,17 +1,13 @@
 package view.cpu;
 
-import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import application.Main;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -19,16 +15,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import model.cpu.CPU;
-import model.cpu.Compiler;
 import model.cpu.SystemClock;
-import model.cpu.process.CodeBuilder;
 
 public class Test extends Application {
 
-	private DoubleBinding getBinding() {
-		return new SimpleDoubleProperty().add(0);
-	}
+//	private DoubleBinding getBinding() {
+//		return new SimpleDoubleProperty().add(0);
+//	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {

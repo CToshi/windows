@@ -6,6 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SystemClock {
 	private static SystemClock clock = new SystemClock();
+	/**
+	 * 系统时钟周期，单位（毫秒）
+	 */
 	private int unit = 1000;
 	private long initTime;
 	private LinkedBlockingQueue<Runnable> runnables;

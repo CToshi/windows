@@ -19,7 +19,7 @@ public class PCBManager {
 	 */
 	private ConcurrentHashMap<Integer, PCB> map;
 	/**
-	 * 空白PCB队列
+	 * 未被使用的pid的队列
 	 */
 	private LinkedBlockingQueue<Integer> queue;
 

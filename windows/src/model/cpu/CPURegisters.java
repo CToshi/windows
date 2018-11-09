@@ -6,8 +6,6 @@ public class CPURegisters implements Cloneable {
 	}
 
 	private int AX;
-	private int PC;
-	private int IR;
 	private PSW_Type PSW;
 
 	public CPURegisters() {
@@ -16,14 +14,6 @@ public class CPURegisters implements Cloneable {
 
 	public int getAX() {
 		return AX;
-	}
-
-	public int getPC() {
-		return PC;
-	}
-
-	public int getIR() {
-		return IR;
 	}
 
 	public PSW_Type getPSW() {
@@ -61,15 +51,4 @@ public class CPURegisters implements Cloneable {
 		return registers;
 	}
 
-	public CPURegisters setIR(int IR) {
-		CPURegisters registers = clone();
-		registers.IR = IR;
-		return registers;
-	}
-
-	public CPURegisters setPC(int PC) {
-		CPURegisters registers = clone();
-		registers.PC = PC;
-		return registers;
-	}
 }

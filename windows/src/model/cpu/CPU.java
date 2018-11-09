@@ -1,11 +1,9 @@
 package model.cpu;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
-import application.Main;
 import model.cpu.process.CodeBuilder;
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
@@ -15,9 +13,12 @@ import model.memory.MemoryBlock;
 public class CPU {
 	private static CPU cpu;
 	private static int MAX_NUMBE_OF_PROCESS = 11;
-	// private CPURegisters registers;
-	private ArrayList<LinkedBlockingQueue<PCB>> processQueues;
-	private LinkedBlockingQueue<ProcessCode> waitingQueue;
+	/**
+	 * 就绪队列
+	 */
+	private LinkedBlockingQueue<PCB> readyQueue;
+
+//	private LinkedBlockingQueue<ProcessCode> waitingQueue;
 	/**
 	 * 运行中的进程
 	 */
@@ -37,15 +38,8 @@ public class CPU {
 	 */
 	private static int INS_UNIT = 3;
 
-	/**
-	 * 运行中的进程的剩余时间片
-	 */
-	private enum Queue_Type {
-		BLANK, READY, BLOCKED
-	}
-
 	private InsExecutor insExecutor;
-	private int currentTime;
+//	private int currentTime;
 	private DeviceManager deviceManager = DeviceManager.getInstance();
 
 	public enum Result{
@@ -56,15 +50,16 @@ public class CPU {
 	}
 
 	private CPU() {
-		processQueues = new ArrayList<>(Queue_Type.values().length);
-		for (int i = 0; i < Queue_Type.values().length; i++) {
-			processQueues.add(new LinkedBlockingQueue<>(MAX_NUMBE_OF_PROCESS));
-		}
+//		processQueues = new ArrayList<>(Queue_Type.values().length);
+//		for (int i = 0; i < Queue_Type.values().length; i++) {
+//			processQueues.add(new LinkedBlockingQueue<>(MAX_NUMBE_OF_PROCESS));
+//		}
+		readyQueue = new LinkedBlockingQueue<>(MAX_NUMBE_OF_PROCESS);
 		memory = Memory.getInstance();
 		pcbManager = new PCBManager();
 		ProcessCode systemCode = new ProcessCode(new int[10]);
 		runningProcess = strollingProcess = pcbManager.allocatePCB(memory.allocate(systemCode), systemCode);
-		waitingQueue = new LinkedBlockingQueue<>();
+//		waitingQueue = new LinkedBlockingQueue<>();
 		insExecutor = new InsExecutor();
 	}
 
@@ -113,7 +108,7 @@ public class CPU {
 	 */
 	public void awake(PCB pcb) {
 		try {
-			getQueue(Queue_Type.READY).put(pcb);
+			readyQueue.put(pcb);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -128,29 +123,29 @@ public class CPU {
 	private Result allocatePCB(ProcessCode code) {
 		MemoryBlock block = null;
 		if (!pcbManager.available() || (block = memory.allocate(code)) == null) {
-			try {
-				waitingQueue.put(code);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				waitingQueue.put(code);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 			if(block == null){
 				return Result.MEMORY_NOT_ENOUGH;
 			}else{
 				return Result.PCB_NOT_ENOUGH;
 			}
 		}
-		getQueue(Queue_Type.READY).add(pcbManager.allocatePCB(block, code));
+		readyQueue.add(pcbManager.allocatePCB(block, code));
 		return Result.OK;
 	}
 
 	public void work() {
-		currentTime++;
-		if (currentTime % INS_UNIT == 0) {
+//		currentTime++;
+		if (SystemClock.getInstance().getClock() % INS_UNIT == 0) {
 			handle();
 		}
 	}
 
-	public void handle() {
+	private void handle() {
 //		Main.test("handle", getCurrentInstruction());
 		insExecutor.execute();
 		// runningProcess.setRegisters(insExecutor.getRegisters());
@@ -182,7 +177,7 @@ public class CPU {
 	private void setToReady() {
 		runningProcess.setRegisters(insExecutor.getRegisters());
 		try {
-			getQueue(Queue_Type.READY).put(runningProcess);
+			readyQueue.put(runningProcess);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -194,9 +189,9 @@ public class CPU {
 	private void takeTurn() {
 		// try {
 		// runningProcess =
-		// getQueue(Queue_Type.READY).poll(systemClock.getTimeUnit() / 2,
+		// readyQueue.poll(systemClock.getTimeUnit() / 2,
 		// TimeUnit.MILLISECONDS);
-		runningProcess = getQueue(Queue_Type.READY).poll();
+		runningProcess = readyQueue.poll();
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
 		// }
@@ -207,9 +202,9 @@ public class CPU {
 		}
 	}
 
-	private LinkedBlockingQueue<PCB> getQueue(Queue_Type type) {
-		return processQueues.get(type.ordinal());
-	}
+//	private LinkedBlockingQueue<PCB> getQueue(Queue_Type type) {
+//		return processQueues.get(type.ordinal());
+//	}
 
 	public static int getMAX_NUMBE_OF_PROCESS() {
 		return MAX_NUMBE_OF_PROCESS;
@@ -236,7 +231,7 @@ public class CPU {
 	}
 
 	public Collection<Integer> getReadyQueue() {
-		return getQueue(Queue_Type.READY).stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
+		return readyQueue.stream().map(pcb -> pcb.getID()).collect(Collectors.toList());
 	}
 
 	public int getPID(MemoryBlock block) {

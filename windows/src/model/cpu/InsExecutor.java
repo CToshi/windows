@@ -59,7 +59,7 @@ public class InsExecutor {
 		} else {
 			registers = registers.setPSW(PSW_Type.END);
 		}
-		
+
 	}
 
 	public int getTimeLeft() {

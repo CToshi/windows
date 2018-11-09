@@ -9,6 +9,11 @@ import model.cpu.process.ProcessCode;
 public class Compiler {
 	private static int END_CODE = 200;
 
+	/**
+	 *
+	 * @param instructions 保存了多个指令的字符串，指令间用空格或回车或制表符隔开
+	 * @return
+	 */
 	public static ProcessCode compile(String instructions) {
 		String[] inss = instructions.split("[\\s]");
 		LinkedList<Integer> list = new LinkedList<>();
@@ -18,7 +23,7 @@ public class Compiler {
 				int res = encode(ins);
 				if (res == 255) {
 					compileError = true;
-					Main.test(ins);
+//					Main.test(ins);
 					break;
 				}
 				list.add(res);
@@ -59,6 +64,9 @@ public class Compiler {
 			result = 101;
 		} else if (code.startsWith("!") && code.length() == 3) {
 			char deviceID = code.charAt(1);
+			if('a' <= deviceID && deviceID <= 'z') {
+				deviceID -= 'a' + 'A';
+			}
 			int time = Integer.valueOf(code.substring(2));
 			if ('A' <= deviceID && deviceID <= 'C' && time > 0) {
 				try {
