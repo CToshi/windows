@@ -24,7 +24,7 @@ public class Disk {
 	public static Disk getInstance() {
 		return disk;
 	}
-	public Disk() {
+	private Disk() {
 		init();
 
 	}
