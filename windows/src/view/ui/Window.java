@@ -257,9 +257,9 @@ public class Window extends Stage {
 		});
 		scene.setRoot(CPUWindow.getInstance().getMainPane());
 		this.setX(primaryScreenBounds.getWidth()/2-640);
-		this.setY(primaryScreenBounds.getHeight()/2-350);
+		this.setY(primaryScreenBounds.getHeight()/2-362);
 		this.setWidth(1280);
-		this.setHeight(700);
+		this.setHeight(785);
 		this.setTitle(fileName);
 	}
 
