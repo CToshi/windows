@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
+import application.Main;
 import model.cpu.process.CodeBuilder;
 import model.cpu.process.PCB;
 import model.cpu.process.ProcessCode;
@@ -80,6 +81,7 @@ public class CPU {
 	 * @return 成功时返回OK，否则返回失败原因
 	 */
 	public Result create(String instructions) {
+		Main.test(instructions);
 		return create(Compiler.compile(instructions));
 	}
 
@@ -122,17 +124,11 @@ public class CPU {
 	 */
 	private Result allocatePCB(ProcessCode code) {
 		MemoryBlock block = null;
-		if (!pcbManager.available() || (block = memory.allocate(code)) == null) {
-//			try {
-//				waitingQueue.put(code);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			if(block == null){
-				return Result.MEMORY_NOT_ENOUGH;
-			}else{
-				return Result.PCB_NOT_ENOUGH;
-			}
+		if(!pcbManager.available()){
+			return Result.PCB_NOT_ENOUGH;
+		}
+		if ((block = memory.allocate(code)) == null) {
+			return Result.MEMORY_NOT_ENOUGH;
 		}
 		readyQueue.add(pcbManager.allocatePCB(block, code));
 		return Result.OK;

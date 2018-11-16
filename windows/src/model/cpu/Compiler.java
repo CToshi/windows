@@ -23,7 +23,7 @@ public class Compiler {
 				int res = encode(ins);
 				if (res == 255) {
 					compileError = true;
-//					Main.test(ins);
+					Main.test("fail", ins);
 					break;
 				}
 				list.add(res);
@@ -93,7 +93,7 @@ public class Compiler {
 			return "x--";
 		} else if (111 <= code && code <= 139) {
 			code -= 110;
-			return "?" + (char) ('A' + code / 10) + String.valueOf(code % 10);
+			return "!" + (char) ('A' + code / 10) + String.valueOf(code % 10);
 		} else if (code == END_CODE) {
 			return "end";
 		}
