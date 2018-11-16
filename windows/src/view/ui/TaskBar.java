@@ -178,4 +178,8 @@ public class TaskBar extends HBox {
 		}
 		return null;
 	}
+
+	public static ArrayList<Window> getWindows() {
+		return windows;
+	}
 }

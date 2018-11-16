@@ -22,6 +22,7 @@ public class SecondaryMenu extends Label {
 	private final int ICON = 2;
 	private int priority = BACKGROUND;
 	private static SecondaryMenu secondaryMenu = new SecondaryMenu();
+	private Window window;
 
 	public static SecondaryMenu getInstance() {
 		return secondaryMenu;
@@ -31,6 +32,7 @@ public class SecondaryMenu extends Label {
 		primaryScreenBounds = Screen.getPrimary().getBounds();
 		backLabels = new Label[BACK_STRINGS.length];
 		iconLabels = new Label[ICON_STRINGS.length];
+		window = null;
 		init();
 	}
 
@@ -69,7 +71,9 @@ public class SecondaryMenu extends Label {
 			label.setMaxSize(LABEL_WIDTH, LABEL_HEIGHT);
 			label.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, null, null)));
 			label.setOnMouseClicked(e -> {
-
+				if(window==null)return;
+				else if(window.isShowing())window.toFront();
+				else window.show();
 			});
 			iconLabels[i] = label;
 		}
@@ -116,7 +120,8 @@ public class SecondaryMenu extends Label {
 		return priority;
 	}
 
-	public void setPriority(int priority) {
+	public void setPriority(int priority,Window window) {
 		this.priority = priority;
+		this.window = window;
 	}
 }

@@ -84,14 +84,14 @@ public class Icon extends Label {
 			}
 		});
 		this.setOnMouseEntered(e -> {
-			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getICON());
+			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getICON(),window);
 			if (!isClick)
 				this.setBackground(new Background(new BackgroundFill(ON_COLOR, null, null)));
 			else
 				this.setBackground(new Background(new BackgroundFill(CLICK, null, null)));
 		});
 		this.setOnMouseExited(e -> {
-			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getBACKGROUND());
+			SecondaryMenu.getInstance().setPriority(SecondaryMenu.getInstance().getBACKGROUND(),window);
 			if (!isClick)
 				this.setBackground(null);
 			else

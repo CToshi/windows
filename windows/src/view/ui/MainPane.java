@@ -2,13 +2,17 @@ package view.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.sun.org.apache.xpath.internal.compiler.Keywords;
 
 import application.Main;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -49,6 +53,7 @@ public class MainPane extends Pane {
 				SecondaryMenu.getInstance().display(e.getX(), e.getY(), SecondaryMenu.getInstance().getPriority());
 			}
 		});
+		
 	}
 
 	public void reStart() {

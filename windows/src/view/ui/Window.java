@@ -10,6 +10,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -34,6 +37,7 @@ public class Window extends Stage {
 	private String fileName;
 	private Console console;
 	private TextArea textArea;
+	private Files file;
 	private static final String HELP_CONTENT = "cmd指令："
 			+ "\nll: 显示当前路径下的文件"
 			+ "\ncreate a.txt：创建一个名为a的txt文件，后缀名可为txt或exe"
@@ -44,7 +48,13 @@ public class Window extends Stage {
 			+ "\nvim a：编辑一个文件，包括txt和exe"
 			+ "\ncd haha：进入一个文件夹，.和..分别表示当前目录和上一级目录"
 			+ "\ntype a：表示显示一个文件的内容"
-			+ "\n（目录和文件名支持绝对路径，即以\\root开头，以及当前路径.\\开头）";
+			+ "\n（目录和文件名支持绝对路径，即以\\root开头，以及当前路径.\\开头）"
+			+ "\n进程指令:"
+			+ "\nx=? --> ?属于[0,99]"
+			+ "\nx++"
+			+ "\nx--"
+			+ "\n!?? --> 第一个?可以是ABC,第二个?可以是1-9"
+			+ "\nend";
 
 	public Window(Stage stage,Type type, Files files) {
 		this.initOwner(stage);
@@ -121,6 +131,7 @@ public class Window extends Stage {
 	}
 
 	private void createTxtWindow(Files file) {
+		this.file = file;
 		BorderPane borderPane = new BorderPane();
 		MenuBar menuBar = new MenuBar();
 		Menu menu = new Menu("文件");
@@ -128,6 +139,7 @@ public class Window extends Stage {
 		menuItem.setOnAction(e->{
 			file.changeFilesContent(textArea.getText());
 		});
+		menuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
 		menu.getItems().add(menuItem);
 		menuBar.getMenus().add(menu);
 		menuBar.prefWidthProperty().bind(this.widthProperty());
@@ -140,6 +152,7 @@ public class Window extends Stage {
 		borderPane.setTop(menuBar);
 		borderPane.setCenter(textArea);
 		scene.setRoot(borderPane);
+
 		this.setOnCloseRequest(e->{
 			MsgWindow msgWindow = new MsgWindow(Main.getPrimaryStage());
 			Button[] buttons = new Button[]{
@@ -237,9 +250,9 @@ public class Window extends Stage {
 	private void createHelpWindow() {
 		Label content = new Label();
 		this.setX((primaryScreenBounds.getWidth()-700)/2);
-		this.setY((primaryScreenBounds.getHeight()-350)/2);
+		this.setY((primaryScreenBounds.getHeight()-500)/2);
 		this.setWidth(700);
-		this.setHeight(350);
+		this.setHeight(500);
 		Font font = Font.font("LiSu", FontWeight.BOLD, FontPosture.ITALIC, 20);
 		content.setFont(font);
 		content.setText(HELP_CONTENT);
@@ -286,6 +299,12 @@ public class Window extends Stage {
 	public Console getConsole() {
 		if(console!=null)return console;
 		return null;
+	}
+
+	public void saveContent(){
+		if (file!=null&&textArea!=null) {
+			file.changeFilesContent(textArea.getText());
+		}
 	}
 
 }

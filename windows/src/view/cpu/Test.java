@@ -33,7 +33,7 @@ public class Test extends Application {
 //			CPU.getInstance().create("!A9 x++ x++ x++ x++ x++");
 //			CPU.getInstance().create("!A9");
 //			CPU.getInstance().create("!A9");
-//			CPU.getInstance().create("!A9");
+//			CPU.getInstance().create("!A1");
 
 //			for(int i = 0;i<10;i++){
 //				CPU.getInstance().create("!B1");
